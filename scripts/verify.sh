@@ -72,7 +72,21 @@ else
   echo "RAW_COLOR_GREP exit=0"
 fi
 
-# 5. screenshots — start preview, shoot each route at 375/768/1280, check for
+# 5. internal link check — every href/src in dist/ resolves to a real file
+# (see scripts/check-links.mjs's own ALLOWLIST for the two known-404 E-1.4
+# routes it deliberately skips).
+if [ "$BUILD_EXIT" -eq 0 ]; then
+  node "$SITE_ROOT/scripts/check-links.mjs" "$SITE_ROOT/dist" > "$LOG_DIR/check-links.log" 2>&1
+  LINKS_EXIT=$?
+  cat "$LOG_DIR/check-links.log"
+  echo "LINKS exit=$LINKS_EXIT (log: $LOG_DIR/check-links.log)"
+  [ "$LINKS_EXIT" -ne 0 ] && FAILS+=("links")
+else
+  echo "LINKS exit=skipped (build failed)"
+  FAILS+=("links-skipped-build-failed")
+fi
+
+# 6. screenshots — start preview, shoot each route at 375/768/1280, check for
 # horizontal overflow, stop preview.
 PREVIEW_PID=""
 cleanup() {
