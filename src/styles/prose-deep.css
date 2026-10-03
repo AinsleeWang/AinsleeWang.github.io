@@ -20,17 +20,19 @@
  * C3 — reusing global.css's named --line-N / --muted-N tokens (added there
  * for this file; see that file's comments) rather than a raw alpha-color
  * literal.
+ *
+ * Font sizes: every rule below reads a --fs-* variable from
+ * src/styles/site-scale.css (--fs-prose-body/-h1/-h2, --fs-caption,
+ * --fs-figcaption, --fs-code) — this file never sets its own font-size
+ * variable or literal px value. The one exception is inline code's
+ * relative `0.9em`, which isn't a fixed size to centralize (see its own
+ * comment below).
  */
 
 [data-mode="deep-space"] .wt-deep-article {
-  --deep-body: 18px;
-  --deep-h1: 40px;
-  --deep-h2: 28px;
-  --deep-caption: 12px;
-
   color: var(--fg);
   font-family: var(--font-stack);
-  font-size: var(--deep-body);
+  font-size: var(--fs-prose-body);
   line-height: 1.9;
 }
 
@@ -44,7 +46,7 @@
   align-items: baseline;
   gap: var(--grid, 8px);
   font-family: var(--font-mono);
-  font-size: var(--deep-caption);
+  font-size: var(--fs-caption);
   line-height: 1.5;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -68,7 +70,7 @@
 
 [data-mode="deep-space"] .wt-deep-article h1 {
   margin: 20px 0 0;
-  font-size: var(--deep-h1);
+  font-size: var(--fs-prose-h1);
   line-height: 1.25;
   font-weight: 700;
   color: var(--fg);
@@ -76,7 +78,7 @@
 
 [data-mode="deep-space"] .wt-deep-article h2 {
   margin: 44px 0 0;
-  font-size: var(--deep-h2);
+  font-size: var(--fs-prose-h2);
   line-height: 1.35;
   font-weight: 600;
   color: var(--fg);
@@ -86,7 +88,7 @@
  * 1g). Opt-in via class, same convention as article.css's .wt-lede. */
 [data-mode="deep-space"] .wt-deep-article .wt-lede {
   margin: 18px 0 0;
-  font-size: var(--deep-body);
+  font-size: var(--fs-prose-body);
   line-height: 1.9;
   color: var(--muted-72);
 }
@@ -97,7 +99,7 @@
 
 [data-mode="deep-space"] .wt-deep-article p {
   margin: 1.5em 0 0;
-  font-size: var(--deep-body);
+  font-size: var(--fs-prose-body);
   line-height: 1.9;
 }
 
@@ -125,7 +127,7 @@
 [data-mode="deep-space"] .wt-deep-article ol {
   margin: 1.5em 0 0;
   padding-inline-start: 1.4em;
-  font-size: var(--deep-body);
+  font-size: var(--fs-prose-body);
   line-height: 1.9;
 }
 
@@ -151,7 +153,11 @@
 
 /* Inline code — sized relative to surrounding text, per article.css's own
  * `code { font-size: 0.9em }` convention. `:not(pre code)` keeps this off
- * the code inside .wt-code blocks below, which sets its own fixed size. */
+ * the code inside .wt-code blocks below, which sets its own fixed size.
+ * Kept as a literal `em` (not a site-scale.css var): it's a ratio against
+ * whatever font-size it inherits, not a fixed px value, so it isn't part
+ * of the font-size-centralization rule the other rules in this file
+ * follow — same exception article.css itself takes. */
 [data-mode="deep-space"] .wt-deep-article code:not(pre code) {
   font-family: var(--font-mono);
   font-size: 0.9em;
@@ -183,7 +189,7 @@
   padding: 10px 16px;
   border-bottom: var(--line-hairline) solid var(--line-14);
   font-family: var(--font-mono);
-  font-size: var(--deep-caption);
+  font-size: var(--fs-caption);
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--muted-62);
@@ -199,7 +205,7 @@
 [data-mode="deep-space"] .wt-deep-article .wt-code code {
   display: block;
   font-family: var(--font-mono);
-  font-size: 13.5px;
+  font-size: var(--fs-code);
   line-height: 1.8;
   color: var(--fg);
   white-space: pre;
@@ -225,7 +231,7 @@
 [data-mode="deep-space"] .wt-deep-article figcaption {
   margin-top: 0.75em;
   font-family: var(--font-mono);
-  font-size: 13px;
+  font-size: var(--fs-figcaption);
   letter-spacing: 0.04em;
   color: var(--muted-62);
 }
@@ -243,7 +249,7 @@
   align-items: baseline;
   gap: var(--grid, 8px);
   font-family: var(--font-mono);
-  font-size: var(--deep-caption);
+  font-size: var(--fs-caption);
   line-height: 1.5;
   letter-spacing: 0.06em;
   text-transform: uppercase;

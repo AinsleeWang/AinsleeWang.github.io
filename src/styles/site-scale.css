@@ -52,3 +52,22 @@ html body[data-mode="paper"] .wt-article {
   --article-measure: 620px;
   --article-caption: 12px;
 }
+
+/* E-1.3 BUILD/PHOTO/TRAVEL reading pages (design-ref 1f/1g, deep-space
+ * mode). src/styles/prose-deep.css reads ONLY these variables for
+ * font-size — same C2 rule as the ESSAY override above, this file is the
+ * one place a literal px value is allowed to appear.
+ *
+ * --fs-caption (12px: meta-row/tag/code-bar/footer mono text) and
+ * --fs-figcaption (13px: image captions) are deliberately two different
+ * sizes, not a typo — design-ref 1f/1g itself uses 12px everywhere except
+ * the figcaption, which is 13px.
+ */
+:root {
+  --fs-prose-body: 18px; /* 1f/1g body paragraphs + lede */
+  --fs-prose-h1: 40px; /* 1f/1g h1 */
+  --fs-prose-h2: 28px; /* 1f h2 */
+  --fs-caption: 12px; /* 1f/1g meta-row/tag/code-bar/footer mono text */
+  --fs-figcaption: 13px; /* 1g image caption */
+  --fs-code: 13.5px; /* 1f code block text */
+}
