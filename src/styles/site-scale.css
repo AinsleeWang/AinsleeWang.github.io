@@ -71,3 +71,16 @@ html body[data-mode="paper"] .wt-article {
   --fs-figcaption: 13px; /* 1g image caption */
   --fs-code: 13.5px; /* 1f code block text */
 }
+
+/* E-1.3 part 2: /tags/<tag>/ index pages (design-ref 1b, lines 126-129 —
+ * the BUILD list-row style only; 1b's own single-column layout is a
+ * rejected alternative per docs/DECISIONS.md and is NOT implemented).
+ * --fs-tag-row-label reuses the existing 56px-wide mono "BUILD" column;
+ * --fs-tag-row-title is the row's title text, distinct from
+ * --fs-buildlog-title (16px, the sidebar BuildLog card) even though both
+ * render a build post's title, because the full-width tag-page row and the
+ * narrow sidebar card are sized differently in design-ref.
+ */
+:root {
+  --fs-tag-row-title: 17px; /* design-ref 1b line 126-127 */
+}
