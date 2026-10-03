@@ -28,8 +28,10 @@ flagged in `docs/NIGHT-REPORT.md`, never silently re-decided.
 
 - Homepage `/`: `1a` header + hero (deep-space), then the filter bar, then the
   `1c` two-column layout (mixed ESSAY/PHOTO/TRAVEL stream left, sticky BUILD
-  LOG right). Mobile (< 768px): single column in `1b`/`1h` rhythm, BUILD LOG
-  items fold into the stream as compact rows.
+  LOG right). Mobile (< 768px): single column — left-column article stream
+  first, then the BUILD LOG card (not sticky), in that DOM order; it does not
+  fold into the stream as compact rows. (amended 2026-10-04, avoids duplicate
+  DOM)
 - Filter bar = plain links to `/tags/<tag>/` (static pages, no client JS).
   Active item uses `--starglow` (the only starglow besides the logo's last node).
 - Content: Astro content collection `posts`, Markdown. Frontmatter:
