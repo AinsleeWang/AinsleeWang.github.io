@@ -1,0 +1,74 @@
+---
+// EssayLayout — ESSAY reading page (design-ref/wit.et Blog.dc.html 1e,
+// lines 336-374). Paper mode, single column, vendored article.css
+// (wit-et-design-system feat/e4-article-layout) for the long-form prose;
+// src/styles/site-scale.css carries the one allowed C2 override (body
+// 18px / measure 620px / caption 12px, see that file's comment).
+//
+// `.wt-tag`/`.wt-meta-row`/`.wt-meta` come straight from article.css
+// rather than the MonoTag component: MonoTag has no border box around the
+// tag and isn't mode-aware (always --moss-300), so it can't reproduce 1e's
+// bordered tag + paper-mode moss-700 meta text. SiteHeader is reused as
+// specified (glow={false}, the 34x17 inner-page variant + the article nav).
+import type { CollectionEntry } from 'astro:content';
+import type { AstroComponentFactory } from 'astro/runtime/server/index.js';
+import Base from './Base.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import '../styles/vendor/article.css';
+
+export interface Props {
+  post: CollectionEntry<'posts'>;
+  mode: 'paper' | 'deep-space';
+  Content: AstroComponentFactory;
+  // Previous post *tagged essay*, by date — null when this is the oldest
+  // essay (design-ref's footer has no "no previous post" state; per the
+  // brief's "沒有就不顯示", the whole footer is omitted instead).
+  prevEssay: CollectionEntry<'posts'> | null;
+}
+
+const { post, mode, Content, prevEssay } = Astro.props;
+const { title, date, tag, summary, minutes, sample } = post.data;
+
+const formatDate = (d: Date) =>
+  `${d.getUTCFullYear()}.${String(d.getUTCMonth() + 1).padStart(2, '0')}.${String(d.getUTCDate()).padStart(2, '0')}`;
+const dateStr = formatDate(date);
+
+const ARTICLE_NAV = [
+  { label: '索引', href: '/' },
+  { label: '關於', href: '/about/' },
+  { label: 'RSS', href: '/rss.xml' },
+];
+---
+
+<Base title={`${title} — wit.et`} description={summary} mode={mode} noindex={sample}>
+  <div class="container page">
+    <SiteHeader mode={mode} glow={false} nav={ARTICLE_NAV} />
+
+    <article class="wt-article">
+      <div class="wt-meta-row">
+        <span class="wt-tag">{tag}</span>
+        <span class="wt-meta">
+          {dateStr}
+          {minutes != null && ` · ${minutes} MIN`}
+        </span>
+      </div>
+      <h1>{title}</h1>
+      {summary && <p class="wt-lede">{summary}</p>}
+      <hr />
+      <Content />
+      {
+        prevEssay && (
+          <div class="wt-article-footer">
+            <a href={`/posts/${prevEssay.id}/`}>← 上一篇 · {prevEssay.data.title}</a>
+          </div>
+        )
+      }
+    </article>
+  </div>
+</Base>
+
+<style>
+  .page {
+    padding-block: 26px 72px;
+  }
+</style>
