@@ -7,7 +7,7 @@
 # Env vars:
 #   MILESTONE=<name>   default "adhoc" — evidence subfolder name
 #   ROUTES=/,/foo      default "/"     — comma-separated routes to screenshot
-#   SHOOT_SCRIPT=path  default: this session's scratchpad shoot.mjs (see note)
+#   SHOOT_SCRIPT=path  default: scripts/shoot.mjs (Playwright, system Chrome)
 
 set -uo pipefail
 
@@ -17,11 +17,7 @@ cd "$SITE_ROOT"
 MILESTONE="${MILESTONE:-adhoc}"
 ROUTES="${ROUTES:-/}"
 DS_REPO="$SITE_ROOT/../wit-et-design-system"
-# NOTE: this default path is session-scoped (lives under a Claude Code
-# scratchpad tied to one session id) and will NOT exist in a future session.
-# Future callers should pass SHOOT_SCRIPT explicitly, or this repo should
-# vendor its own copy of shoot.mjs + a playwright devDependency.
-SHOOT_SCRIPT="${SHOOT_SCRIPT:-/private/tmp/claude-501/-Users-ufo/a4f74a8c-f942-4309-b955-4bb66972f309/scratchpad/shoot/shoot.mjs}"
+SHOOT_SCRIPT="${SHOOT_SCRIPT:-$SITE_ROOT/scripts/shoot.mjs}"
 
 LOG_DIR="$SITE_ROOT/.evidence/$MILESTONE"
 mkdir -p "$LOG_DIR"
