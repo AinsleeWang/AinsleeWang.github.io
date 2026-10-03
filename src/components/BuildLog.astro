@@ -1,0 +1,116 @@
+---
+// BuildLog — right-column sticky card, per design-ref/wit.et Blog.dc.html
+// 1c lines 232-240. Lists the 5 newest `build`-tagged posts; the header
+// count is the true total of build posts (see docs/pr/E-1.2.md — the
+// design mock's sample count of "6" does not match this repo's 5 real
+// build posts, flagged there rather than hardcoded here).
+import type { CollectionEntry } from 'astro:content';
+
+export interface Props {
+  posts: CollectionEntry<'posts'>[]; // all build posts, sorted newest first
+}
+
+const { posts } = Astro.props;
+const total = posts.length;
+const recent = posts.slice(0, 5);
+
+const formatShortDate = (d: Date) => `${String(d.getUTCMonth() + 1).padStart(2, '0')}.${String(d.getUTCDate()).padStart(2, '0')}`;
+---
+
+<aside class="build-log" aria-label="Build log">
+  <div class="build-log__header">
+    <span>build log</span>
+    <span class="build-log__total">{total}</span>
+  </div>
+  {
+    recent.map((post) => (
+      <a href={`/posts/${post.id}/`} class="build-log__item">
+        <div class="build-log__title">{post.data.title}</div>
+        <div class="build-log__meta">
+          {formatShortDate(post.data.date)}
+          {post.data.minutes != null && <> &middot; {post.data.minutes} MIN</>}
+        </div>
+      </a>
+    ))
+  }
+  <a href="/tags/build/" class="build-log__footer">全部 build …</a>
+</aside>
+
+<style>
+  .build-log {
+    background: var(--space-800);
+    border: 1px solid var(--line-16);
+    border-radius: var(--radius-md);
+    padding: 22px 24px;
+  }
+  .build-log__header {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: var(--fs-meta);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--moss-300);
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--line-16);
+  }
+  .build-log__total {
+    color: var(--muted-62);
+  }
+  .build-log__item {
+    display: block;
+    padding: 13px 0;
+    border-bottom: 1px solid var(--line-10);
+    color: var(--fg);
+  }
+  .build-log__item:hover,
+  .build-log__item:focus-visible {
+    color: var(--functional);
+  }
+  .build-log__title {
+    font-family: var(--font-stack);
+    font-size: var(--fs-buildlog-title);
+    line-height: 1.6;
+  }
+  .build-log__meta {
+    margin-top: 5px;
+    font-family: var(--font-mono);
+    font-size: var(--fs-meta);
+    color: var(--muted-62);
+  }
+  .build-log__footer {
+    display: block;
+    padding-top: 14px;
+    border-top: 1px solid var(--line-16);
+    font-family: var(--font-mono);
+    font-size: var(--fs-meta);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--moss-300);
+  }
+
+  @media (min-width: 768px) {
+    .build-log {
+      position: sticky;
+      top: 24px;
+      align-self: start;
+      margin-top: 34px;
+    }
+  }
+
+  @media (max-width: 767px) {
+    /* 44px touch target, per 1h (e.g. lines 490/507). */
+    .build-log__item,
+    .build-log__footer {
+      min-height: 44px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .build-log__footer {
+      display: flex;
+      align-items: center;
+    }
+  }
+</style>

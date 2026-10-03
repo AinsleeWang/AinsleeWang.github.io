@@ -1,0 +1,58 @@
+---
+// ImageSlot — placeholder box for a missing cover image, per
+// design-ref/wit.et Blog.dc.html (e.g. lines 69-71, 186-189, 199-200).
+// No post in this milestone's seed content has a `cover`; when one does,
+// E-1.3 can branch here to render a real <img> instead of the box.
+//
+// labelPosition exists because the design moves the "IMAGE W:H" label from
+// its default bottom-left to top-right whenever the slot carries a text
+// overlay (1c line 188, the feature photo card) — otherwise the overlay
+// title and the label would collide. The default slot is that overlay; it
+// is empty (and unused) for the plain image cases.
+export interface Props {
+  ratio: string; // CSS aspect-ratio value, e.g. "4/3", "2.4/1", "3/2"
+  label?: string;
+  labelPosition?: 'bottom-left' | 'top-right';
+}
+
+const { ratio, label, labelPosition = 'bottom-left' } = Astro.props;
+const autoLabel = `IMAGE ${ratio.replace('/', ':')}`;
+---
+
+<div
+  class={`image-slot image-slot--label-${labelPosition}`}
+  style={`aspect-ratio:${ratio}`}
+>
+  <slot />
+  <span class="image-slot__label">{label ?? autoLabel}</span>
+</div>
+
+<style>
+  .image-slot {
+    position: relative;
+    width: 100%;
+    background: var(--space-800);
+    border: 1px solid var(--line-18);
+    border-radius: var(--radius-sm);
+  }
+  .image-slot:has(> :not(.image-slot__label)) {
+    display: flex;
+    align-items: flex-end;
+    padding: 22px;
+  }
+  .image-slot__label {
+    position: absolute;
+    font-family: var(--font-mono);
+    font-size: var(--fs-meta);
+    letter-spacing: 0.06em;
+    color: var(--label-70);
+  }
+  .image-slot--label-bottom-left .image-slot__label {
+    left: 12px;
+    bottom: 10px;
+  }
+  .image-slot--label-top-right .image-slot__label {
+    right: 12px;
+    top: 10px;
+  }
+</style>
