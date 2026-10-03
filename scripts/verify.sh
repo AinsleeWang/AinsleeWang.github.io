@@ -33,6 +33,9 @@ echo "CHECK exit=$CHECK_EXIT (log: $LOG_DIR/check.log)"
 [ "$CHECK_EXIT" -ne 0 ] && FAILS+=("check")
 
 # 2. astro build
+# The content layer caches rendered Markdown and does not invalidate it when
+# remark/rehype plugins change, so always build from a clean cache.
+rm -rf "$SITE_ROOT/.astro" "$SITE_ROOT/node_modules/.astro"
 npm run build > "$LOG_DIR/build.log" 2>&1
 BUILD_EXIT=$?
 echo "BUILD exit=$BUILD_EXIT (log: $LOG_DIR/build.log)"
@@ -77,6 +80,9 @@ cleanup() {
     kill "$PREVIEW_PID" 2>/dev/null || true
     wait "$PREVIEW_PID" 2>/dev/null || true
   fi
+  # npx forks the real server as a child, so killing the wrapper PID can
+  # leave it listening; ask astro to stop it as well.
+  npx astro preview stop > /dev/null 2>&1 || true
 }
 trap cleanup EXIT
 
