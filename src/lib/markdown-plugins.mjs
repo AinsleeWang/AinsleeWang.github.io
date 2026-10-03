@@ -18,9 +18,8 @@ function walk(node, visit, parent, index) {
 }
 
 // BUILD pages (design-ref 1f) show a bar above each code block with the
-// fence's language and a static "copy" label (copy-to-clipboard itself
-// needs client JS, which this milestone doesn't add — see docs/pr/E-1.3.md
-// Part 2 note). Scoped to `tag: build` via the frontmatter Astro exposes
+// fence's language. The design's "copy" label is omitted until a
+// copy-to-clipboard script exists — an inert label would mislead. Scoped to `tag: build` via the frontmatter Astro exposes
 // on the vfile, so ESSAY/PHOTO pages — which never show this bar in the
 // design — are untouched even if a future post puts a code fence there.
 export function rehypeCodeBar() {
@@ -47,7 +46,6 @@ export function rehypeCodeBar() {
         properties: { className: ['wt-code-bar'] },
         children: [
           { type: 'element', tagName: 'span', properties: {}, children: [{ type: 'text', value: lang }] },
-          { type: 'element', tagName: 'span', properties: {}, children: [{ type: 'text', value: 'copy' }] },
         ],
       };
       const wrapper = {
