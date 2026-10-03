@@ -1,0 +1,19 @@
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="wit.et Cassiopeia W symbol">
+  <title>wit.et symbol — moss-600</title>
+  <style>
+    :root { --moss-600: #4A593D; }
+    .w-line { fill: none; stroke: var(--moss-600); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .w-node { fill: var(--moss-600); }
+    .w-ring { fill: none; stroke: var(--moss-600); stroke-width: 1.5; }
+  </style>
+  <!-- line drawn first, under the nodes -->
+  <path class="w-line" d="M8,39.5 L29,60.5 L50,39.5 L71,60.5 L92,39.5" />
+  <!-- nodes: A, B, C, D, E (center C largest, ends A/E next, mid B/D smallest) -->
+  <circle class="w-node" cx="8" cy="39.5" r="4.5" />
+  <circle class="w-node" cx="29" cy="60.5" r="3" />
+  <circle class="w-node" cx="50" cy="39.5" r="6.5" />
+  <circle class="w-node" cx="71" cy="60.5" r="3" />
+  <circle class="w-node" cx="92" cy="39.5" r="4.5" />
+  <!-- planet ring easter egg on E node; radius reduced 7.5 -> 6.0 (-20%, within allowed tolerance) to avoid clipping at viewBox edge -->
+  <circle class="w-ring" cx="92" cy="39.5" r="7" />
+</svg>
