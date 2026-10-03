@@ -90,7 +90,13 @@ const navColor = mode === 'paper' ? 'var(--moss-700)' : 'var(--moss-300)';
   }
 
   @media (max-width: 767px) {
-    /* 44px touch target, per 1h (e.g. lines 490/507). */
+    /* 44px touch target, per 1h (e.g. lines 490/507). Scoped to the mobile
+       media query only — min-height is a floor, and .site-header already
+       centers its children vertically, so this doesn't shift the logo's
+       position or change its rendered height at 1280px. */
+    .site-header__brand {
+      min-height: 44px;
+    }
     .site-header__nav a {
       display: flex;
       align-items: center;
