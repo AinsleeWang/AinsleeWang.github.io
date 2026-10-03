@@ -35,3 +35,48 @@ body {
   color: var(--fg);
   font-family: var(--font-stack);
 }
+
+/* Alpha colors used across the deep-space homepage (E-1.2). The design ref
+   (design-ref/wit.et Blog.dc.html) writes these as raw alpha-color literals;
+   docs/DECISIONS.md C3 requires color-mix(in srgb, var(--token) N%, transparent)
+   instead, named once here rather than repeated per component.
+   Conversion (moss-300 r157 g180 b141, starlight r234 g237 b232,
+   space-950 r11 g16 b38): moss-300 alpha -> --moss-300; starlight alpha ->
+   --starlight; space-950 alpha -> --space-950. */
+:root {
+  --line-10: color-mix(in srgb, var(--moss-300) 10%, transparent);
+  --line-16: color-mix(in srgb, var(--moss-300) 16%, transparent);
+  --line-18: color-mix(in srgb, var(--moss-300) 18%, transparent);
+  --line-22: color-mix(in srgb, var(--moss-300) 22%, transparent);
+  --label-70: color-mix(in srgb, var(--moss-300) 70%, transparent);
+  --muted-62: color-mix(in srgb, var(--starlight) 62%, transparent);
+  --muted-66: color-mix(in srgb, var(--starlight) 66%, transparent);
+  /* Paper-mode equivalent, for SiteHeader's paper variant (reused by E-1.3
+     article pages; not exercised on this deep-space-only homepage). */
+  --line-paper-12: color-mix(in srgb, var(--space-950) 12%, transparent);
+}
+
+/* Page container: shared left/right padding + max-width per E-1.2 brief. */
+.container {
+  max-width: 1280px;
+  margin-inline: auto;
+  padding-inline: 72px;
+}
+
+@media (max-width: 767px) {
+  .container {
+    padding-inline: 20px;
+  }
+}
+
+/* Visible hover/focus-visible state for all links (brief: "連結的 hover／
+   focus-visible 狀態要看得見"). Components may layer additional styling
+   (e.g. PostCard's whole-card link) on top of this baseline. */
+a:hover {
+  color: var(--functional);
+}
+a:focus-visible {
+  outline: 2px solid var(--functional);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}

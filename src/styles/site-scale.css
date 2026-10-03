@@ -1,0 +1,26 @@
+/* site-scale.css — font-size scale for the wit.et site (E-1.2 landing).
+ *
+ * These values come straight off design-ref/wit.et Blog.dc.html artboards
+ * 1a/1c/1h, NOT off the brand brief's §3.2 type scale (Body 16/1.75,
+ * Caption 13 mono). docs/DECISIONS.md C2 is the record of that conflict and
+ * names this file as the single, intentional override point: components
+ * under src/components/ read ONLY these variables for font-size, never a
+ * literal px value and never the brief's §3.2 numbers directly.
+ *
+ * If the brief scale is ever restored, this file is the one place to edit.
+ */
+:root {
+  --fs-hero: 64px; /* 1a hero title, line 57 */
+  --fs-hero-mobile: 40px; /* no mobile hero spec in design-ref (1h follows 1b,
+    which has no hero); judgment call to keep the hero but shrink it rather
+    than drop the section — see docs/pr/E-1.2.md */
+  --fs-hero-sub: 18px; /* 1a hero subtitle, line 58 */
+  --fs-logo: 19px; /* 1a header wordmark, line 48 */
+  --fs-nav: 12px; /* header nav + filter bar items, lines 50/61 */
+  --fs-feature-title: 28px; /* 1c feature photo card overlay title, line 187 */
+  --fs-card-title-lg: 34px; /* 1c essay card title, line 194 */
+  --fs-card-title: 26px; /* 1c photo/travel 300px-image card title, lines 203/217 */
+  --fs-summary: 17px; /* 1c card summary paragraph, line 195 */
+  --fs-meta: 11px; /* mono tag / date / MIN / FRAMES rows throughout 1c */
+  --fs-buildlog-title: 16px; /* BUILD LOG item title, line 234 */
+}
