@@ -7,9 +7,12 @@ export interface Props {
   title: string;
   description?: string;
   mode: 'paper' | 'deep-space';
+  // E-1.3: seed posts carry `sample: true` (docs/DECISIONS.md) — their
+  // reading pages render but shouldn't be indexed until real content lands.
+  noindex?: boolean;
 }
 
-const { title, description, mode } = Astro.props;
+const { title, description, mode, noindex = false } = Astro.props;
 ---
 
 <!doctype html>
@@ -20,6 +23,7 @@ const { title, description, mode } = Astro.props;
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
     {description && <meta name="description" content={description} />}
+    {noindex && <meta name="robots" content="noindex" />}
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
