@@ -6,6 +6,11 @@ import { rehypeCodeBar, rehypeFigureImages } from './src/lib/markdown-plugins.mj
 // https://astro.build/config
 export default defineConfig({
   output: 'static',
+  // [TBD] 正式網域未知 — @astrojs/rss needs an absolute `site` to build
+  // item/channel links. SITE_URL lets CI/deploy set the real domain later
+  // without a code change; localhost is just so `npm run build` and
+  // scripts/verify.sh work tonight.
+  site: process.env.SITE_URL ?? 'http://localhost:4321',
   markdown: {
     // Shiki (Astro's default) inlines literal hex colors into the HTML
     // output; qa/color_audit.py and scripts/verify.sh's raw-color grep

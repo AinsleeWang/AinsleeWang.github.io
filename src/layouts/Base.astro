@@ -21,6 +21,7 @@ const { title, description, mode, noindex = false } = Astro.props;
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate" type="application/rss+xml" title="wit.et" href="/rss.xml" />
     <title>{title}</title>
     {description && <meta name="description" content={description} />}
     {noindex && <meta name="robots" content="noindex" />}
