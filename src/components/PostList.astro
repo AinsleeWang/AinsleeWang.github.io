@@ -1,0 +1,130 @@
+---
+// PostList — the numbered contents list and its end line, shared by the
+// home page and the tag pages. Each row is one link.
+import type { Post } from '../lib/posts';
+import { formatDate } from '../lib/posts';
+import { TAG_LABEL } from '../lib/labels';
+import Lat from './Lat.astro';
+import Mixed from './Mixed.astro';
+
+export interface Props {
+  posts: Post[];
+  numbers: Map<string, string>;
+}
+
+const { posts, numbers } = Astro.props;
+---
+
+<section class="toc" aria-label="文章列表">
+  {
+    posts.map((post) => {
+      const { title, summary, date, tag, location } = post.data;
+      return (
+        <a class="row" href={`/posts/${post.id}/`}>
+          <div class="no">
+            <Lat>{numbers.get(post.id)}</Lat>
+          </div>
+          <div>
+            <p class="line">{summary ?? title}</p>
+            {summary && <p class="title">{title}</p>}
+          </div>
+          <p class="meta">
+            <Lat>{formatDate(date)}</Lat>
+            <small>
+              {TAG_LABEL[tag]}
+              {location && (
+                <>
+                  {'　'}
+                  <Mixed text={location} />
+                </>
+              )}
+            </small>
+          </p>
+        </a>
+      );
+    })
+  }
+  <p class="end">清單還在寫 ⋯</p>
+</section>
+
+<style>
+  .toc {
+    padding: 14px 0 40px;
+  }
+  .row {
+    display: grid;
+    grid-template-columns: 110px 1fr 220px;
+    gap: 36px;
+    align-items: baseline;
+    padding: 38px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  /* Numbers are Lat (italic Garamond); size and colour come from here. */
+  .no {
+    font-size: var(--fs-no);
+    line-height: 1;
+    color: var(--moss-600);
+  }
+  .no :global(i.l) {
+    font-size: inherit;
+  }
+  .line {
+    font-family: var(--zh);
+    font-weight: 700;
+    font-size: var(--fs-row-line);
+    line-height: 1.4;
+    letter-spacing: 0.03em;
+    text-wrap: balance;
+  }
+  .title {
+    margin-top: 10px;
+    font-family: var(--zh);
+    font-weight: 400;
+    font-size: var(--fs-row-title);
+    line-height: 1.6;
+    letter-spacing: 0.04em;
+    color: var(--ink-70);
+  }
+  .row .meta {
+    margin: 0;
+    text-align: right;
+  }
+  .row .meta > :global(i.l) {
+    font-size: var(--fs-row-date);
+  }
+  .row small {
+    display: block;
+    font-size: var(--fs-row-small);
+    letter-spacing: 0.14em;
+    color: var(--ink-50);
+    margin-top: 8px;
+  }
+  .row:hover .line {
+    color: var(--moss-700);
+  }
+  .end {
+    padding: 34px 0 10px;
+    text-align: center;
+    font-family: var(--zh);
+    font-size: var(--fs-end);
+    letter-spacing: 0.3em;
+    color: var(--ink-50);
+  }
+
+  @media (max-width: 820px) {
+    .row {
+      grid-template-columns: 1fr;
+      gap: 10px;
+      padding: 28px 0;
+    }
+    .no {
+      font-size: var(--fs-no-m);
+    }
+    .line {
+      font-size: var(--fs-row-line-m);
+    }
+    .row .meta {
+      text-align: left;
+    }
+  }
+</style>

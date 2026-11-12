@@ -41,3 +41,41 @@ export function adjacentPosts(post: Post, all: Post[]): { older: Post | null; ne
   if (i === -1) return { older: null, newer: null };
   return { newer: sameTag[i - 1] ?? null, older: sameTag[i + 1] ?? null };
 }
+
+export function formatDate(d: Date): string {
+  return `${d.getUTCFullYear()}.${String(d.getUTCMonth() + 1).padStart(2, '0')}.${String(d.getUTCDate()).padStart(2, '0')}`;
+}
+
+// A post's number is its ordinal among all published posts by date
+// (oldest = 01), so it never changes when newer posts are added to a tag
+// page or the home list. `all` must be sorted new -> old.
+export function postNumbers(all: Post[]): Map<string, string> {
+  return new Map(all.map((p, i) => [p.id, String(all.length - i).padStart(2, '0')]));
+}
+
+// First ~110 characters of the body as plain text, cut at a sentence end
+// where possible. Markdown marks, code, images, headings, quotes and the
+// `---` credit block are dropped.
+export function excerpt(post: Post, target = 110): string {
+  const lines = (post.body ?? '')
+    .replace(/```[\s\S]*?```|~~~[\s\S]*?~~~/g, '')
+    .split('\n')
+    .map((l) => l.trim())
+    .filter((l) => l && !/^(#|>|!\[|[-*_]{3,}$|<|\|)/.test(l) && !/^▌/.test(l));
+  const text = lines
+    .map((l) =>
+      l
+        .replace(/^([-*+]|\d+\.)\s+/, '')
+        .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
+        .replace(/[*_`]+/g, ''),
+    )
+    .join('')
+    .replace(/\s+/g, ' ');
+  if (text.length <= target) return text;
+  const head = text.slice(0, target + 1);
+  const cut = Math.max(head.lastIndexOf('。'), head.lastIndexOf('！'), head.lastIndexOf('？'));
+  if (cut >= target * 0.5) return text.slice(0, cut + 1);
+  const after = text.slice(target).search(/[。！？]/);
+  if (after !== -1 && after <= 40) return text.slice(0, target + after + 1);
+  return `${text.slice(0, target)}⋯`;
+}
