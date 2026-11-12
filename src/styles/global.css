@@ -21,7 +21,7 @@ svg {
 :root {
   --ink: var(--space-950);
   --ink-70: color-mix(in srgb, var(--space-950) 70%, transparent);
-  --ink-50: color-mix(in srgb, var(--space-950) 50%, transparent);
+  --ink-60: color-mix(in srgb, var(--space-950) 60%, transparent); /* secondary text: 4.5:1 on paper */
   --ink-62: color-mix(in srgb, var(--space-950) 62%, transparent); /* code comments */
   --rule: color-mix(in srgb, var(--space-950) 14%, transparent);
   --rule-strong: color-mix(in srgb, var(--space-950) 80%, transparent);

@@ -157,7 +157,7 @@
   font-size: var(--fs-credit);
   line-height: 1.9;
   letter-spacing: 0.08em;
-  color: var(--ink-50);
+  color: var(--ink-60);
 }
 
 /* ---- ordered list: steps with Garamond italic numerals ---- */
@@ -239,7 +239,7 @@
   font-size: var(--fs-code-bar);
   line-height: 1.7; /* taller than the button, so adding it moves nothing */
   letter-spacing: 0.06em;
-  color: var(--ink-50);
+  color: var(--ink-60);
 }
 
 /* The button is added by Enhance.astro's script, so it only exists where it
@@ -338,7 +338,7 @@
   font-family: var(--zh);
   font-size: var(--fs-out-label);
   letter-spacing: 0.2em;
-  color: var(--ink-50);
+  color: var(--ink-60);
 }
 
 .out pre {
@@ -471,7 +471,7 @@
   display: grid;
   grid-template-columns: 26px 1fr;
   padding: 5px 0;
-  color: var(--ink-50);
+  color: var(--ink-60);
 }
 
 .tocm a i,
