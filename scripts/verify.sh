@@ -33,6 +33,9 @@ echo "CHECK exit=$CHECK_EXIT (log: $LOG_DIR/check.log)"
 [ "$CHECK_EXIT" -ne 0 ] && FAILS+=("check")
 
 # 2. astro build
+# The content layer caches rendered Markdown and does not invalidate it when
+# remark/rehype plugins change, so always build from a clean cache.
+rm -rf "$SITE_ROOT/.astro" "$SITE_ROOT/node_modules/.astro"
 npm run build > "$LOG_DIR/build.log" 2>&1
 BUILD_EXIT=$?
 echo "BUILD exit=$BUILD_EXIT (log: $LOG_DIR/build.log)"
@@ -69,7 +72,21 @@ else
   echo "RAW_COLOR_GREP exit=0"
 fi
 
-# 5. screenshots — start preview, shoot each route at 375/768/1280, check for
+# 5. internal link check — every href/src in dist/ resolves to a real file
+# (see scripts/check-links.mjs's own ALLOWLIST for the two known-404 E-1.4
+# routes it deliberately skips).
+if [ "$BUILD_EXIT" -eq 0 ]; then
+  node "$SITE_ROOT/scripts/check-links.mjs" "$SITE_ROOT/dist" > "$LOG_DIR/check-links.log" 2>&1
+  LINKS_EXIT=$?
+  cat "$LOG_DIR/check-links.log"
+  echo "LINKS exit=$LINKS_EXIT (log: $LOG_DIR/check-links.log)"
+  [ "$LINKS_EXIT" -ne 0 ] && FAILS+=("links")
+else
+  echo "LINKS exit=skipped (build failed)"
+  FAILS+=("links-skipped-build-failed")
+fi
+
+# 6. screenshots — start preview, shoot each route at 375/768/1280, check for
 # horizontal overflow, stop preview.
 PREVIEW_PID=""
 cleanup() {
@@ -77,6 +94,9 @@ cleanup() {
     kill "$PREVIEW_PID" 2>/dev/null || true
     wait "$PREVIEW_PID" 2>/dev/null || true
   fi
+  # npx forks the real server as a child, so killing the wrapper PID can
+  # leave it listening; ask astro to stop it as well.
+  npx astro preview stop > /dev/null 2>&1 || true
 }
 trap cleanup EXIT
 

@@ -1,0 +1,101 @@
+---
+// PhotoLayout — PHOTO/TRAVEL reading page (design-ref/wit.et Blog.dc.html
+// 1g, lines 431-464). Deep-space mode, shared by both tags. Title block is
+// capped at 820px; images (the cover ImageSlot placeholder, and any
+// standalone markdown image turned into a <figure> by
+// src/lib/markdown-plugins.mjs's rehypeFigureImages) run the full content
+// width; body paragraphs are capped at 620px like the design-ref's closing
+// paragraph (line 460).
+//
+// None of this milestone's seed posts set `cover`, so the `post.data.cover`
+// branch below is implemented per the brief but unexercised by
+// scripts/verify.sh's three sample routes — flagged in docs/pr/E-1.3.md.
+import type { CollectionEntry } from 'astro:content';
+import type { AstroComponentFactory } from 'astro/runtime/server/index.js';
+import Base from './Base.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import ImageSlot from '../components/ImageSlot.astro';
+import '../styles/prose-deep.css';
+
+export interface Props {
+  post: CollectionEntry<'posts'>;
+  mode: 'paper' | 'deep-space';
+  Content: AstroComponentFactory;
+}
+
+const { post, mode, Content } = Astro.props;
+const { title, date, tag, summary, frames, location, cover, sample } = post.data;
+
+const formatDate = (d: Date) =>
+  `${d.getUTCFullYear()}.${String(d.getUTCMonth() + 1).padStart(2, '0')}.${String(d.getUTCDate()).padStart(2, '0')}`;
+
+const metaParts = [formatDate(date)];
+if (location) metaParts.push(location);
+if (frames != null) metaParts.push(`${frames} FRAMES`);
+
+const moreHref = `/tags/${tag}/`;
+const moreLabel = tag === 'photo' ? '← 更多 photo' : '← 更多 travel';
+
+const ARTICLE_NAV = [
+  { label: '索引', href: '/' },
+  { label: '關於', href: '/about/' },
+  { label: 'RSS', href: '/rss.xml' },
+];
+---
+
+<Base title={`${title} — wit.et`} description={summary} mode={mode} noindex={sample}>
+  <div class="container page">
+    <SiteHeader mode={mode} glow={false} nav={ARTICLE_NAV} />
+
+    <article class="wt-deep-article">
+      <div class="wt-photo-head">
+        <div class="wt-meta-row">
+          <span class="wt-tag">{tag}</span>
+          <span class="wt-meta">{metaParts.join(' · ')}</span>
+        </div>
+        <h1>{title}</h1>
+        {summary && <p class="wt-lede">{summary}</p>}
+      </div>
+
+      <div class="wt-photo-cover">
+        {cover ? <img src={cover} alt={title} /> : <ImageSlot ratio="16/9" />}
+      </div>
+
+      <div class="wt-photo-body">
+        <Content />
+      </div>
+
+      <div class="wt-article-footer">
+        <a href={moreHref}>{moreLabel}</a>
+      </div>
+    </article>
+  </div>
+</Base>
+
+<style>
+  .page {
+    padding-block: 26px 64px;
+  }
+
+  .wt-photo-head {
+    max-width: 820px;
+    padding-top: 44px;
+  }
+
+  .wt-photo-cover {
+    margin-top: 30px;
+  }
+
+  .wt-photo-body {
+    margin-top: 44px;
+  }
+</style>
+
+<style is:global>
+  /* .wt-photo-body wraps <Content />'s output (not authored directly in
+     this file's template), so — same reasoning as BuildLayout's .wt-code
+     rules — this needs is:global rather than a scoped selector. */
+  .wt-photo-body p {
+    max-width: 620px;
+  }
+</style>

@@ -24,3 +24,63 @@
   --fs-meta: 11px; /* mono tag / date / MIN / FRAMES rows throughout 1c */
   --fs-buildlog-title: 16px; /* BUILD LOG item title, line 234 */
 }
+
+/* E-1.3 ESSAY reading page (design-ref 1e) vs. the vendored article.css
+ * (wit-et-design-system, feat/e4-article-layout). article.css defaults to
+ * the brand brief's §3.2 type scale (Body 16/1.75, Caption 13 mono); the
+ * draft (design-ref 1e, lines 345/350-351) uses Body 18/1.9 and 12px mono
+ * meta. docs/DECISIONS.md C2 resolves this in favor of the draft and names
+ * this file as the single override point — components/layouts read these
+ * custom properties (or article.css's own, which these redefine), never a
+ * literal font-size.
+ *
+ * --article-measure: article.css's own default is `36em` (relative,
+ * ~36 CJK characters per line); 1e measures 620px flat at the 1280px
+ * artboard width, so this pins it to that exact value.
+ *
+ * Selector: `html body[data-mode="paper"] .wt-article` rather than the
+ * bare `[data-mode="paper"] .wt-article` article.css itself uses. Same
+ * specificity + later-in-cascade isn't reliable here — Vite's CSS bundling
+ * order across astro component imports doesn't guarantee this file's
+ * <link> lands after article.css's — so the two extra type selectors
+ * (html, body; both legitimately in the element's ancestor chain, since
+ * Base.astro sets data-mode on <body>) give this rule strictly higher
+ * specificity instead, which wins regardless of source order.
+ */
+html body[data-mode="paper"] .wt-article {
+  --article-body: 18px;
+  --article-measure: 620px;
+  --article-caption: 12px;
+}
+
+/* E-1.3 BUILD/PHOTO/TRAVEL reading pages (design-ref 1f/1g, deep-space
+ * mode). src/styles/prose-deep.css reads ONLY these variables for
+ * font-size — same C2 rule as the ESSAY override above, this file is the
+ * one place a literal px value is allowed to appear.
+ *
+ * --fs-caption (12px: meta-row/tag/code-bar/footer mono text) and
+ * --fs-figcaption (13px: image captions) are deliberately two different
+ * sizes, not a typo — design-ref 1f/1g itself uses 12px everywhere except
+ * the figcaption, which is 13px.
+ */
+:root {
+  --fs-prose-body: 18px; /* 1f/1g body paragraphs + lede */
+  --fs-prose-h1: 40px; /* 1f/1g h1 */
+  --fs-prose-h2: 28px; /* 1f h2 */
+  --fs-caption: 12px; /* 1f/1g meta-row/tag/code-bar/footer mono text */
+  --fs-figcaption: 13px; /* 1g image caption */
+  --fs-code: 13.5px; /* 1f code block text */
+}
+
+/* E-1.3 part 2: /tags/<tag>/ index pages (design-ref 1b, lines 126-129 —
+ * the BUILD list-row style only; 1b's own single-column layout is a
+ * rejected alternative per docs/DECISIONS.md and is NOT implemented).
+ * --fs-tag-row-label reuses the existing 56px-wide mono "BUILD" column;
+ * --fs-tag-row-title is the row's title text, distinct from
+ * --fs-buildlog-title (16px, the sidebar BuildLog card) even though both
+ * render a build post's title, because the full-width tag-page row and the
+ * narrow sidebar card are sized differently in design-ref.
+ */
+:root {
+  --fs-tag-row-title: 17px; /* design-ref 1b line 126-127 */
+}

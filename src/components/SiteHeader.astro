@@ -10,9 +10,20 @@
 export interface Props {
   mode: 'paper' | 'deep-space';
   glow?: boolean;
+  // E-1.3 article pages use "索引 / 關於 / rss" instead of the homepage's
+  // "關於 / Projects / RSS" (design-ref 1e/1f/1g lines 345/383/429 vs 1a
+  // line 50) — same header, different nav items, so it's a prop rather
+  // than a second component.
+  nav?: { label: string; href: string }[];
 }
 
-const { mode, glow = true } = Astro.props;
+const DEFAULT_NAV = [
+  { label: '關於', href: '/about/' },
+  { label: 'Projects', href: '/projects/' },
+  { label: 'RSS', href: '/rss.xml' },
+];
+
+const { mode, glow = true, nav = DEFAULT_NAV } = Astro.props;
 const lineColor = mode === 'paper' ? 'var(--moss-600)' : 'var(--moss-300)';
 const navColor = mode === 'paper' ? 'var(--moss-700)' : 'var(--moss-300)';
 ---
@@ -44,9 +55,7 @@ const navColor = mode === 'paper' ? 'var(--moss-700)' : 'var(--moss-300)';
     <span class="site-header__wordmark">wit.et</span>
   </a>
   <nav class="site-header__nav" aria-label="主導覽">
-    <a href="/about/">關於</a>
-    <a href="/projects/">Projects</a>
-    <a href="/rss.xml">RSS</a>
+    {nav.map((item) => <a href={item.href}>{item.label}</a>)}
   </nav>
 </header>
 
