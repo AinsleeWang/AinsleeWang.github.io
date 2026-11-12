@@ -1,16 +1,21 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
+import sitemap from '@astrojs/sitemap';
 import { unified } from '@astrojs/markdown-remark';
 import { rehypeEditorial, shikiMetaTransformer } from './src/lib/markdown-plugins.mjs';
 
 // https://astro.build/config
 export default defineConfig({
   output: 'static',
-  // [TBD] 正式網域未知 — @astrojs/rss needs an absolute `site` to build
-  // item/channel links. SITE_URL lets CI/deploy set the real domain later
-  // without a code change; localhost is just so `npm run build` and
-  // scripts/verify.sh work tonight.
-  site: process.env.SITE_URL ?? 'http://localhost:4321',
+  // User site at the root, no base. SITE_URL overrides it (local previews, forks).
+  site: process.env.SITE_URL ?? 'https://ainsleewang.github.io',
+  // Sample posts are absent from production builds (src/lib/posts.ts), so the
+  // sitemap never sees them. Tag pages and /404 are left out (list views, not content).
+  integrations: [
+    sitemap({
+      filter: (page) => !page.includes('/tags/') && !page.endsWith('/404/') && !page.endsWith('/404.html'),
+    }),
+  ],
   markdown: {
     // Shiki's stock themes inline literal hex colors into the HTML, which
     // the color audit (docs/DECISIONS.md C3) forbids. The built-in
