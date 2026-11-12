@@ -1,0 +1,149 @@
+---
+// About (docs/EDITORIAL-SPEC.md section 6): the reading layout, no date, no
+// reading time, no prev/next. Copy is locked in
+// design-ref/editorial/pages-copy.md; do not paraphrase.
+import Base from '../layouts/Base.astro';
+import ReadingHead from '../components/ReadingHead.astro';
+import Lat from '../components/Lat.astro';
+import { TAG_LABEL, TAGS } from '../lib/labels';
+import '../styles/article.css';
+
+const TAG_NOTE: Record<(typeof TAGS)[number], string> = {
+  essay: '把一件事想清楚之後，留下來的紀錄。',
+  build: '做東西的過程，和中途學到的小事。',
+  photo: '照片，以及按下快門的那個當下。',
+  travel: '在路上。',
+};
+---
+
+<Base
+  title="關於 — wit.et"
+  description="才智，以及其他。wit.et 是一張永遠沒寫完的清單——程式、文字、照片、路上。"
+  current="about"
+  rule
+  bleed
+>
+  <main id="main">
+    <div class="wrap">
+      <ReadingHead kicker="關於" title="wit, et cetera." latin />
+    </div>
+
+    <div class="band">
+      <div class="wrap">
+        <p>興趣雜得像一張永遠寫不完的清單。</p>
+      </div>
+    </div>
+
+    <div class="wrap">
+      <div class="layout">
+        <article class="prose">
+          <h2>et，是「以及」</h2>
+          <p>wit.et 讀作 wit, et cetera——才智，以及其他。</p>
+          <p>
+            拉丁文的 <Lat>et</Lat> 只是一個連接詞。把它放進名字裡，是因為想寫的東西從來收不進單一個分類：程式、文字、照片、路上看到的事。與其假裝它們有共同的主題，不如承認，清單本身就是主題。
+          </p>
+          <p>
+            <Lat>et</Lat> 也讓人想到另一個 E.T.。對外面的世界，也對心裡那塊還沒去過的地方，保持一點外星訪客式的好奇——不預設看得懂，所以看得比較仔細。
+          </p>
+
+          <h2>這裡會出現什麼</h2>
+          <p>四個標籤，一條時間流。</p>
+          <dl class="kv">
+            {
+              TAGS.map((tag) => (
+                <div>
+                  <dt>
+                    <a href={`/tags/${tag}/`}>{TAG_LABEL[tag]}</a>
+                  </dt>
+                  <dd>{TAG_NOTE[tag]}</dd>
+                </div>
+              ))
+            }
+          </dl>
+          <p>清單還在寫。分類以後可能變多，也可能不會。</p>
+
+          <h2>這個網站是怎麼做的</h2>
+          <p>
+            整個網站只用一種紙：米白底、明體字，想做成一本攤開來讀的雜誌。中文是 Noto Serif TC，英文和數字是 EB Garamond，程式碼是 JetBrains Mono。顏色、字級和間距都來自同一份 design tokens。
+          </p>
+          <p>
+            用 Astro 建置，<a href="https://github.com/AinsleeWang/AinsleeWang.github.io" rel="noopener"
+              >原始碼公開在 GitHub</a
+            >。
+          </p>
+
+          <h2>找到我</h2>
+          <dl class="kv kv--find">
+            <div>
+              <dt><Lat>github</Lat></dt>
+              <dd>
+                <a href="https://github.com/AinsleeWang" rel="me noopener">github.com/AinsleeWang</a>
+              </dd>
+            </div>
+            <div>
+              <dt><Lat>instagram</Lat></dt>
+              <dd>
+                <a href="https://www.instagram.com/wit.etcetera/" rel="me noopener">@wit.etcetera</a>
+              </dd>
+            </div>
+          </dl>
+
+          <hr />
+          <p class="close" lang="en">
+            wit.et is a list that never finishes — code, words, photographs, the road. <em>Et</em> means "and". The rest
+            is et cetera.
+          </p>
+        </article>
+      </div>
+    </div>
+  </main>
+</Base>
+
+<style>
+  .kv {
+    margin-top: 1.5em;
+  }
+  .kv > div {
+    display: grid;
+    grid-template-columns: 5.5em 1fr;
+    gap: 1.2em;
+    align-items: center;
+    min-height: 44px;
+    padding: 0.5em 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .kv > div:first-child {
+    border-top: 1px solid var(--rule);
+  }
+  .kv dt {
+    font-weight: 700;
+  }
+  .kv dd {
+    margin: 0;
+  }
+  .kv--find > div {
+    grid-template-columns: 7em 1fr;
+  }
+  .kv--find dt {
+    font-weight: 400;
+  }
+  .kv a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+  .prose .kv + p {
+    margin-top: 1.5em;
+  }
+  .prose .close {
+    font-family: var(--en);
+    font-style: italic;
+    font-size: var(--fs-close-en);
+    line-height: 1.6;
+    letter-spacing: 0;
+    text-align: left;
+  }
+  .close em {
+    font-style: normal;
+  }
+</style>

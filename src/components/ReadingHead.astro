@@ -7,29 +7,37 @@ import { TAG_LABEL } from '../lib/labels';
 import Lat from './Lat.astro';
 import Mixed from './Mixed.astro';
 
+// Without `post` the head is a plain page head (kicker + h1 only, used by
+// 關於); `latin` sets a Latin-only h1 in Garamond italic.
 export interface Props {
-  post: Post;
+  post?: Post;
+  kicker?: string;
+  title?: string;
+  latin?: boolean;
 }
 
-const { post } = Astro.props;
-const { title, date, tag, location } = post.data;
+const { post, latin = false } = Astro.props;
+const kicker = post ? TAG_LABEL[post.data.tag] : Astro.props.kicker;
+const title = post ? post.data.title : Astro.props.title;
 ---
 
 <div class="head">
-  <div class="kick">{TAG_LABEL[tag]}</div>
-  <h1>{title}</h1>
-  <p class="meta">
-    <span>
-      <Lat>{formatDate(date)}</Lat>
-      {location && (
-        <>
-          {'　'}
-          <Mixed text={location} />
-        </>
+  <div class="kick">{kicker}</div>
+  <h1 class={latin ? 'latin' : undefined}>{title}</h1>
+  {post && (
+    <p class="meta">
+      <span>
+        <Lat>{formatDate(post.data.date)}</Lat>
+        {post.data.location && (
+          <>
+            {'　'}
+            <Mixed text={post.data.location} />
+          </>
       )}
     </span>
     <span>約 <Lat>{readingMinutes(post)}</Lat> 分鐘</span>
   </p>
+  )}
 </div>
 
 <style>
@@ -45,6 +53,12 @@ const { title, date, tag, location } = post.data;
     line-height: 1.36;
     letter-spacing: 0.02em;
     text-wrap: balance;
+  }
+  h1.latin {
+    font-family: var(--en);
+    font-style: italic;
+    font-weight: 500;
+    letter-spacing: 0;
   }
   .meta {
     display: flex;

@@ -80,8 +80,7 @@ else
 fi
 
 # 5. internal link check — every href/src in dist/ resolves to a real file
-# (see scripts/check-links.mjs's own ALLOWLIST for the two known-404 E-1.4
-# routes it deliberately skips).
+# (scripts/check-links.mjs).
 if [ "$BUILD_EXIT" -eq 0 ]; then
   node "$SITE_ROOT/scripts/check-links.mjs" "$SITE_ROOT/dist" > "$LOG_DIR/check-links.log" 2>&1
   LINKS_EXIT=$?
