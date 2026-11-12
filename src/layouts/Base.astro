@@ -2,26 +2,31 @@
 import '../styles/vendor/tokens.css';
 import '../styles/global.css';
 import '../styles/site-scale.css';
-import Backdrop from '../components/Backdrop.astro';
+import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
+import type { NavKey } from '../components/SiteHeader.astro';
 import { tokenValue } from '../lib/tokens';
 
 export interface Props {
   title: string;
   description?: string;
-  mode: 'paper' | 'deep-space';
-  // E-1.3: seed posts carry `sample: true` (docs/DECISIONS.md) — their
-  // reading pages render but shouldn't be indexed until real content lands.
+  // Which nav item aria-current marks (home and tag pages: 'index').
+  current?: NavKey;
+  // Hairline under the header (reading pages; the home masthead has its own).
+  rule?: boolean;
+  // Seed posts carry `sample: true` — their reading pages render but
+  // shouldn't be indexed until real content lands.
   noindex?: boolean;
 }
 
-const { title, description, mode, noindex = false } = Astro.props;
+const { title, description, current, rule = false, noindex = false } = Astro.props;
 
-// Load only the CJK face this mode sets text in (POLISH-SPEC section 5):
-// paper is Noto Serif TC, deep-space is Noto Sans TC.
-const cjkFamily = mode === 'paper' ? 'Noto+Serif+TC:wght@400;600;700' : 'Noto+Sans+TC:wght@400;500;700';
-const fontsHref = `https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500&family=${cjkFamily}&display=swap`;
-const themeColor = tokenValue(mode === 'paper' ? 'paper' : 'space-950');
+// Four faces, each with one job (docs/EDITORIAL-SPEC.md section 2).
+const fontsHref =
+  'https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;700' +
+  '&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500' +
+  '&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500&display=swap';
+const themeColor = tokenValue('paper');
 ---
 
 <!doctype html>
@@ -40,10 +45,12 @@ const themeColor = tokenValue(mode === 'paper' ? 'paper' : 'space-950');
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href={fontsHref} />
   </head>
-  <body data-mode={mode}>
+  <body data-mode="paper">
     <a class="skip-link" href="#main">跳到內容</a>
-    {mode === 'deep-space' && <Backdrop />}
-    <slot />
-    <SiteFooter mode={mode} />
+    <div class="wrap">
+      <SiteHeader current={current} rule={rule} />
+      <slot />
+      <SiteFooter />
+    </div>
   </body>
 </html>

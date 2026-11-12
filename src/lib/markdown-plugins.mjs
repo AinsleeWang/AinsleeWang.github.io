@@ -69,10 +69,8 @@ export function rehypeCodeBar() {
 
 // A standalone paragraph containing only an image (markdown `![caption](src)`
 // on its own line) becomes <figure><img/><figcaption>caption</figcaption></figure>,
-// matching the figure/figcaption styles already defined in the vendored
-// article.css (paper mode) and this site's prose-deep.css (deep-space
-// mode). Applies to every post — not just photo/travel — since both prose
-// stylesheets define the same figure/figcaption hooks.
+// matching the figure/figcaption styles in src/styles/prose-legacy.css.
+// Applies to every post, not just photo/travel.
 //
 // A paragraph holding two or more images (and nothing else) becomes
 // <div class="wt-gallery"> of such figures, captions taken from alt.

@@ -15,8 +15,8 @@ export default defineConfig({
     // Shiki's stock themes inline literal hex colors into the HTML, which
     // the color audit (docs/DECISIONS.md C3) forbids. The built-in
     // `css-variables` theme emits `color:var(--astro-code-token-*)`
-    // instead; each mode maps those variables onto palette tokens in
-    // src/styles/prose-deep.css and prose-paper.css (POLISH-SPEC section 0).
+    // instead; src/styles/prose-legacy.css maps those variables onto palette
+    // tokens (POLISH-SPEC section 0).
     // Both options are read by the unified() processor below as well.
     syntaxHighlight: 'shiki',
     shikiConfig: { theme: 'css-variables' },
