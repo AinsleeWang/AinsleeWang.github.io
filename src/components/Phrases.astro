@@ -1,0 +1,19 @@
+---
+// Phrases — a short Chinese line split after each full-width comma, every
+// piece set as an inline-block. The line can then only break between pieces
+// (after a comma), never inside a short phrase: "沒碰過的，/不一定沒變。"
+// instead of "沒碰過的，不/一定沒變。". The text content is unchanged.
+export interface Props {
+  text: string;
+}
+
+const pieces = Astro.props.text.split(/(?<=，)/).filter((s) => s !== '');
+---
+
+{pieces.map((s) => <span class="ph">{s}</span>)}
+
+<style>
+  .ph {
+    display: inline-block;
+  }
+</style>

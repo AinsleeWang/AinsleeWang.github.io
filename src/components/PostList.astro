@@ -6,6 +6,7 @@ import { formatDate } from '../lib/posts';
 import { TAG_LABEL } from '../lib/labels';
 import Lat from './Lat.astro';
 import Mixed from './Mixed.astro';
+import Phrases from './Phrases.astro';
 
 export interface Props {
   posts: Post[];
@@ -25,7 +26,9 @@ const { posts, numbers } = Astro.props;
             <Lat>{numbers.get(post.id)}</Lat>
           </div>
           <div>
-            <p class="line">{summary ?? title}</p>
+            <p class="line">
+              <Phrases text={summary ?? title} />
+            </p>
             {summary && <p class="title">{title}</p>}
           </div>
           <p class="meta">

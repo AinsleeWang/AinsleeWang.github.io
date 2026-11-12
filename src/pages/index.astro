@@ -10,6 +10,7 @@ import PostList from '../components/PostList.astro';
 import ImageSlot from '../components/ImageSlot.astro';
 import Lat from '../components/Lat.astro';
 import Mixed from '../components/Mixed.astro';
+import Phrases from '../components/Phrases.astro';
 
 const all = await getPublishedPosts();
 const numbers = postNumbers(all);
@@ -32,7 +33,9 @@ const [feat, ...rest] = all;
               </div>
             )}
             <a class="line-link" href={`/posts/${feat.id}/`}>
-              <p class="line">{feat.data.summary ?? feat.data.title}</p>
+              <p class="line">
+                <Phrases text={feat.data.summary ?? feat.data.title} />
+              </p>
             </a>
           </div>
           <div class="side">
