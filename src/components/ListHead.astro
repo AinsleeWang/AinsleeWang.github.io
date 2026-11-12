@@ -8,7 +8,7 @@ export interface Props {
 
 <section class="head">
   <h1>{Astro.props.title}</h1>
-  <p class="meta"><slot /></p>
+  {Astro.slots.has('default') && <p class="meta"><slot /></p>}
 </section>
 
 <style>
