@@ -2,6 +2,19 @@
 // Hero — "wit, et cetera." title + zh subtitle + star-chart SVG, per
 // design-ref/wit.et Blog.dc.html 1a lines 55-59. Deep-space only; appears
 // once, on the homepage.
+//
+// Entrance (POLISH-SPEC section 4): on first paint the two lines draw in
+// and the nodes fade in left to right, once. The markup is the finished
+// chart; the animation only supplies the starting frame, so with reduced
+// motion (or no animation support) the chart is simply there.
+// pathLength="1" lets one dash pattern draw paths of different lengths.
+const nodes = [
+  { cx: 150, cy: 70, r: 2 },
+  { cx: 242, cy: 38, r: 1.5 },
+  { cx: 330, cy: 96, r: 2.5 },
+  { cx: 418, cy: 52, r: 1.5 },
+  { cx: 470, cy: 122, r: 2, glow: true },
+];
 ---
 
 <div class="hero">
@@ -13,13 +26,13 @@
     fill="none"
     aria-hidden="true"
   >
-    <path d="M20 190 C 160 40, 380 20, 520 60" stroke="var(--moss-300)" stroke-width="1" fill="none" opacity=".45"></path>
-    <circle cx="150" cy="70" r="2" fill="var(--moss-300)"></circle>
-    <circle cx="242" cy="38" r="1.5" fill="var(--moss-300)"></circle>
-    <circle cx="330" cy="96" r="2.5" fill="var(--moss-300)"></circle>
-    <circle cx="418" cy="52" r="1.5" fill="var(--moss-300)"></circle>
-    <circle cx="470" cy="122" r="2" fill="var(--starglow)"></circle>
-    <path d="M150 70 L242 38 L330 96 L418 52 L470 122" stroke="var(--moss-300)" stroke-width="1" opacity=".35" fill="none"></path>
+    <path class="hero__link" pathLength="1" d="M20 190 C 160 40, 380 20, 520 60" stroke="var(--moss-300)" stroke-width="1" fill="none" opacity=".45"></path>
+    {
+      nodes.map((n, i) => (
+        <circle class="hero__node" style={`--i:${i}`} cx={n.cx} cy={n.cy} r={n.r} fill={n.glow ? 'var(--starglow)' : 'var(--moss-300)'} />
+      ))
+    }
+    <path class="hero__link" pathLength="1" d="M150 70 L242 38 L330 96 L418 52 L470 122" stroke="var(--moss-300)" stroke-width="1" opacity=".35" fill="none"></path>
   </svg>
   <h1 class="hero__title">wit, et cetera.</h1>
   <p class="hero__subtitle">才智，以及其他。一份永遠沒寫完的清單——程式、文字、照片、路上。</p>
@@ -37,6 +50,28 @@
     right: -40px;
     top: 0;
     opacity: 0.5;
+  }
+  .hero__link {
+    animation: hero-draw var(--dur-draw) var(--ease-out) backwards;
+  }
+  .hero__node {
+    animation: hero-node var(--dur-node) var(--ease-out) backwards;
+    animation-delay: calc(var(--i) * var(--dur-stagger));
+  }
+  @keyframes hero-draw {
+    from {
+      stroke-dasharray: 1;
+      stroke-dashoffset: 1;
+    }
+    to {
+      stroke-dasharray: 1;
+      stroke-dashoffset: 0;
+    }
+  }
+  @keyframes hero-node {
+    from {
+      opacity: 0;
+    }
   }
   .hero__title {
     margin: 0;
@@ -56,8 +91,11 @@
   }
 
   @media (max-width: 767px) {
+    /* Hidden, not removed: an element that returns from display:none
+       starts its animations again, which would replay the entrance each
+       time the window is resized across this breakpoint. */
     .hero__chart {
-      display: none;
+      visibility: hidden;
     }
     .hero__title {
       font-size: var(--fs-hero-mobile);

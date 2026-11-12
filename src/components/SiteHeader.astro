@@ -92,6 +92,11 @@ const navColor = mode === 'paper' ? 'var(--moss-700)' : 'var(--moss-300)';
     align-items: center;
     gap: 12px;
   }
+  /* The mark keeps one view-transition name on every page, so it is held
+     in place across a navigation while the rest of the page cross-fades. */
+  .site-header__brand svg {
+    view-transition-name: site-logo;
+  }
   .site-header__brand:hover,
   .site-header__brand:focus-visible {
     color: inherit;

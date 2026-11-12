@@ -44,6 +44,54 @@ a {
   --reading-top: 72px;
 }
 
+/* Motion (POLISH-SPEC section 4). Every duration and easing on the site is
+   one of these; no other file writes a literal time value. */
+:root {
+  --dur-fast: 160ms; /* hover / focus colour shifts */
+  --dur-page: 180ms; /* cross-document view transition */
+  --dur-draw: 900ms; /* hero constellation links drawing in */
+  --dur-node: 320ms; /* one hero node fading in */
+  --dur-stagger: 140ms; /* delay between consecutive hero nodes */
+  --ease-out: ease-out;
+}
+
+/* Cross-document view transition: a short root cross-fade. The logo mark
+   carries its own name (SiteHeader) so it is held in place rather than
+   faded with the page. */
+@view-transition {
+  navigation: auto;
+}
+
+::view-transition-group(*),
+::view-transition-old(*),
+::view-transition-new(*) {
+  animation-duration: var(--dur-page);
+  animation-timing-function: var(--ease-out);
+}
+
+/* The logo's group does not travel. By default it would fly from where the
+   mark sat on the old page — from above the viewport when that page was
+   scrolled — to its place on the new one; without the group animation it
+   sits where the new page puts it and only its two images cross-fade. */
+::view-transition-group(site-logo) {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  @view-transition {
+    navigation: none;
+  }
+
+  /* Elements are authored in their final state, so dropping the animation
+     shows the finished page at once. */
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
 @media (max-width: 767px) {
   :root {
     --reading-top: 28px;
