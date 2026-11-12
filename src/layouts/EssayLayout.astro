@@ -28,7 +28,7 @@ export interface Props {
 }
 
 const { post, mode, Content, older, newer } = Astro.props;
-const { title, date, tag, summary, sample } = post.data;
+const { title, date, tag, summary, sample, location } = post.data;
 const minutes = readingMinutes(post);
 
 const formatDate = (d: Date) =>
@@ -51,6 +51,7 @@ const ARTICLE_NAV = [
         <span class="wt-tag">{tag}</span>
         <span class="wt-meta">
           {dateStr}
+          {location && ` · ${location}`}
           {` · ${minutes} MIN`}
         </span>
       </div>
