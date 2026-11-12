@@ -117,7 +117,6 @@ Technical posts (any tag; used by 實作):
 
 | Part | Markdown the author writes | Result |
 |---|---|---|
-| Summary table | frontmatter `env`, `materials`, `conclusion` (all optional strings) | 環境 / 材料 / 結論 rows under the band; absent fields omit their row |
 | TOC | automatic from `h2` when the post has ≥ 3 | sticky list in the left margin ≥ 1180px with scroll-spy (active item `--ink` + 700; no starglow); `<details>` titled 目錄 above the prose below that |
 | Code | fenced block; optional `title="verify.py"` and `{6}` / `{2,5-7}` in the info string | tinted panel, bar with filename (or language) and 複製, highlighted lines, Shiki colours from the paper map in POLISH-SPEC §0 with the comment at 62 % |
 | Output | fenced block with language `output` | quiet block with a left rule labelled 輸出, no bar, no highlighting |
@@ -127,6 +126,9 @@ Technical posts (any tag; used by 實作):
 | Callout | blockquote whose first line is `注意` or `補充` | bordered note with a moss bar |
 | Steps | ordered list | Garamond italic numerals |
 | References | ordered list under an `h2` named 參考資料 | numbered list, links in `--functional` |
+
+There is no structured summary block (environment, materials, conclusion):
+the owner states those in the opening paragraph when a post needs them.
 
 The copy button and scroll-spy stay the one inline script from the motion
 work order, now emitted on any page that has a code block or a TOC.
