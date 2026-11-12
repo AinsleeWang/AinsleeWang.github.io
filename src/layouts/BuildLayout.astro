@@ -1,57 +1,40 @@
 ---
-// BuildLayout — BUILD reading page (design-ref/wit.et Blog.dc.html 1f,
-// lines 376-429; mobile 1h lines 511-523). Deep-space mode, 200px sticky
-// TOC (desktop) / <details> disclosure under the title (mobile, no JS —
-// 1h keeps 28px from the header rule to the meta row, so the disclosure
-// cannot sit between them), code blocks break
-// out 110px past the content column on wide desktop.
-//
-// The TOC's "current position" highlight (1f: one item in the accent gold
-// token with a colored left rule) and the code bar's copy button are
-// progressive enhancements added by Enhance.astro's inline script — the
-// only script on the site, rendered here only when this post has a TOC or
-// a code block. Without it every TOC item is --moss-300 and the bar shows
-// the language alone.
+// BuildLayout — temporary reading layout for build posts (the next work
+// order replaces it): sticky TOC beside the prose on wide screens, a
+// <details> disclosure below that. The TOC highlight and the code bar's
+// copy button are added by Enhance.astro's inline script, rendered only
+// when this post has a TOC or a code block.
 import type { Post } from '../lib/posts';
-import { readingMinutes } from '../lib/posts';
 import type { AstroComponentFactory } from 'astro/runtime/server/index.js';
 import type { MarkdownHeading } from 'astro';
 import Base from './Base.astro';
-import SiteHeader from '../components/SiteHeader.astro';
+import ReadingHead from '../components/ReadingHead.astro';
 import PostNav from '../components/PostNav.astro';
 import Enhance from '../components/Enhance.astro';
-import '../styles/prose-deep.css';
+import '../styles/prose-legacy.css';
 
 export interface Props {
   post: Post;
-  mode: 'paper' | 'deep-space';
   Content: AstroComponentFactory;
   headings: MarkdownHeading[];
   older: Post | null;
   newer: Post | null;
 }
 
-const { post, mode, Content, headings, older, newer } = Astro.props;
-const { title, date, tag, sample, lang } = post.data;
-const minutes = readingMinutes(post);
+const { post, Content, headings, older, newer } = Astro.props;
+const { title, tag, sample, lang } = post.data;
 const toc = headings.filter((h) => h.depth === 2);
 // A fenced block in the source is what rehypeCodeBar turns into a code bar.
 const hasCode = /^\s*(```|~~~)/m.test(post.body ?? '');
-
-const formatDate = (d: Date) =>
-  `${d.getUTCFullYear()}.${String(d.getUTCMonth() + 1).padStart(2, '0')}.${String(d.getUTCDate()).padStart(2, '0')}`;
-const dateStr = formatDate(date);
 ---
 
-<Base title={`${title} — wit.et`} mode={mode} noindex={sample}>
-  <div class="container page">
-    <SiteHeader mode={mode} glow={false} />
-
+<Base title={`${title} — wit.et`} rule noindex={sample}>
+  <div>
     <div class="wt-build-layout">
       {
         toc.length > 0 && (
           <nav class="wt-toc" aria-label="文章目錄">
-            <div class="wt-toc__label">on this page</div>
+            <div class="wt-toc__label">目錄</div>
             {toc.map((h) => (
               <a href={`#${h.slug}`}>{h.text}</a>
             ))}
@@ -60,15 +43,8 @@ const dateStr = formatDate(date);
       }
 
       <main id="main" class="wt-build-main">
-        <article class="wt-deep-article" lang={lang === 'en' ? 'en' : undefined}>
-          <div class="wt-meta-row">
-            <span class="wt-tag">{tag}</span>
-            <span class="wt-meta">
-              {dateStr}
-              {` · ${minutes} MIN`}
-            </span>
-          </div>
-          <h1>{title}</h1>
+        <article class="wt-prose" lang={lang === 'en' ? 'en' : undefined}>
+          <ReadingHead post={post} />
           {
             toc.length > 0 && (
               <details class="wt-toc-mobile">
@@ -82,7 +58,7 @@ const dateStr = formatDate(date);
             )
           }
           <Content />
-          <PostNav tag={tag} mode={mode} older={older} newer={newer} />
+          <PostNav tag={tag} older={older} newer={newer} />
         </article>
       </main>
     </div>
@@ -91,74 +67,20 @@ const dateStr = formatDate(date);
 </Base>
 
 <style>
-  .page {
-    padding-block: 26px 72px;
-  }
-
+  /* minmax(0, ...) so a long unwrapped code line cannot widen the track. */
   .wt-build-layout {
     display: grid;
-    /* minmax(0, ...) rather than a bare 1fr/200px: a grid track's "auto"
-       minimum otherwise defaults to its item's max-content size, which for
-       a <pre> (white-space: pre, unwrapped lines) is the longest code
-       line — wide enough to overflow the viewport even through the pre's
-       own overflow:auto, since that only clips *within* whatever size the
-       track resolves to. Caught via scripts/shoot.mjs's overflow check at
-       375/768px on git-worktree-no-more-stash.md's code blocks. */
     grid-template-columns: minmax(0, 200px) minmax(0, 1fr);
     gap: 56px;
-    padding-top: var(--reading-top);
   }
-
   .wt-build-main {
     min-width: 0;
+    max-width: 680px;
   }
-
-  .wt-deep-article {
-    max-width: 640px;
-  }
-
-  @media (max-width: 767px) {
+  @media (max-width: 820px) {
     .wt-build-layout {
       grid-template-columns: minmax(0, 1fr);
       gap: 0;
-    }
-  }
-</style>
-
-<style is:global>
-  /* .wt-code is rendered inside <Content />'s own scope (markdown-plugins.mjs's
-     rehypeCodeBar wraps each `build` post's <pre> in it), not authored
-     directly in this file's template — Astro's scoped-style attribute
-     only reaches elements literally written in a component's own markup,
-     so a plain scoped `.wt-deep-article .wt-code` selector above would
-     silently never match. is:global opts out of that scoping; the
-     selectors below are written fully-qualified instead to stay scoped
-     to this page in effect. */
-
-  /* Breakout only where there's room for it past the 640px content column
-     without pushing the page wider than the viewport (verified against
-     scripts/shoot.mjs's horizontalOverflow check at 375/768/1280 — at
-     768px the 200px TOC + 56px gap already leaves well under 640px for
-     the content column, so a further -110px would overflow). 1150px is
-     the smallest width at which 72px container padding + 200px TOC + 56px
-     gap + 640px content + 110px breakout still fits; 1280px (the only
-     desktop width this milestone's design-ref/verify.sh test) clears it
-     with room to spare. Flagged as a judgment call — design-ref only
-     specifies the 1280px case. */
-  @media (min-width: 1150px) {
-    .wt-build-layout .wt-deep-article .wt-code {
-      margin-right: -110px;
-    }
-  }
-
-  @media (max-width: 767px) {
-    /* Flush to the viewport edge, canceling .container's 20px mobile
-       padding (design-ref 1h line 522). */
-    .wt-build-layout .wt-deep-article .wt-code {
-      margin-inline: -20px;
-      border-radius: 0;
-      border-left: none;
-      border-right: none;
     }
   }
 </style>

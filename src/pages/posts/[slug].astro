@@ -1,13 +1,9 @@
 ---
-// Article reading page — E-1.3 (roadmap, first half; tag pages + RSS are
-// the next ticket, not built here). Dispatches by `tag` to one of three
-// layouts; the *mode* each layout renders in always comes from
-// src/lib/modes.ts's modeForTag (never hardcoded here), per
-// docs/DECISIONS.md C1.
+// Article reading page. Dispatches by `tag` to one of three layouts (a
+// temporary split; the next work order merges them into one).
 import { render } from 'astro:content';
 import { adjacentPosts, getPublishedPosts } from '../../lib/posts';
 import type { Post } from '../../lib/posts';
-import { modeForTag } from '../../lib/modes';
 import EssayLayout from '../../layouts/EssayLayout.astro';
 import BuildLayout from '../../layouts/BuildLayout.astro';
 import PhotoLayout from '../../layouts/PhotoLayout.astro';
@@ -28,13 +24,12 @@ export interface Props {
 
 const { post, older, newer } = Astro.props;
 const { Content, headings } = await render(post);
-const mode = modeForTag[post.data.tag];
 ---
 
-{post.data.tag === 'essay' && <EssayLayout post={post} mode={mode} Content={Content} older={older} newer={newer} />}
-{post.data.tag === 'build' && <BuildLayout post={post} mode={mode} Content={Content} headings={headings} older={older} newer={newer} />}
+{post.data.tag === 'essay' && <EssayLayout post={post} Content={Content} older={older} newer={newer} />}
+{post.data.tag === 'build' && <BuildLayout post={post} Content={Content} headings={headings} older={older} newer={newer} />}
 {
   (post.data.tag === 'photo' || post.data.tag === 'travel') && (
-    <PhotoLayout post={post} mode={mode} Content={Content} older={older} newer={newer} />
+    <PhotoLayout post={post} Content={Content} older={older} newer={newer} />
   )
 }

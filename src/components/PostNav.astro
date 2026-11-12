@@ -1,111 +1,93 @@
 ---
-// PostNav — reading-page footer: older neighbour on the left, newer on the
-// right, both within the same tag. A missing side is omitted; with neither
-// side, the "更多 <tag>" link stays. Colours follow the footer each mode
-// already used (paper: moss-700 on the article hairline; deep-space:
-// moss-300 on line-20).
+// PostNav — prev/next within the tag (design-ref/editorial/essay.html .pn).
+// 上一篇 = the older neighbour on the left, 下一篇 = the newer on the right.
+// With neither side, a single link back to the tag page.
 import type { Post } from '../lib/posts';
+import { TAG_LABEL } from '../lib/labels';
+import type { Tag } from '../lib/labels';
 
 export interface Props {
-  tag: string;
-  mode: 'paper' | 'deep-space';
+  tag: Tag;
   older: Post | null;
   newer: Post | null;
 }
 
-const { tag, mode, older, newer } = Astro.props;
+const { tag, older, newer } = Astro.props;
 ---
 
-<nav class={`post-nav post-nav--${mode}${older && newer ? ' post-nav--both' : ''}`} aria-label="相鄰文章">
+<nav class="pn" aria-label="相鄰文章">
   {
     older || newer ? (
       <>
-        {older && (
-          <a class="post-nav__link post-nav__link--older" href={`/posts/${older.id}/`} rel="prev">
-            <span class="post-nav__text">← {older.data.title}</span>
+        {older ? (
+          <a href={`/posts/${older.id}/`} rel="prev">
+            <span>上一篇</span>
+            <b>{older.data.title}</b>
           </a>
+        ) : (
+          <span class="gap" />
         )}
         {newer && (
-          <a class="post-nav__link post-nav__link--newer" href={`/posts/${newer.id}/`} rel="next">
-            <span class="post-nav__text">{newer.data.title} →</span>
+          <a class="next" href={`/posts/${newer.id}/`} rel="next">
+            <span>下一篇</span>
+            <b>{newer.data.title}</b>
           </a>
         )}
       </>
     ) : (
-      <a class="post-nav__link post-nav__link--older" href={`/tags/${tag}/`}>
-        <span class="post-nav__text">← 更多 {tag}</span>
+      <a href={`/tags/${tag}/`}>
+        <span>更多</span>
+        <b>{TAG_LABEL[tag]}</b>
       </a>
     )
   }
 </nav>
 
 <style>
-  .post-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: stretch;
-    gap: 24px;
-    margin-top: 3.25em;
-    padding-top: 1.5em;
-    border-top: var(--line-hairline) solid var(--post-nav-rule);
-    font-family: var(--font-mono);
-    font-size: var(--fs-postnav);
-    line-height: 1.5;
+  .pn {
+    max-width: 680px;
+    margin: 64px auto 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    padding-top: 26px;
+    border-top: 1px solid var(--rule-strong);
+  }
+  a {
+    display: block;
+    min-height: 44px;
+  }
+  .pn span {
+    display: block;
+    font-family: var(--zh);
+    font-size: var(--fs-pn-label);
+    letter-spacing: 0.3em;
+    color: var(--ink-50);
+  }
+  .pn b {
+    display: block;
+    margin-top: 6px;
+    font-family: var(--zh);
+    font-weight: 700;
+    font-size: var(--fs-pn-title);
+    line-height: 1.6;
     letter-spacing: 0.04em;
   }
-  .post-nav--paper {
-    --post-nav-rule: var(--article-hairline-color);
-    --post-nav-color: var(--moss-700);
-  }
-  .post-nav--deep-space {
-    --post-nav-rule: var(--line-20);
-    --post-nav-color: var(--moss-300);
-  }
-  .post-nav__link {
-    display: flex;
-    align-items: center;
-    min-height: 44px;
-    min-width: 0;
-    max-width: 100%;
-  }
-  .post-nav--both .post-nav__link {
-    max-width: calc(50% - 12px);
-  }
-  .post-nav__link--newer {
-    margin-left: auto;
-    justify-content: flex-end;
+  .next {
+    grid-column: 2;
     text-align: right;
   }
-  /* Doubled class: must outrank the prose stylesheets' `.wt-article a` /
-     `.wt-deep-article a` underline + link colour. */
-  .post-nav.post-nav a.post-nav__link {
-    color: var(--post-nav-color);
-    text-decoration: none;
-  }
-  .post-nav.post-nav a.post-nav__link:hover,
-  .post-nav.post-nav a.post-nav__link:focus-visible {
-    color: var(--functional);
-    text-decoration: underline;
-  }
-  .post-nav__text {
-    display: block;
-    min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  a:hover b {
+    color: var(--moss-700);
   }
 
-  @media (max-width: 767px) {
-    .post-nav {
-      flex-direction: column;
-      gap: 0;
+  @media (max-width: 820px) {
+    .pn {
+      grid-template-columns: 1fr;
+      gap: 20px;
     }
-    .post-nav--both .post-nav__link {
-      max-width: 100%;
-    }
-    .post-nav__link--newer {
-      margin-left: 0;
-      justify-content: flex-start;
+    .next {
+      grid-column: 1;
       text-align: left;
     }
   }

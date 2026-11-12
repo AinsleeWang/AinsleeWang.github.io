@@ -1,0 +1,63 @@
+---
+// ReadingHead — kicker, h1 and meta line (date, place, reading time) shared
+// by the three reading layouts (design-ref/editorial/essay.html .head).
+import type { Post } from '../lib/posts';
+import { formatDate, readingMinutes } from '../lib/posts';
+import { TAG_LABEL } from '../lib/labels';
+import Lat from './Lat.astro';
+import Mixed from './Mixed.astro';
+
+export interface Props {
+  post: Post;
+}
+
+const { post } = Astro.props;
+const { title, date, tag, location } = post.data;
+---
+
+<div class="head">
+  <div class="kick">{TAG_LABEL[tag]}</div>
+  <h1>{title}</h1>
+  <p class="meta">
+    <span>
+      <Lat>{formatDate(date)}</Lat>
+      {location && (
+        <>
+          {'　'}
+          <Mixed text={location} />
+        </>
+      )}
+    </span>
+    <span>約 <Lat>{readingMinutes(post)}</Lat> 分鐘</span>
+  </p>
+</div>
+
+<style>
+  .head {
+    padding: 76px 0 44px;
+  }
+  h1 {
+    margin-top: 26px;
+    max-width: 16em;
+    font-family: var(--zh);
+    font-weight: 700;
+    font-size: var(--fs-h1);
+    line-height: 1.36;
+    letter-spacing: 0.02em;
+    text-wrap: balance;
+  }
+  .meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 28px;
+  }
+
+  @media (max-width: 820px) {
+    .head {
+      padding: 40px 0 30px;
+    }
+  }
+</style>

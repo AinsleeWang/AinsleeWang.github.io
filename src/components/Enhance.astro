@@ -6,10 +6,10 @@
 // add to markup that already works.
 //
 // 1. Copy button. Each .wt-code-bar gets a <button> that copies the text
-//    of the <pre> after it; the label reads COPIED for 1.6 s. The button is
+//    of the <pre> after it; the label reads 已複製 for 1.6 s. The button is
 //    created here rather than in the markup so that it never exists where
 //    it cannot work (JS off, or no Clipboard API on an insecure origin).
-//    A refused write is ignored: the label just stays COPY.
+//    A refused write is ignored: the label just stays 複製.
 // 2. TOC scroll-spy. The active section is the last h2 whose top has
 //    crossed into the upper 30% of the viewport; before the first one gets
 //    there, nothing is active. The observer watches the headings against
@@ -34,14 +34,14 @@
         let t;
         b.type = 'button';
         b.className = 'wt-copy';
-        b.textContent = 'COPY';
+        b.textContent = '複製';
         b.setAttribute('aria-live', 'polite');
         b.onclick = () =>
           navigator.clipboard.writeText(bar.nextElementSibling.textContent).then(
             () => {
-              b.textContent = 'COPIED';
+              b.textContent = '已複製';
               clearTimeout(t);
-              t = setTimeout(() => (b.textContent = 'COPY'), 1600);
+              t = setTimeout(() => (b.textContent = '複製'), 1600);
             },
             () => {},
           );
