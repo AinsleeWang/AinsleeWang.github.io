@@ -543,7 +543,14 @@
 
   .band p {
     font-size: var(--fs-band-m);
-    padding: 28px 22px;
+    padding-block: 28px;
+  }
+
+  /* Justified CJK with Latin words leaves stretched lines in a narrow
+     column; set ragged-right on phones. */
+  .prose p,
+  .prose li {
+    text-align: start;
   }
 
   .prose {
