@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "astro dev",
     "og": "node scripts/og.mjs",
-    "prebuild": "node scripts/og.mjs",
+    "prebuild": "node scripts/og.mjs || echo 'og: share cards skipped'",
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
