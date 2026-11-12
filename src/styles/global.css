@@ -167,6 +167,8 @@ p {
   --line-18: color-mix(in srgb, var(--moss-300) 18%, transparent);
   --line-20: color-mix(in srgb, var(--moss-300) 20%, transparent);
   --line-22: color-mix(in srgb, var(--moss-300) 22%, transparent);
+  /* A card's cover border while the card is hovered or focused. */
+  --line-40: color-mix(in srgb, var(--moss-300) 40%, transparent);
   --label-70: color-mix(in srgb, var(--moss-300) 70%, transparent);
   --muted-62: color-mix(in srgb, var(--starlight) 62%, transparent);
   --muted-66: color-mix(in srgb, var(--starlight) 66%, transparent);
@@ -204,11 +206,29 @@ p {
 /* Visible hover/focus-visible state for all links (brief: "連結的 hover／
    focus-visible 狀態要看得見"). Components may layer additional styling
    (e.g. PostCard's whole-card link) on top of this baseline. */
+a {
+  transition:
+    color var(--dur-fast) var(--ease-out),
+    text-decoration-color var(--dur-fast) var(--ease-out),
+    text-decoration-thickness var(--dur-fast) var(--ease-out);
+}
 a:hover {
   color: var(--functional);
 }
-a:focus-visible {
+/* One focus ring for everything focusable: links, the copy button, the
+   mobile TOC disclosure, scrollable code blocks. */
+:focus-visible {
   outline: 2px solid var(--functional);
   outline-offset: 3px;
+}
+a:focus-visible {
   border-radius: var(--radius-sm);
+}
+
+/* The title colour a card takes while hovered or focused. */
+[data-mode="deep-space"] {
+  --card-title-hover: var(--moss-300);
+}
+[data-mode="paper"] {
+  --card-title-hover: var(--moss-700);
 }

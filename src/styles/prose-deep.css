@@ -117,11 +117,12 @@
   text-decoration: underline;
   text-decoration-color: color-mix(in srgb, var(--functional) 45%, transparent);
   text-decoration-thickness: 1px;
-  text-underline-offset: 0.15em;
+  text-underline-offset: 3px;
 }
 
 [data-mode="deep-space"] .wt-deep-article a:hover {
   text-decoration-color: var(--functional);
+  text-decoration-thickness: 2px;
 }
 
 [data-mode="deep-space"] .wt-deep-article ul,

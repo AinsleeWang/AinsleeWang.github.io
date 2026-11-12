@@ -109,9 +109,21 @@ const variant = tag === 'essay' ? 'essay' : featured ? 'feature' : 'media';
   .post-card__link:focus-visible {
     color: var(--fg);
   }
+  /* Hover/focus: the title takes the mode's moss and the cover's border
+     firms up. Colour only — no movement, no shadow (POLISH-SPEC section 4). */
+  .post-card__title {
+    transition: color var(--dur-fast) var(--ease-out);
+  }
+  .post-card__link :global(.image-slot) {
+    transition: border-color var(--dur-fast) var(--ease-out);
+  }
   .post-card__link:hover .post-card__title,
   .post-card__link:focus-visible .post-card__title {
-    color: var(--functional);
+    color: var(--card-title-hover);
+  }
+  .post-card__link:hover :global(.image-slot),
+  .post-card__link:focus-visible :global(.image-slot) {
+    border-color: var(--line-40);
   }
 
   .post-card--feature .post-card__link {
