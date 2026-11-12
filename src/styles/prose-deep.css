@@ -176,7 +176,6 @@
 /* wrapper — this file only owns the block's own look.                    */
 /* ---------------------------------------------------------------------- */
 
-[data-mode="deep-space"] .wt-deep-article .wt-code {
 /* Syntax colours. Shiki's css-variables theme writes
  * `color:var(--astro-code-token-*)` on each token; this is the deep-space
  * half of the map (POLISH-SPEC section 0), prose-paper.css holds the paper
@@ -196,6 +195,7 @@
   --astro-code-token-link: var(--functional);
 }
 
+[data-mode="deep-space"] .wt-deep-article .wt-code {
   margin: 1.75em 0 0;
   background: var(--space-800);
   border: var(--line-hairline) solid var(--line-18);
@@ -216,11 +216,41 @@
   color: var(--muted-62);
 }
 
+/* Copy button — added to the bar by Enhance.astro's inline script, so it
+ * is absent without JS. It takes the bar's own type; the padding with an
+ * equal negative margin enlarges the hit area without changing the bar's
+ * height, and stays small enough for the focus ring to clear .wt-code's
+ * clipped edge. */
+[data-mode="deep-space"] .wt-deep-article .wt-copy {
+  appearance: none;
+  margin: -5px -10px;
+  padding: 5px 10px;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: none;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  color: inherit;
+  cursor: pointer;
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+[data-mode="deep-space"] .wt-deep-article .wt-copy:hover {
+  color: var(--functional);
+}
+
 [data-mode="deep-space"] .wt-deep-article .wt-code pre {
   margin: 0;
   padding: 18px 16px;
   overflow: auto;
   max-width: 100%;
+}
+
+/* Shiki makes a scrollable <pre> focusable. .wt-code clips its overflow,
+ * so the ring is drawn inside the block instead of 3px outside it. */
+[data-mode="deep-space"] .wt-deep-article .wt-code pre:focus-visible {
+  outline-offset: -2px;
 }
 
 [data-mode="deep-space"] .wt-deep-article .wt-code code {
@@ -309,9 +339,9 @@
 
 /* ---------------------------------------------------------------------- */
 /* Table of contents (BUILD page only, design-ref 1f desktop / 1h mobile)  */
-/* "目前位置" highlight needs JS to track scroll position and isn't built  */
-/* tonight — every item uses --moss-300 uniformly; the accent gold token  */
-/* stays limited to the three places docs/DECISIONS.md names it for.      */
+/* Every item is --moss-300; Enhance.astro's scroll-spy adds .is-active to */
+/* the section being read, which takes the accent gold for its text and   */
+/* left rule (design-ref 1f lines 391-394). Without JS no item is active. */
 /* ---------------------------------------------------------------------- */
 
 [data-mode="deep-space"] .wt-toc {
@@ -336,11 +366,21 @@
   margin-top: 10px;
   color: var(--moss-300);
   border-left: var(--line-hairline) solid var(--line-20);
+  transition:
+    color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out);
 }
 
 [data-mode="deep-space"] .wt-toc a:hover,
 [data-mode="deep-space"] .wt-toc a:focus-visible {
   color: var(--functional);
+}
+
+[data-mode="deep-space"] .wt-toc a.is-active,
+[data-mode="deep-space"] .wt-toc a.is-active:hover,
+[data-mode="deep-space"] .wt-toc a.is-active:focus-visible {
+  color: var(--starglow);
+  border-left-color: var(--starglow);
 }
 
 [data-mode="deep-space"] .wt-toc-mobile {

@@ -1,0 +1,66 @@
+---
+// Enhance — the site's only client script (POLISH-SPEC sections 0 and 4).
+// Inline, no framework, no dependency, no network request, under 2 KB as
+// shipped. Rendered by BuildLayout alone, and only when the page has a code
+// bar or a TOC to enhance. The page is complete without it: both features
+// add to markup that already works.
+//
+// 1. Copy button. Each .wt-code-bar gets a <button> that copies the text
+//    of the <pre> after it; the label reads COPIED for 1.6 s. The button is
+//    created here rather than in the markup so that it never exists where
+//    it cannot work (JS off, or no Clipboard API on an insecure origin).
+//    A refused write is ignored: the label just stays COPY.
+// 2. TOC scroll-spy. The active section is the last h2 whose top has
+//    crossed into the upper 30% of the viewport; before the first one gets
+//    there, nothing is active. The observer watches the headings against
+//    that band and only triggers a recount from their positions, so the
+//    state never depends on the order or batching of its callbacks.
+//
+// Everything it touches precedes it in the document (BuildLayout renders
+// it after the article), so it runs as it is parsed.
+//
+// The script is written compactly by hand because `is:inline` ships it
+// byte for byte. The 1600 below is the one duration that cannot come from
+// global.css's motion variables.
+---
+
+<script is:inline>
+  (() => {
+    const d = document;
+    const all = (s) => [...d.querySelectorAll(s)];
+    if (navigator.clipboard)
+      all('.wt-code-bar').forEach((bar) => {
+        const b = d.createElement('button');
+        let t;
+        b.type = 'button';
+        b.className = 'wt-copy';
+        b.textContent = 'COPY';
+        b.setAttribute('aria-live', 'polite');
+        b.onclick = () =>
+          navigator.clipboard.writeText(bar.nextElementSibling.textContent).then(
+            () => {
+              b.textContent = 'COPIED';
+              clearTimeout(t);
+              t = setTimeout(() => (b.textContent = 'COPY'), 1600);
+            },
+            () => {},
+          );
+        bar.append(b);
+      });
+    const links = all('.wt-toc a');
+    const heads = links.map((a) => d.getElementById(decodeURIComponent(a.hash.slice(1))));
+    if (!links.length || heads.includes(null) || !window.IntersectionObserver) return;
+    const spy = () => {
+      let on = -1;
+      heads.forEach((h, i) => {
+        if (h.getBoundingClientRect().top < innerHeight * 0.3) on = i;
+      });
+      links.forEach((a, i) => {
+        a.classList.toggle('is-active', i == on);
+        i == on ? a.setAttribute('aria-current', 'true') : a.removeAttribute('aria-current');
+      });
+    };
+    const band = new IntersectionObserver(spy, { rootMargin: '0px 0px -70% 0px' });
+    heads.forEach((h) => band.observe(h));
+  })();
+</script>
