@@ -22,18 +22,86 @@ a {
   text-decoration: none;
 }
 
-:root {
-  /* Reused by later milestones: --font-en ends in a generic "sans-serif"
-     fallback, which would win over --font-zh for CJK text if placed first.
-     This stack names the Latin face directly, then falls through to
-     --font-zh (which itself ends in serif/sans-serif). */
+/* Declared on [data-mode] (the <body>), not :root: --font-zh only exists
+   from the mode element down, and a custom property that references an
+   undefined one is invalid where it is declared — on :root these stacks
+   resolved to nothing and every var(--font-stack) fell back to the
+   browser default. */
+[data-mode] {
+  /* --font-en ends in a generic "sans-serif" fallback, which would win
+     over --font-zh for CJK text if placed first. This stack names the
+     Latin face directly, then falls through to --font-zh (which itself
+     ends in serif/sans-serif). */
   --font-stack: "Space Grotesk", var(--font-zh);
+  /* Same idea for mono rows that carry CJK labels (the header nav): the
+     Latin face by name, then the mode's CJK face. var(--font-mono) alone
+     ends in a generic "monospace", which hands CJK to a system font. */
+  --font-mono-stack: "JetBrains Mono", var(--font-zh);
+}
+
+:root {
+  /* Header rule to the reading page's meta row (POLISH-SPEC section 3). */
+  --reading-top: 72px;
+}
+
+@media (max-width: 767px) {
+  :root {
+    --reading-top: 28px;
+  }
 }
 
 body {
   background: var(--bg);
   color: var(--fg);
   font-family: var(--font-stack);
+  font-kerning: normal;
+  /* CJK-Latin spacing where the browser supports it. */
+  text-autospace: normal;
+}
+
+/* Typography refinements (POLISH-SPEC section 5). */
+h1,
+h2,
+h3,
+h4 {
+  text-wrap: balance;
+}
+
+p {
+  text-wrap: pretty;
+}
+
+/* Selection carries the mode's moss, never the accent. */
+[data-mode="paper"] ::selection {
+  background: var(--moss-100);
+}
+
+[data-mode="deep-space"] ::selection {
+  background: var(--moss-700);
+  color: var(--starlight);
+}
+
+/* Skip link: first focusable element on every page, off-screen until it
+   receives keyboard focus. */
+.skip-link {
+  position: absolute;
+  left: 20px;
+  top: 12px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 18px;
+  background: var(--bg);
+  color: var(--fg);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius-sm);
+  font-size: var(--fs-skip);
+  transform: translateY(-200%);
+}
+
+.skip-link:focus {
+  transform: none;
 }
 
 /* Alpha colors used across the deep-space homepage (E-1.2). The design ref
@@ -63,6 +131,13 @@ body {
   /* Paper-mode equivalent, for SiteHeader's paper variant (reused by E-1.3
      article pages; not exercised on this deep-space-only homepage). */
   --line-paper-12: color-mix(in srgb, var(--space-950) 12%, transparent);
+  /* Launch 2 (POLISH-SPEC sections 2-3). --muted-paper-62: the footer
+     colophon on paper pages (deep-space uses --muted-62). --scrim-*: the
+     gradient under text laid over an ImageSlot — 950 over a photograph,
+     800 (the slot's own ground) over a generated star chart. */
+  --muted-paper-62: color-mix(in srgb, var(--space-950) 62%, transparent);
+  --scrim-950-80: color-mix(in srgb, var(--space-950) 80%, transparent);
+  --scrim-800-92: color-mix(in srgb, var(--space-800) 92%, transparent);
 }
 
 /* Page container: shared left/right padding + max-width per E-1.2 brief. */

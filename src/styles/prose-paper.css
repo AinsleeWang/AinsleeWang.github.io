@@ -1,0 +1,33 @@
+/* prose-paper.css — the site's own additions to the vendored article.css
+ * (paper mode, .wt-article). article.css is synced from the design system
+ * and is not edited here; anything the site needs on top of it lives in
+ * this file (docs/POLISH-SPEC.md sections 3 and 5).
+ */
+
+/* Gallery — two or more images in one paragraph (rehypeFigureImages).
+ * 2-up from 768px, stacked below; mirrors prose-deep.css. */
+[data-mode="paper"] .wt-article .wt-gallery {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0 20px;
+}
+
+[data-mode="paper"] .wt-article .wt-gallery figure {
+  min-width: 0;
+}
+
+@media (min-width: 768px) {
+  [data-mode="paper"] .wt-article .wt-gallery {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* An opening bracket or quote at the start of a paragraph hangs in the
+ * margin where the browser supports it. */
+[data-mode="paper"] .wt-article p {
+  hanging-punctuation: first;
+}
+
+[data-mode="paper"] .wt-article .wt-meta-row {
+  font-variant-numeric: tabular-nums;
+}

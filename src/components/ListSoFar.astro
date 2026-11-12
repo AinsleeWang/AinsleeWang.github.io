@@ -1,0 +1,75 @@
+---
+// ListSoFar — the right-rail card shown when there are no build posts yet
+// (docs/POLISH-SPEC.md section 3): one mono row per tag with a two-digit
+// count, linking to its tag page; a tag with no posts shows a dash. The
+// list ends on the ellipsis, because it is not finished.
+import type { Post } from '../lib/posts';
+import RailCard from './RailCard.astro';
+import EllipsisMark from './EllipsisMark.astro';
+
+export interface Props {
+  posts: Post[]; // all published posts
+}
+
+const { posts } = Astro.props;
+const TAGS = ['essay', 'build', 'photo', 'travel'] as const;
+const rows = TAGS.map((tag) => ({ tag, count: posts.filter((p) => p.data.tag === tag).length }));
+---
+
+<RailCard label="the list so far" ariaLabel="The list so far">
+  {
+    rows.map(({ tag, count }) => (
+      <a href={`/tags/${tag}/`} class="list-so-far__row">
+        <span class="list-so-far__tag">{tag}</span>
+        {count > 0 ? (
+          <span class="list-so-far__count">{String(count).padStart(2, '0')}</span>
+        ) : (
+          <span class="list-so-far__count list-so-far__count--none">—</span>
+        )}
+      </a>
+    ))
+  }
+  <div class="list-so-far__more">
+    <EllipsisMark />
+  </div>
+</RailCard>
+
+<style>
+  .list-so-far__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--line-10);
+    font-family: var(--font-mono);
+    font-size: var(--fs-nav);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-variant-numeric: tabular-nums;
+    color: var(--moss-300);
+  }
+  .list-so-far__count {
+    color: var(--fg);
+  }
+  .list-so-far__count--none {
+    color: var(--muted-62);
+  }
+  .list-so-far__row:hover,
+  .list-so-far__row:focus-visible,
+  .list-so-far__row:hover .list-so-far__count,
+  .list-so-far__row:focus-visible .list-so-far__count {
+    color: var(--functional);
+  }
+  .list-so-far__more {
+    padding: 18px 0 4px;
+    color: var(--moss-300);
+  }
+
+  @media (max-width: 767px) {
+    /* 44px touch target. */
+    .list-so-far__row {
+      min-height: 44px;
+      box-sizing: border-box;
+    }
+  }
+</style>

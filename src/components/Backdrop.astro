@@ -1,0 +1,80 @@
+---
+// Backdrop — the star-chart grid behind deep-space pages (VIS brief section
+// 5.1; docs/POLISH-SPEC.md section 3). Fixed, decorative, non-interactive.
+// Meant to be found, not noticed; no accent colour. Base.astro renders it
+// for deep-space pages only.
+//
+// Nothing is ever drawn behind the content column. Each group is anchored
+// to a viewport edge and stays inside the outer 72px — the container's own
+// side padding, so that strip is clear of content at every width the
+// backdrop is shown (it is hidden below 1200px, where the padding shrinks).
+// x is in pixels from the edge (negative = from the right edge), y in
+// percent of the viewport height.
+type Node = [x: number, y: number, r: number];
+const left: Node[] = [
+  [16, 17, 2],
+  [62, 26, 1.5],
+  [8, 36, 2.2],
+  [44, 78, 1.8],
+  [18, 88, 1.5],
+];
+const right: Node[] = [
+  [-40, 14, 1.5],
+  [-22, 46, 2.2],
+  [-62, 57, 1.5],
+  [-10, 66, 1.8],
+];
+const leftLinks = [
+  [0, 1],
+  [1, 2],
+  [3, 4],
+];
+const rightLinks = [
+  [1, 2],
+  [2, 3],
+];
+const groups = [
+  { x: '0', nodes: left, links: leftLinks },
+  { x: '100%', nodes: right, links: rightLinks },
+];
+---
+
+<svg class="backdrop" aria-hidden="true" focusable="false">
+  {
+    groups.map((group) => (
+      <svg x={group.x} overflow="visible">
+        {group.links.map(([a, b]) => (
+          <line
+            x1={group.nodes[a][0]}
+            y1={`${group.nodes[a][1]}%`}
+            x2={group.nodes[b][0]}
+            y2={`${group.nodes[b][1]}%`}
+            stroke="var(--line-10)"
+            stroke-width="1"
+          />
+        ))}
+        {group.nodes.map(([x, y, r]) => (
+          <circle cx={x} cy={`${y}%`} r={r} fill="var(--line-14)" />
+        ))}
+      </svg>
+    ))
+  }
+</svg>
+
+<style>
+  .backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    pointer-events: none;
+  }
+
+  @media (max-width: 1199px) {
+    .backdrop {
+      display: none;
+    }
+  }
+</style>

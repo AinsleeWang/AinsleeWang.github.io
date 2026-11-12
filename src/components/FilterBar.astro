@@ -8,9 +8,12 @@ export type FilterTag = 'all' | 'essay' | 'build' | 'photo' | 'travel';
 export interface Props {
   active: FilterTag;
   count: number;
+  // Off where the header's own bottom hairline sits directly above (tag
+  // pages); on under the homepage hero.
+  topRule?: boolean;
 }
 
-const { active, count } = Astro.props;
+const { active, count, topRule = true } = Astro.props;
 const items: { key: FilterTag; label: string; href: string }[] = [
   { key: 'all', label: 'all', href: '/' },
   { key: 'essay', label: 'essay', href: '/tags/essay/' },
@@ -20,7 +23,7 @@ const items: { key: FilterTag; label: string; href: string }[] = [
 ];
 ---
 
-<nav class="filter-bar" aria-label="依類型篩選">
+<nav class={topRule ? 'filter-bar' : 'filter-bar filter-bar--no-top-rule'} aria-label="依類型篩選">
   {
     items.map((item) => (
       <a
@@ -49,6 +52,9 @@ const items: { key: FilterTag; label: string; href: string }[] = [
     text-transform: uppercase;
     flex-wrap: wrap;
   }
+  .filter-bar--no-top-rule {
+    border-top: 0;
+  }
   .filter-bar__item {
     color: var(--moss-300);
   }
@@ -63,6 +69,7 @@ const items: { key: FilterTag; label: string; href: string }[] = [
   }
   .filter-bar__count {
     margin-left: auto;
+    font-variant-numeric: tabular-nums;
     color: var(--muted-62);
     text-transform: none;
   }
