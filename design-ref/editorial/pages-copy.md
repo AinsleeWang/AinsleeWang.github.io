@@ -1,16 +1,18 @@
 # Locked copy for /about/, /projects/, 404
 
-Written by the coordinator. Use verbatim; do not paraphrase, extend, or add
-facts. Markdown emphasis (`*et*`) renders as `<em>`.
+Written by the coordinator, revised 2026-11-13 for the editorial direction
+(`docs/EDITORIAL-SPEC.md`): every page is paper, interface text is Chinese,
+no monospace or uppercase labels, Chinese is never italic. Use the copy
+verbatim; do not paraphrase, extend, or add facts. `*et*` marks a Latin word
+set in Garamond italic (use the `Lat` component, not `<em>` around Chinese).
 
 ---
 
-## /about/  (paper mode)
+## /about/  (reading layout)
 
-- Mono tag: `ABOUT`
+- Kicker: 關於
 - h1: `wit, et cetera.`
-- Lede (`.wt-lede`): 興趣雜得像一張永遠寫不完的清單。
-- Star-dot divider, then:
+- Band: 興趣雜得像一張永遠寫不完的清單。
 
 ### h2: et，是「以及」
 
@@ -24,32 +26,30 @@ wit.et 讀作 wit, et cetera——才智，以及其他。
 
 四個標籤，一條時間流。
 
-(definition list or four rows: mono tag on the left, sentence on the right;
-each tag links to `/tags/<tag>/`)
+(four rows: tag name in bold on the left, sentence on the right; each tag
+name links to `/tags/<tag>/`)
 
-- `ESSAY` — 把一件事想清楚之後，留下來的紀錄。
-- `BUILD` — 做東西的過程，和中途學到的小事。
-- `PHOTO` — 照片，以及按下快門的那個當下。
-- `TRAVEL` — 在路上。
+- 隨筆 — 把一件事想清楚之後，留下來的紀錄。
+- 實作 — 做東西的過程，和中途學到的小事。
+- 攝影 — 照片，以及按下快門的那個當下。
+- 旅行 — 在路上。
 
 清單還在寫。分類以後可能變多，也可能不會。
 
 ### h2: 這個網站是怎麼做的
 
-網站有兩種模式。長文用紙面：米白底、襯線字，像一頁印出來的稿子。其他頁面用深空：深藍黑底，細線和節點排成星圖。同一頁只會是其中一種。
-
-顏色、字級和間距都來自同一份 design tokens。英文是 Space Grotesk，中文是 Noto Serif TC 與 Noto Sans TC，程式碼和標籤是 JetBrains Mono。還沒有照片的文章，封面是一張依文章算出來的星圖，每篇都不一樣。
+整個網站只用一種紙：米白底、明體字，想做成一本攤開來讀的雜誌。中文是 Noto Serif TC，英文和數字是 EB Garamond，程式碼是 JetBrains Mono。顏色、字級和間距都來自同一份 design tokens。
 
 用 Astro 建置，[原始碼公開在 GitHub](https://github.com/AinsleeWang/AinsleeWang.github.io)。
 
 ### h2: 找到我
 
-(two rows, mono caps label + link; external links `rel="me noopener"`)
+(two rows, label in Garamond italic + link; external links `rel="me noopener"`)
 
-- `GITHUB` — [github.com/AinsleeWang](https://github.com/AinsleeWang)
-- `INSTAGRAM` — [@wit.etcetera](https://www.instagram.com/wit.etcetera/)
+- *github* — [github.com/AinsleeWang](https://github.com/AinsleeWang)
+- *instagram* — [@wit.etcetera](https://www.instagram.com/wit.etcetera/)
 
-### Closing paragraph (`lang="en"`, after a star-dot divider)
+### Closing paragraph (`lang="en"`, Garamond italic, after the ⋯ divider)
 
 wit.et is a list that never finishes — code, words, photographs, the road. *Et* means "and". The rest is et cetera.
 
@@ -58,52 +58,66 @@ wit.et is a list that never finishes — code, words, photographs, the road. *Et
 
 ---
 
-## /projects/  (deep-space)
+## /projects/  (list page, like a tag page)
 
-- Mono tag / eyebrow: `PROJECTS`
-- h1: `Projects`
-- Deck (one line, muted): 做過、而且公開放著的東西。
-- `<title>`: `Projects — wit.et`
+- h1: 作品
+- Deck (one line, `--ink-70`): 做過、而且公開放著的東西。
+- `<title>`: `作品 — wit.et`
 - meta description: wit.et 公開的專案：網站、地圖工具、Android app 與資料流程的紀錄。
 
-Rows, in this order. Fields: name · year · description · stack tags · links.
+Rows, in this order, numbered like the home list (05 at the top down to 01).
+Fields: name (large line, Latin so Garamond roman 500) · year (Garamond
+italic) · description · stack (one line, names separated by ` · `, Garamond
+roman, `--ink-50`) · links (Garamond italic `live` / `source`).
 Descriptions are final. Do not add awards, team member names, employers,
 user numbers, or any claim not written here.
 
 1. **wit.et** · 2026
-   你正在看的這個網站。雙模式設計系統、依文章生成的星圖封面，幾乎不用 JavaScript。
-   Stack: `ASTRO` `CSS` `DESIGN TOKENS`
-   Links: SOURCE → https://github.com/AinsleeWang/AinsleeWang.github.io
+   你正在看的這個網站。紙面排版、中英混排的字體規則，幾乎不用 JavaScript。
+   Stack: Astro · CSS · design tokens
+   Links: source → https://github.com/AinsleeWang/AinsleeWang.github.io
 
 2. **taipei-village-seismic-check** · 2026
    輸入臺北市的地址，查看所在的里的危老風險分數，並在 2D／3D 地圖上疊合圖層；另有一份用手機填的單棟初篩表單。分數是一個里的平均狀況，不是單棟的耐震評估。兩人團隊作品。
-   Stack: `MAPLIBRE GL` `DECK.GL` `PYTHON`
-   Links: LIVE → https://ainsleewang.github.io/taipei-village-seismic-check/ · SOURCE → https://github.com/AinsleeWang/taipei-village-seismic-check
+   Stack: MapLibre GL · deck.gl · Python
+   Links: live → https://ainsleewang.github.io/taipei-village-seismic-check/ · source → https://github.com/AinsleeWang/taipei-village-seismic-check
 
 3. **lolesports-rolster** · 2026
    Mark the players you like! 一個標記喜歡的英雄聯盟職業選手的單頁小工具。
-   Stack: `REACT` `VITE` `TAILWIND` `ZUSTAND`
-   Links: LIVE → https://ainsleewang.github.io/lolesports-rolster/ · SOURCE → https://github.com/AinsleeWang/lolesports-rolster
+   Stack: React · Vite · Tailwind · Zustand
+   Links: live → https://ainsleewang.github.io/lolesports-rolster/ · source → https://github.com/AinsleeWang/lolesports-rolster
 
 4. **ETL_Sports_Data_Valorization** · 2026
    一套 ETL 流程的架構紀錄：把健身社群 app 匯出的 Excel，轉成跨梯次的參與報表和個人趨勢圖。這個 repo 目前只有文件，程式碼尚未公開。
-   Stack: `PYTHON` `PANDAS` `CHART.JS`
-   Links: SOURCE → https://github.com/AinsleeWang/ETL_Sports_Data_Valorization
+   Stack: Python · pandas · Chart.js
+   Links: source → https://github.com/AinsleeWang/ETL_Sports_Data_Valorization
 
 5. **Island-Disaster-Survival-App** · 2025
    為沒有網路的災難情境設計的 Android app：用指南針和步數做離線避難導航，內建避難所資料、物資清單、摩斯電碼求救訊號與醫療卡。研究原型，還不是正式產品。
-   Stack: `KOTLIN` `JETPACK COMPOSE` `ROOM`
-   Links: SOURCE → https://github.com/AinsleeWang/Island-Disaster-Survival-App
+   Stack: Kotlin · Jetpack Compose · Room
+   Links: source → https://github.com/AinsleeWang/Island-Disaster-Survival-App
 
-After the last row: the three-node ellipsis mark alone on a row (the list is
-unfinished).
+After the last row: the end line 「清單還在寫 ⋯」.
 
 ---
 
-## 404  (deep-space)
+## 404
 
-- h1: `…` (rendered as the three-node ellipsis mark, with visually-hidden
-  text `404`)
-- Line: 這一頁不在清單上。
-- Mono link: `← 回到索引` → `/`
+- Masthead-style `h1` in Garamond italic: `404`
+- Line (Noto Serif TC 700): 這一頁不在清單上。
+- Link (upright, with the rule from the kicker): 回到文章 → `/`
 - `<title>`: `404 — wit.et`; `noindex`
+
+---
+
+## /archive/
+
+- h1: 全部文章
+- Grouped by year (year as a Garamond italic heading, newest first); each
+  row: date (Garamond italic `MM.DD`), title, tag name. Uses the same
+  numbered ordinal as the home list.
+- `<title>`: `全部文章 — wit.et`
+- The home page's end line becomes 「清單還在寫 ⋯」 followed by a link
+  全部文章 → `/archive/` once there are more than 10 posts; until then the
+  archive is linked from the footer only (`archive`, Garamond italic, placed
+  before `rss`).
