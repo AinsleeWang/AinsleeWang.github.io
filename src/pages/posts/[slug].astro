@@ -1,12 +1,9 @@
 ---
-// Article reading page. Dispatches by `tag` to one of three layouts (a
-// temporary split; the next work order merges them into one).
+// Article reading page: every post, whatever its tag, uses ArticleLayout.
 import { render } from 'astro:content';
 import { adjacentPosts, getPublishedPosts } from '../../lib/posts';
 import type { Post } from '../../lib/posts';
-import EssayLayout from '../../layouts/EssayLayout.astro';
-import BuildLayout from '../../layouts/BuildLayout.astro';
-import PhotoLayout from '../../layouts/PhotoLayout.astro';
+import ArticleLayout from '../../layouts/ArticleLayout.astro';
 
 export async function getStaticPaths() {
   const posts = await getPublishedPosts();
@@ -26,10 +23,4 @@ const { post, older, newer } = Astro.props;
 const { Content, headings } = await render(post);
 ---
 
-{post.data.tag === 'essay' && <EssayLayout post={post} Content={Content} older={older} newer={newer} />}
-{post.data.tag === 'build' && <BuildLayout post={post} Content={Content} headings={headings} older={older} newer={newer} />}
-{
-  (post.data.tag === 'photo' || post.data.tag === 'travel') && (
-    <PhotoLayout post={post} Content={Content} older={older} newer={newer} />
-  )
-}
+<ArticleLayout post={post} Content={Content} headings={headings} older={older} newer={newer} />

@@ -1,0 +1,101 @@
+---
+// ArticleLayout — the one reading page for every tag (EDITORIAL-SPEC
+// section 5, design-ref/editorial/essay.html and build.html): head, cover,
+// summary band, 680px prose with an optional table of contents, prev/next
+// within the tag. The parts inside the prose come from Markdown through
+// src/lib/markdown-plugins.mjs.
+import type { Post } from '../lib/posts';
+import type { AstroComponentFactory } from 'astro/runtime/server/index.js';
+import type { MarkdownHeading } from 'astro';
+import Base from './Base.astro';
+import ReadingHead from '../components/ReadingHead.astro';
+import PostNav from '../components/PostNav.astro';
+import ImageSlot from '../components/ImageSlot.astro';
+import Enhance from '../components/Enhance.astro';
+import Phrases from '../components/Phrases.astro';
+import '../styles/article.css';
+
+export interface Props {
+  post: Post;
+  Content: AstroComponentFactory;
+  headings: MarkdownHeading[];
+  older: Post | null;
+  newer: Post | null;
+}
+
+const { post, Content, headings, older, newer } = Astro.props;
+const { title, tag, summary, cover, coverAlt, sample, lang } = post.data;
+
+// A table of contents only for posts with three or more h2.
+const toc = headings.filter((h) => h.depth === 2);
+const showToc = toc.length >= 3;
+// The script is needed where the copy button or the TOC highlight is.
+const hasCode = post.rendered?.html?.includes('class="code-bar"') ?? false;
+---
+
+<Base title={`${title} — wit.et`} description={summary} rule noindex={sample} bleed>
+  <main id="main">
+    <div class="wrap">
+      <ReadingHead post={post} />
+      {
+        cover && (
+          <div class="cover">
+            <ImageSlot ratio="16/9" cover={cover} alt={coverAlt ?? title} eager />
+          </div>
+        )
+      }
+    </div>
+
+    {
+      summary && (
+        <div class="band">
+          <div class="wrap">
+            <p>
+              <Phrases text={summary} />
+            </p>
+          </div>
+        </div>
+      )
+    }
+
+    <div class="wrap">
+      <div class="layout">
+        {
+          showToc && (
+            <div class="toc-side">
+              <nav class="tocm" aria-label="目錄">
+                <span class="label">目錄</span>
+                {toc.map((h, i) => (
+                  <a href={`#${h.slug}`}>
+                    <i>{i + 1}</i>
+                    {h.text}
+                  </a>
+                ))}
+              </nav>
+            </div>
+          )
+        }
+        {
+          showToc && (
+            <details class="toc-m">
+              <summary>目錄</summary>
+              <nav aria-label="目錄">
+                {toc.map((h, i) => (
+                  <a href={`#${h.slug}`}>
+                    <i>{i + 1}</i>
+                    {h.text}
+                  </a>
+                ))}
+              </nav>
+            </details>
+          )
+        }
+        <article class="prose" lang={lang === 'en' ? 'en' : undefined}>
+          <Content />
+        </article>
+      </div>
+      <PostNav tag={tag} older={older} newer={newer} />
+    </div>
+  </main>
+  {(showToc || hasCode) && <Enhance />}
+</Base>

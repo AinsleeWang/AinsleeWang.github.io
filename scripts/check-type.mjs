@@ -48,7 +48,7 @@ function audit() {
   const all = [document.documentElement, ...document.body.querySelectorAll('*')];
   for (const el of all) {
     const cs = getComputedStyle(el);
-    if (/^\s*"?JetBrains Mono/i.test(cs.fontFamily) && !el.closest('pre, code, kbd, .code-bar, .wt-code-bar')) {
+    if (/^\s*"?JetBrains Mono/i.test(cs.fontFamily) && !el.closest('pre, code, kbd, .code-bar')) {
       out['mono-outside-code'].push(`${sum(el)} font-family=${cs.fontFamily}`);
     }
     if (cs.textTransform === 'uppercase') out.uppercase.push(sum(el));

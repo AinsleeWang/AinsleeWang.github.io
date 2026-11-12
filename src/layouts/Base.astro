@@ -17,9 +17,12 @@ export interface Props {
   // Seed posts carry `sample: true` — their reading pages render but
   // shouldn't be indexed until real content lands.
   noindex?: boolean;
+  // The page lays out its own `.wrap` sections (full-width bands between
+  // them); Base then only renders the header and footer, each in a wrap.
+  bleed?: boolean;
 }
 
-const { title, description, current, rule = false, noindex = false } = Astro.props;
+const { title, description, current, rule = false, noindex = false, bleed = false } = Astro.props;
 
 // Four faces, each with one job (docs/EDITORIAL-SPEC.md section 2).
 const fontsHref =
@@ -47,10 +50,24 @@ const themeColor = tokenValue('paper');
   </head>
   <body data-mode="paper">
     <a class="skip-link" href="#main">跳到內容</a>
-    <div class="wrap">
-      <SiteHeader current={current} rule={rule} />
-      <slot />
-      <SiteFooter />
-    </div>
+    {
+      bleed ? (
+        <>
+          <div class="wrap">
+            <SiteHeader current={current} rule={rule} />
+          </div>
+          <slot />
+          <div class="wrap">
+            <SiteFooter />
+          </div>
+        </>
+      ) : (
+        <div class="wrap">
+          <SiteHeader current={current} rule={rule} />
+          <slot />
+          <SiteFooter />
+        </div>
+      )
+    }
   </body>
 </html>

@@ -1,0 +1,575 @@
+/* article.css — the reading page: band, prose and its parts, code, figures,
+ * notes, table of contents. Values are lifted from
+ * design-ref/editorial/essay.html and build.html (docs/EDITORIAL-SPEC.md
+ * section 5). Sizes are --fs-* from site-scale.css; colours are named
+ * variables from global.css and tokens.css. The markup comes from
+ * src/lib/markdown-plugins.mjs and src/layouts/ArticleLayout.astro. */
+
+/* ---- cover and summary band ---- */
+.cover {
+  margin-bottom: 44px;
+}
+
+.band {
+  background: var(--band);
+  border-block: 1px solid var(--rule);
+}
+
+.band p {
+  max-width: 680px;
+  margin-inline: auto;
+  padding: 40px 0;
+  font-family: var(--zh);
+  font-weight: 500;
+  font-size: var(--fs-band);
+  line-height: 1.8;
+  letter-spacing: 0.06em;
+}
+
+/* ---- prose ---- */
+.layout {
+  position: relative;
+}
+
+.prose {
+  max-width: 680px;
+  margin-inline: auto;
+  padding: 56px 0 20px;
+  font-family: var(--zh);
+  font-size: var(--fs-prose);
+  line-height: 2.05;
+  letter-spacing: 0.045em;
+}
+
+.prose p {
+  margin-top: 1.5em;
+  text-align: justify;
+  text-wrap: pretty;
+}
+
+.prose p:first-child {
+  margin-top: 0;
+}
+
+.prose h2 {
+  margin-top: 3.2em;
+  padding-left: 18px;
+  border-left: 5px solid var(--moss-600);
+  font-weight: 700;
+  font-size: var(--fs-h2);
+  line-height: 1.5;
+  letter-spacing: 0.04em;
+}
+
+.prose h2:first-child {
+  margin-top: 0;
+}
+
+.prose h2 + p {
+  margin-top: 1.2em;
+}
+
+.prose h3 {
+  margin-top: 2.4em;
+  font-weight: 700;
+  font-size: var(--fs-h3);
+  line-height: 1.5;
+  letter-spacing: 0.04em;
+}
+
+.prose a {
+  color: var(--functional);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--functional) 45%, transparent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.prose a:hover {
+  text-decoration-color: var(--functional);
+  text-decoration-thickness: 2px;
+}
+
+.prose ul {
+  margin-top: 1.5em;
+  padding-inline-start: 1.4em;
+}
+
+.prose ul li + li {
+  margin-top: 0.5em;
+}
+
+.prose li::marker {
+  color: var(--moss-600);
+}
+
+/* Quotation: thin moss rule. A paragraph of Latin only is Garamond italic
+   (the plugin marks it .en); a Chinese one stays upright. */
+.prose blockquote {
+  margin: 2.2em 0;
+  padding-left: 1.6em;
+  border-left: 1px solid var(--moss-400);
+  color: var(--moss-700);
+}
+
+.prose blockquote .en {
+  font-family: var(--en);
+  font-style: italic;
+  font-size: var(--fs-quote-en);
+  line-height: 1.5;
+  letter-spacing: 0;
+  color: var(--ink);
+}
+
+.prose blockquote p {
+  margin-top: 0.5em;
+  text-align: left;
+}
+
+/* Inline code; the em is a ratio against the surrounding text, the one
+   font-size that is not a site-scale variable. */
+.prose :not(pre) > code {
+  font-family: var(--mono);
+  font-size: 0.86em;
+  letter-spacing: 0;
+  background: var(--band);
+  padding: 0.1em 0.4em;
+  border-radius: 3px;
+}
+
+/* A rule is the separator: three dots in moss. */
+.prose hr {
+  width: 120px;
+  height: auto;
+  margin: 3.4em auto;
+  border: 0;
+  text-align: center;
+  font-size: var(--fs-sep);
+  letter-spacing: 0.9em;
+  color: var(--moss-600);
+}
+
+.prose hr::after {
+  content: "⋯" / "";
+}
+
+.prose .credit {
+  font-size: var(--fs-credit);
+  line-height: 1.9;
+  letter-spacing: 0.08em;
+  color: var(--ink-50);
+}
+
+/* ---- ordered list: steps with Garamond italic numerals ---- */
+.prose ol {
+  margin: 1.4em 0 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: s;
+}
+
+.prose ol li {
+  counter-increment: s;
+  position: relative;
+  margin-top: 0.7em;
+  padding-left: 38px;
+  text-align: justify;
+}
+
+.prose ol li::before {
+  content: counter(s);
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-family: var(--en);
+  font-style: italic;
+  font-size: var(--fs-ol-no);
+  line-height: 1.45;
+  color: var(--moss-600);
+  letter-spacing: 0;
+}
+
+.prose li > p {
+  margin-top: 0;
+}
+
+.prose li > p + p {
+  margin-top: 0.7em;
+}
+
+/* references: the ordered list under the 參考資料 heading */
+.prose ol.refs {
+  margin-top: 1em;
+  font-size: var(--fs-refs);
+}
+
+.prose ol.refs li {
+  margin-top: 0.5em;
+  text-align: left;
+}
+
+.prose ol.refs li::before {
+  font-size: var(--fs-refs-no);
+  line-height: 1.87;
+}
+
+.prose ol.refs a {
+  text-decoration: none;
+  border-bottom: 1px solid var(--functional);
+  color: var(--functional);
+}
+
+/* ---- code ---- */
+.prose .code {
+  margin: 1.9em 0 0;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-sm);
+  background: var(--band);
+  letter-spacing: 0;
+  overflow: hidden;
+}
+
+.code-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 9px 16px;
+  border-bottom: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: var(--fs-code-bar);
+  line-height: 1.7; /* taller than the button, so adding it moves nothing */
+  letter-spacing: 0.06em;
+  color: var(--ink-50);
+}
+
+/* The button is added by Enhance.astro's script, so it only exists where it
+   can work. */
+.code-bar .copy {
+  all: unset;
+  position: relative;
+  cursor: pointer;
+  font-family: var(--zh);
+  font-size: var(--fs-copy);
+  line-height: 1;
+  letter-spacing: 0.2em;
+  color: var(--ink-70);
+}
+
+.code-bar .copy::after {
+  content: "";
+  position: absolute;
+  inset: -12px -16px;
+}
+
+.code-bar .copy:hover {
+  color: var(--functional);
+}
+
+.code-bar .copy:focus-visible {
+  outline: 2px solid var(--functional);
+  outline-offset: 3px;
+}
+
+/* Shiki's css-variables theme: paper map from EDITORIAL-SPEC section 5. */
+.code pre.astro-code {
+  --astro-code-foreground: var(--ink);
+  --astro-code-background: transparent;
+  --astro-code-token-keyword: var(--moss-700);
+  --astro-code-token-string: var(--stellar-600);
+  --astro-code-token-string-expression: var(--stellar-600);
+  --astro-code-token-function: var(--space-950);
+  --astro-code-token-constant: var(--moss-600);
+  --astro-code-token-comment: var(--ink-62);
+  --astro-code-token-punctuation: var(--ink);
+  --astro-code-token-parameter: var(--ink);
+  --astro-code-token-link: var(--functional);
+}
+
+.code pre {
+  margin: 0;
+  padding: 16px 18px 18px;
+  overflow: auto;
+  max-width: 100%;
+  font-family: var(--mono);
+  font-size: var(--fs-code);
+  line-height: 1.85;
+  color: var(--ink);
+}
+
+.code pre:focus-visible {
+  outline-offset: -2px;
+}
+
+.code pre code {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+.code pre span {
+  font-style: normal;
+}
+
+/* Highlighted line: runs the full width of the panel. inline-block, not
+   block, so the newline after it stays the only line break. */
+.code .line.hl {
+  display: inline-block;
+  min-width: calc(100% + 36px);
+  margin: 0 -18px;
+  padding: 0 18px;
+  background: color-mix(in srgb, var(--moss-400) 22%, transparent);
+  box-shadow: inset 3px 0 0 var(--moss-600);
+}
+
+.code .line.hl:empty::before {
+  content: "\200b";
+}
+
+/* ---- program output ---- */
+.out {
+  margin: 0.9em 0 0;
+  padding: 2px 0 2px 18px;
+  border-left: 1px solid var(--moss-400);
+  letter-spacing: 0;
+}
+
+.out > span {
+  display: block;
+  margin-bottom: 4px;
+  font-family: var(--zh);
+  font-size: var(--fs-out-label);
+  letter-spacing: 0.2em;
+  color: var(--ink-50);
+}
+
+.out pre {
+  margin: 0;
+  overflow: auto;
+  font-family: var(--mono);
+  font-size: var(--fs-out);
+  line-height: 1.8;
+  color: var(--ink-70);
+}
+
+.out pre code {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+.out pre:focus-visible {
+  outline-offset: 3px;
+}
+
+/* ---- figures ---- */
+.prose figure {
+  margin: 2.4em 0 0;
+}
+
+.prose figure.wide,
+.prose .gallery.wide {
+  margin-inline: -90px;
+}
+
+.shot {
+  display: block;
+  overflow: hidden;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-sm);
+}
+
+.shot img {
+  width: 100%;
+  height: auto;
+}
+
+.prose figcaption {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 14px;
+  font-family: var(--zh);
+  font-size: var(--fs-figcaption);
+  line-height: 1.8;
+  letter-spacing: 0.05em;
+  color: var(--ink-70);
+  text-align: left;
+}
+
+.fig-no {
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  white-space: nowrap;
+  color: var(--moss-700);
+}
+
+.prose .gallery {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 20px;
+  align-items: start;
+  margin-top: 2.4em;
+}
+
+.prose .gallery figure {
+  margin-top: 0;
+  min-width: 0;
+}
+
+/* ---- note (注意 / 補充) ---- */
+.prose .note {
+  margin: 2em 0 0;
+  padding: 18px 22px;
+  border: 1px solid var(--rule);
+  border-left: 5px solid var(--moss-600);
+}
+
+.prose .note b {
+  display: block;
+  margin-bottom: 4px;
+  font-weight: 700;
+  font-size: var(--fs-note-title);
+  letter-spacing: 0.2em;
+}
+
+.prose .note p {
+  margin: 0;
+}
+
+.prose .note p + p {
+  margin-top: 0.6em;
+}
+
+/* ---- table of contents ---- */
+.toc-side {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -56px; /* the mock sets it against the wrap's padding edge */
+  width: 170px;
+}
+
+.tocm {
+  position: sticky;
+  top: 24px;
+  margin-top: 64px;
+  font-family: var(--zh);
+  font-size: var(--fs-toc);
+  line-height: 1.7;
+  letter-spacing: 0.06em;
+}
+
+.tocm .label {
+  display: block;
+  padding-bottom: 10px;
+  margin-bottom: 12px;
+  border-bottom: 1px solid var(--rule-strong);
+  font-weight: 700;
+  letter-spacing: 0.3em;
+}
+
+.tocm a,
+.toc-m a {
+  display: grid;
+  grid-template-columns: 26px 1fr;
+  padding: 5px 0;
+  color: var(--ink-50);
+}
+
+.tocm a i,
+.toc-m a i {
+  font-family: var(--en);
+  font-style: italic;
+  font-size: var(--fs-toc-no);
+}
+
+.tocm a:hover,
+.tocm a:focus-visible {
+  color: var(--ink);
+}
+
+.tocm a.on {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+/* Below 1180px the margin is gone: a disclosure above the prose instead. */
+.toc-m {
+  max-width: 680px;
+  margin: 36px auto 0;
+  font-family: var(--zh);
+  font-size: var(--fs-toc);
+  letter-spacing: 0.06em;
+  border-block: 1px solid var(--rule);
+}
+
+.toc-m summary {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+  cursor: pointer;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+}
+
+.toc-m a {
+  align-items: center;
+  min-height: 44px;
+  padding: 0;
+}
+
+@media (max-width: 1179px) {
+  .toc-side {
+    display: none;
+  }
+}
+
+@media (min-width: 1180px) {
+  .toc-m {
+    display: none;
+  }
+}
+
+/* ---- narrow ---- */
+@media (max-width: 859px) {
+  .prose figure.wide,
+  .prose .gallery.wide {
+    margin-inline: -22px;
+  }
+}
+
+@media (max-width: 820px) {
+  .cover {
+    margin-bottom: 30px;
+  }
+
+  .band p {
+    font-size: var(--fs-band-m);
+    padding: 28px 22px;
+  }
+
+  .prose {
+    padding-top: 36px;
+    font-size: var(--fs-prose-m);
+    line-height: 2;
+  }
+
+  .prose h2 {
+    font-size: var(--fs-h2-m);
+  }
+
+  .prose .gallery {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .prose .gallery figure + figure {
+    margin-top: 2.4em;
+  }
+
+  .prose .wide .shot {
+    border-radius: 0;
+    border-inline: 0;
+  }
+
+  .prose .wide figcaption {
+    padding-inline: 22px;
+  }
+}

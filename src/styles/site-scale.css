@@ -1,5 +1,5 @@
 /* site-scale.css — every font size on the site, lifted from
- * design-ref/editorial/home.html and essay.html. Components read these
+ * design-ref/editorial/home.html, essay.html and build.html. Components read these
  * variables; no other file writes a literal font-size (inline code's
  * relative em is the one exception). */
 :root {
@@ -43,19 +43,32 @@
   --fs-row-small: 13px;
   --fs-end: 15px;
 
-  /* reading pages (temporary, replaced by the next work order) */
+  /* reading pages (design-ref/editorial/essay.html and build.html) */
   --fs-h1: clamp(32px, 4.4vw, 54px);
   --fs-h2: 25px;
   --fs-h2-m: 22px;
+  --fs-h3: 20px;
   --fs-band: 24px;
   --fs-band-m: 20px;
   --fs-prose: 17px;
   --fs-prose-m: 16.5px;
-  --fs-small: 14px;
+  --fs-quote-en: 26px;
+  --fs-credit: 14px;
+  --fs-sep: 15px;
   --fs-pn-label: 13px;
   --fs-pn-title: 17px;
+
+  /* technical parts */
   --fs-code: 13.5px;
-  --fs-code-bar: 12px;
-  --fs-figcaption: 13px;
+  --fs-code-bar: 11px;
+  --fs-copy: 13px;
+  --fs-out-label: 12.5px;
+  --fs-out: 13px;
+  --fs-figcaption: 14px;
+  --fs-note-title: 14px;
+  --fs-ol-no: 24px;
+  --fs-refs: 15.5px;
+  --fs-refs-no: 17px;
   --fs-toc: 14px;
+  --fs-toc-no: 16px;
 }
