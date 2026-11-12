@@ -4,10 +4,11 @@
 // count is the true total of build posts (see docs/pr/E-1.2.md — the
 // design mock's sample count of "6" does not match this repo's 5 real
 // build posts, flagged there rather than hardcoded here).
-import type { CollectionEntry } from 'astro:content';
+import type { Post } from '../lib/posts';
+import { readingMinutes } from '../lib/posts';
 
 export interface Props {
-  posts: CollectionEntry<'posts'>[]; // all build posts, sorted newest first
+  posts: Post[]; // all build posts, sorted newest first
 }
 
 const { posts } = Astro.props;
@@ -28,7 +29,7 @@ const formatShortDate = (d: Date) => `${String(d.getUTCMonth() + 1).padStart(2, 
         <div class="build-log__title">{post.data.title}</div>
         <div class="build-log__meta">
           {formatShortDate(post.data.date)}
-          {post.data.minutes != null && <> &middot; {post.data.minutes} MIN</>}
+          {` · ${readingMinutes(post)} MIN`}
         </div>
       </a>
     ))

@@ -9,22 +9,27 @@
 // tonight per the brief — every item here uses --moss-300 uniformly
 // instead (see prose-deep.css's comment on .wt-toc; that accent color
 // stays limited to its allowed spots per docs/DECISIONS.md).
-import type { CollectionEntry } from 'astro:content';
+import type { Post } from '../lib/posts';
+import { readingMinutes } from '../lib/posts';
 import type { AstroComponentFactory } from 'astro/runtime/server/index.js';
 import type { MarkdownHeading } from 'astro';
 import Base from './Base.astro';
 import SiteHeader from '../components/SiteHeader.astro';
+import PostNav from '../components/PostNav.astro';
 import '../styles/prose-deep.css';
 
 export interface Props {
-  post: CollectionEntry<'posts'>;
+  post: Post;
   mode: 'paper' | 'deep-space';
   Content: AstroComponentFactory;
   headings: MarkdownHeading[];
+  older: Post | null;
+  newer: Post | null;
 }
 
-const { post, mode, Content, headings } = Astro.props;
-const { title, date, tag, minutes, sample } = post.data;
+const { post, mode, Content, headings, older, newer } = Astro.props;
+const { title, date, tag, sample } = post.data;
+const minutes = readingMinutes(post);
 const toc = headings.filter((h) => h.depth === 2);
 
 const formatDate = (d: Date) =>
@@ -72,14 +77,12 @@ const ARTICLE_NAV = [
           <span class="wt-tag">{tag}</span>
           <span class="wt-meta">
             {dateStr}
-            {minutes != null && ` · ${minutes} MIN`}
+            {` · ${minutes} MIN`}
           </span>
         </div>
         <h1>{title}</h1>
         <Content />
-        <div class="wt-article-footer">
-          <a href="/tags/build/">← 更多 build</a>
-        </div>
+        <PostNav tag={tag} mode={mode} older={older} newer={newer} />
       </article>
     </div>
   </div>

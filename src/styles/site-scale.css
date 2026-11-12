@@ -84,3 +84,9 @@ html body[data-mode="paper"] .wt-article {
 :root {
   --fs-tag-row-title: 17px; /* design-ref 1b line 126-127 */
 }
+
+/* Launch 1: empty state (POLISH-SPEC section 1) and prev/next navigation. */
+:root {
+  --fs-empty-title: 24px; /* 「清單還在寫。」 */
+  --fs-postnav: 15px; /* prev/next neighbour titles */
+}

@@ -4,46 +4,37 @@
 // layouts; the *mode* each layout renders in always comes from
 // src/lib/modes.ts's modeForTag (never hardcoded here), per
 // docs/DECISIONS.md C1.
-import { getCollection, render } from 'astro:content';
-import type { CollectionEntry } from 'astro:content';
+import { render } from 'astro:content';
+import { adjacentPosts, getPublishedPosts } from '../../lib/posts';
+import type { Post } from '../../lib/posts';
 import { modeForTag } from '../../lib/modes';
 import EssayLayout from '../../layouts/EssayLayout.astro';
 import BuildLayout from '../../layouts/BuildLayout.astro';
 import PhotoLayout from '../../layouts/PhotoLayout.astro';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('posts');
+  const posts = await getPublishedPosts();
   return posts.map((post) => ({
     params: { slug: post.id },
-    props: { post },
+    props: { post, ...adjacentPosts(post, posts) },
   }));
 }
 
 export interface Props {
-  post: CollectionEntry<'posts'>;
+  post: Post;
+  older: Post | null;
+  newer: Post | null;
 }
 
-const { post } = Astro.props;
+const { post, older, newer } = Astro.props;
 const { Content, headings } = await render(post);
 const mode = modeForTag[post.data.tag];
-
-// ESSAY footer links to the previous *essay*-tagged post by date (design-ref
-// 1e: "← 上一篇 · 關於「以及」" — the linked post is the previous essay, not
-// simply the previous post of any tag). Only computed for essay posts.
-let prevEssay: CollectionEntry<'posts'> | null = null;
-if (post.data.tag === 'essay') {
-  const essays = (await getCollection('posts'))
-    .filter((p) => p.data.tag === 'essay')
-    .sort((a, b) => a.data.date.valueOf() - b.data.date.valueOf());
-  const idx = essays.findIndex((p) => p.id === post.id);
-  prevEssay = idx > 0 ? essays[idx - 1] : null;
-}
 ---
 
-{post.data.tag === 'essay' && <EssayLayout post={post} mode={mode} Content={Content} prevEssay={prevEssay} />}
-{post.data.tag === 'build' && <BuildLayout post={post} mode={mode} Content={Content} headings={headings} />}
+{post.data.tag === 'essay' && <EssayLayout post={post} mode={mode} Content={Content} older={older} newer={newer} />}
+{post.data.tag === 'build' && <BuildLayout post={post} mode={mode} Content={Content} headings={headings} older={older} newer={newer} />}
 {
   (post.data.tag === 'photo' || post.data.tag === 'travel') && (
-    <PhotoLayout post={post} mode={mode} Content={Content} />
+    <PhotoLayout post={post} mode={mode} Content={Content} older={older} newer={newer} />
   )
 }

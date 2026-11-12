@@ -7,24 +7,25 @@
 // width; body paragraphs are capped at 620px like the design-ref's closing
 // paragraph (line 460).
 //
-// None of this milestone's seed posts set `cover`, so the `post.data.cover`
-// branch below is implemented per the brief but unexercised by
-// scripts/verify.sh's three sample routes — flagged in docs/pr/E-1.3.md.
-import type { CollectionEntry } from 'astro:content';
+// The cover is the first image on the page, so it loads eagerly.
+import type { Post } from '../lib/posts';
 import type { AstroComponentFactory } from 'astro/runtime/server/index.js';
 import Base from './Base.astro';
 import SiteHeader from '../components/SiteHeader.astro';
+import PostNav from '../components/PostNav.astro';
 import ImageSlot from '../components/ImageSlot.astro';
 import '../styles/prose-deep.css';
 
 export interface Props {
-  post: CollectionEntry<'posts'>;
+  post: Post;
   mode: 'paper' | 'deep-space';
   Content: AstroComponentFactory;
+  older: Post | null;
+  newer: Post | null;
 }
 
-const { post, mode, Content } = Astro.props;
-const { title, date, tag, summary, frames, location, cover, sample } = post.data;
+const { post, mode, Content, older, newer } = Astro.props;
+const { title, date, tag, summary, frames, location, cover, coverAlt, sample } = post.data;
 
 const formatDate = (d: Date) =>
   `${d.getUTCFullYear()}.${String(d.getUTCMonth() + 1).padStart(2, '0')}.${String(d.getUTCDate()).padStart(2, '0')}`;
@@ -32,9 +33,6 @@ const formatDate = (d: Date) =>
 const metaParts = [formatDate(date)];
 if (location) metaParts.push(location);
 if (frames != null) metaParts.push(`${frames} FRAMES`);
-
-const moreHref = `/tags/${tag}/`;
-const moreLabel = tag === 'photo' ? '← 更多 photo' : '← 更多 travel';
 
 const ARTICLE_NAV = [
   { label: '索引', href: '/' },
@@ -58,16 +56,14 @@ const ARTICLE_NAV = [
       </div>
 
       <div class="wt-photo-cover">
-        {cover ? <img src={cover} alt={title} /> : <ImageSlot ratio="16/9" />}
+        <ImageSlot ratio="16/9" cover={cover} alt={coverAlt ?? title} eager />
       </div>
 
       <div class="wt-photo-body">
         <Content />
       </div>
 
-      <div class="wt-article-footer">
-        <a href={moreHref}>{moreLabel}</a>
-      </div>
+      <PostNav tag={tag} mode={mode} older={older} newer={newer} />
     </article>
   </div>
 </Base>

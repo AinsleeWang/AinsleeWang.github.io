@@ -1,12 +1,12 @@
 // RSS feed — E-1.3 part 2. SiteHeader (homepage + article nav) links here;
-// before this file existed the link 404'd. All posts, newest first; same
-// sort as src/pages/index.astro.
+// before this file existed the link 404'd. Published posts, newest first
+// (src/lib/posts.ts).
 import rss from '@astrojs/rss';
 import type { APIContext } from 'astro';
-import { getCollection } from 'astro:content';
+import { getPublishedPosts } from '../lib/posts';
 
 export async function GET(context: APIContext) {
-  const posts = (await getCollection('posts')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+  const posts = await getPublishedPosts();
 
   return rss({
     title: 'wit.et',
