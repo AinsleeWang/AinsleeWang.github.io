@@ -104,6 +104,8 @@ cleanup() {
   # npx forks the real server as a child, so killing the wrapper PID can
   # leave it listening; ask astro to stop it as well.
   npx astro preview stop > /dev/null 2>&1 || true
+  # Last resort: nothing may keep listening on the preview port.
+  lsof -ti :4321 2>/dev/null | xargs kill 2>/dev/null || true
 }
 trap cleanup EXIT
 
