@@ -22,11 +22,16 @@ a {
   text-decoration: none;
 }
 
-:root {
-  /* Reused by later milestones: --font-en ends in a generic "sans-serif"
-     fallback, which would win over --font-zh for CJK text if placed first.
-     This stack names the Latin face directly, then falls through to
-     --font-zh (which itself ends in serif/sans-serif). */
+/* Declared on [data-mode] (the <body>), not :root: --font-zh only exists
+   from the mode element down, and a custom property that references an
+   undefined one is invalid where it is declared — on :root these stacks
+   resolved to nothing and every var(--font-stack) fell back to the
+   browser default. */
+[data-mode] {
+  /* --font-en ends in a generic "sans-serif" fallback, which would win
+     over --font-zh for CJK text if placed first. This stack names the
+     Latin face directly, then falls through to --font-zh (which itself
+     ends in serif/sans-serif). */
   --font-stack: "Space Grotesk", var(--font-zh);
 }
 
