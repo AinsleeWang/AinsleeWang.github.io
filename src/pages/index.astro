@@ -56,7 +56,7 @@ const [feat, ...rest] = all;
       )
     }
 
-    <PostList posts={rest} numbers={numbers} />
+    <PostList posts={rest} numbers={numbers} archive={all.length > 10} />
   </main>
 </Base>
 

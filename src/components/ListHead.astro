@@ -1,0 +1,26 @@
+---
+// ListHead — the head of a list page: h1 and an optional one-line deck or
+// count (slot). Used by the tag pages, the archive and the projects page.
+export interface Props {
+  title: string;
+}
+---
+
+<section class="head">
+  <h1>{Astro.props.title}</h1>
+  <p class="meta"><slot /></p>
+</section>
+
+<style>
+  .head {
+    padding: 36px 0 40px;
+    border-top: 1px solid var(--rule-strong);
+  }
+  h1 {
+    font-family: var(--zh);
+    font-weight: 700;
+    font-size: var(--fs-feat);
+    line-height: 1.28;
+    letter-spacing: 0.02em;
+  }
+</style>

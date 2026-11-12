@@ -8,6 +8,7 @@ import Base from '../../layouts/Base.astro';
 import FilterBar from '../../components/FilterBar.astro';
 import PostList from '../../components/PostList.astro';
 import Lat from '../../components/Lat.astro';
+import ListHead from '../../components/ListHead.astro';
 
 export async function getStaticPaths() {
   return TAGS.map((tag) => ({ params: { tag } }));
@@ -22,25 +23,8 @@ const posts = all.filter((p) => p.data.tag === tag);
 
 <Base title={`${TAG_LABEL[tag]} — wit.et`} current="index">
   <main id="main">
-    <section class="head">
-      <h1>{TAG_LABEL[tag]}</h1>
-      <p class="meta">共 <Lat>{posts.length}</Lat> 篇</p>
-    </section>
+    <ListHead title={TAG_LABEL[tag]}>共 <Lat>{posts.length}</Lat> 篇</ListHead>
     <FilterBar active={tag} count={posts.length} />
     <PostList posts={posts} numbers={numbers} />
   </main>
 </Base>
-
-<style>
-  .head {
-    padding: 36px 0 40px;
-    border-top: 1px solid var(--rule-strong);
-  }
-  h1 {
-    font-family: var(--zh);
-    font-weight: 700;
-    font-size: var(--fs-feat);
-    line-height: 1.28;
-    letter-spacing: 0.02em;
-  }
-</style>
