@@ -2,6 +2,9 @@
 import '../styles/vendor/tokens.css';
 import '../styles/global.css';
 import '../styles/site-scale.css';
+import Backdrop from '../components/Backdrop.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import { tokenValue } from '../lib/tokens';
 
 export interface Props {
   title: string;
@@ -13,6 +16,8 @@ export interface Props {
 }
 
 const { title, description, mode, noindex = false } = Astro.props;
+
+const themeColor = tokenValue(mode === 'paper' ? 'paper' : 'space-950');
 ---
 
 <!doctype html>
@@ -20,6 +25,7 @@ const { title, description, mode, noindex = false } = Astro.props;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
+    <meta name="theme-color" content={themeColor} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="alternate" type="application/rss+xml" title="wit.et" href="/rss.xml" />
     <title>{title}</title>
@@ -34,6 +40,9 @@ const { title, description, mode, noindex = false } = Astro.props;
     />
   </head>
   <body data-mode={mode}>
+    <a class="skip-link" href="#main">跳到內容</a>
+    {mode === 'deep-space' && <Backdrop />}
     <slot />
+    <SiteFooter mode={mode} />
   </body>
 </html>

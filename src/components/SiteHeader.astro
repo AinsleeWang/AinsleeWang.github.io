@@ -7,28 +7,34 @@
 // Color rule (brief): deep-space uses --moss-300 for logo+nav, paper uses
 // --moss-600 for the logo and --moss-700 for nav (design-ref 1e, lines
 // 342-345). --starglow is the one exception allowed on the last node.
+//
+// One nav everywhere (docs/POLISH-SPEC.md section 3). `current` marks the
+// page the visitor is on with aria-current="page"; only a nav item's own
+// page sets it (the homepage for 索引 — tag and reading pages set nothing).
+// `rule` draws the bottom hairline; the homepage turns it off because the
+// hero supplies its own top rule.
+export type NavKey = 'index' | 'about' | 'projects';
+
 export interface Props {
   mode: 'paper' | 'deep-space';
   glow?: boolean;
-  // E-1.3 article pages use "索引 / 關於 / rss" instead of the homepage's
-  // "關於 / Projects / RSS" (design-ref 1e/1f/1g lines 345/383/429 vs 1a
-  // line 50) — same header, different nav items, so it's a prop rather
-  // than a second component.
-  nav?: { label: string; href: string }[];
+  current?: NavKey;
+  rule?: boolean;
 }
 
-const DEFAULT_NAV = [
-  { label: '關於', href: '/about/' },
-  { label: 'Projects', href: '/projects/' },
-  { label: 'RSS', href: '/rss.xml' },
+const NAV: { key: NavKey | 'rss'; label: string; href: string }[] = [
+  { key: 'index', label: '索引', href: '/' },
+  { key: 'about', label: '關於', href: '/about/' },
+  { key: 'projects', label: 'PROJECTS', href: '/projects/' },
+  { key: 'rss', label: 'RSS', href: '/rss.xml' },
 ];
 
-const { mode, glow = true, nav = DEFAULT_NAV } = Astro.props;
+const { mode, glow = true, current, rule = true } = Astro.props;
 const lineColor = mode === 'paper' ? 'var(--moss-600)' : 'var(--moss-300)';
 const navColor = mode === 'paper' ? 'var(--moss-700)' : 'var(--moss-300)';
 ---
 
-<header class={`site-header site-header--${mode}`} style={`--line-color:${lineColor}; --nav-color:${navColor};`}>
+<header class={`site-header site-header--${mode}${rule ? ' site-header--rule' : ''}`} style={`--line-color:${lineColor}; --nav-color:${navColor};`}>
   <a href="/" class="site-header__brand" aria-label="wit.et — 首頁">
     {
       glow ? (
@@ -55,7 +61,13 @@ const navColor = mode === 'paper' ? 'var(--moss-700)' : 'var(--moss-300)';
     <span class="site-header__wordmark">wit.et</span>
   </a>
   <nav class="site-header__nav" aria-label="主導覽">
-    {nav.map((item) => <a href={item.href}>{item.label}</a>)}
+    {
+      NAV.map((item) => (
+        <a href={item.href} aria-current={item.key === current ? 'page' : undefined}>
+          {item.label}
+        </a>
+      ))
+    }
   </nav>
 </header>
 
@@ -66,9 +78,14 @@ const navColor = mode === 'paper' ? 'var(--moss-700)' : 'var(--moss-300)';
     justify-content: space-between;
     padding-bottom: 28px;
   }
+  .site-header--rule {
+    border-bottom: 1px solid var(--line-22);
+  }
   .site-header--paper {
-    border-bottom: 1px solid var(--line-paper-12);
     padding-bottom: 20px;
+  }
+  .site-header--paper.site-header--rule {
+    border-bottom-color: var(--line-paper-12);
   }
   .site-header__brand {
     display: flex;
@@ -89,13 +106,23 @@ const navColor = mode === 'paper' ? 'var(--moss-700)' : 'var(--moss-300)';
   .site-header__nav {
     display: flex;
     gap: 28px;
-    font-family: var(--font-mono);
+    /* Mono for the Latin items; the two CJK items fall through to the
+       mode's own CJK face instead of a system fallback. */
+    font-family: var(--font-mono-stack);
     font-size: var(--fs-nav);
+    /* Fixed line-height + baseline alignment: the CJK face has taller
+       metrics than the mono one and would otherwise sit lower. */
+    line-height: 1.5;
+    align-items: baseline;
     letter-spacing: 0.05em;
     text-transform: uppercase;
   }
   .site-header__nav a {
     color: var(--nav-color);
+  }
+  .site-header__nav a[aria-current='page'] {
+    padding-bottom: 3px;
+    border-bottom: 1px solid var(--nav-color);
   }
 
   @media (max-width: 767px) {
@@ -103,13 +130,28 @@ const navColor = mode === 'paper' ? 'var(--moss-700)' : 'var(--moss-300)';
        media query only — min-height is a floor, and .site-header already
        centers its children vertically, so this doesn't shift the logo's
        position or change its rendered height at 1280px. */
+    .site-header {
+      gap: 12px;
+    }
     .site-header__brand {
       min-height: 44px;
+    }
+    .site-header__nav {
+      gap: 18px;
     }
     .site-header__nav a {
       display: flex;
       align-items: center;
       min-height: 44px;
+    }
+    /* The 44px box would drop the underline far below the label; draw it
+       under the text instead. */
+    .site-header__nav a[aria-current='page'] {
+      padding-bottom: 0;
+      border-bottom: 0;
+      text-decoration: underline;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 6px;
     }
   }
 </style>

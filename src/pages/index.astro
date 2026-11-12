@@ -9,6 +9,7 @@ import Hero from '../components/Hero.astro';
 import FilterBar from '../components/FilterBar.astro';
 import PostCard from '../components/PostCard.astro';
 import BuildLog from '../components/BuildLog.astro';
+import ListSoFar from '../components/ListSoFar.astro';
 import EmptyState from '../components/EmptyState.astro';
 
 const allPosts = await getPublishedPosts();
@@ -23,23 +24,23 @@ const featuredId = streamPosts[0]?.data.tag === 'photo' ? streamPosts[0].id : nu
 
 <Base title="wit.et — 才智，以及其他。" description="程式、文字、照片、路上——一份永遠沒寫完的清單。" mode="deep-space">
   <div class="container page">
-    <SiteHeader mode="deep-space" />
+    <SiteHeader mode="deep-space" current="index" rule={false} />
     <Hero />
     <FilterBar active="all" count={allPosts.length} />
 
     {
       allPosts.length === 0 ? (
-        <main class="layout layout--empty">
+        <main id="main" class="layout layout--empty">
           <EmptyState />
         </main>
       ) : (
-        <main class="layout">
+        <main id="main" class="layout">
           <section class="stream" aria-label="文章列表">
             {streamPosts.map((post, i) => (
               <PostCard post={post} featured={post.id === featuredId} eager={i === 0} />
             ))}
           </section>
-          {buildPosts.length > 0 && <BuildLog posts={buildPosts} />}
+          {buildPosts.length > 0 ? <BuildLog posts={buildPosts} /> : <ListSoFar posts={allPosts} />}
         </main>
       )
     }

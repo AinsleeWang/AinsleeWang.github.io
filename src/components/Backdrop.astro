@@ -1,0 +1,70 @@
+---
+// Backdrop — the star-chart grid behind deep-space pages (VIS brief section
+// 5.1; docs/POLISH-SPEC.md section 3). Fixed, decorative, non-interactive:
+// 14 nodes and 5 links, hand-placed. Meant to be found, not noticed; no accent colour.
+// Base.astro renders it for deep-space pages only.
+// Coordinates are in a 1440x900 field that covers the viewport ("slice").
+// The linked groups sit at x < 150 or x > 1290: outside the 1280px content
+// column on every desktop width, so no line ever runs behind text. Only
+// lone nodes fall inside the column, and none in the header band.
+// Below 1200px there is no margin left for the groups and the lone nodes
+// alone read as specks on the screen, so the backdrop is not shown.
+const nodes = [
+  [96, 150, 2],
+  [142, 236, 1.5],
+  [88, 322, 2.2],
+  [1338, 420, 2.2],
+  [1296, 512, 1.5],
+  [1352, 590, 1.8],
+  [124, 706, 1.8],
+  [98, 792, 1.5],
+  [388, 640, 1.5],
+  [742, 372, 1.5],
+  [1010, 132, 1.8],
+  [560, 470, 1.5],
+  [884, 818, 1.8],
+  [1180, 762, 1.5],
+];
+const links = [
+  [0, 1],
+  [1, 2],
+  [3, 4],
+  [4, 5],
+  [6, 7],
+];
+---
+
+<svg class="backdrop" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+  {
+    links.map(([a, b]) => (
+      <line
+        x1={nodes[a][0]}
+        y1={nodes[a][1]}
+        x2={nodes[b][0]}
+        y2={nodes[b][1]}
+        stroke="var(--line-10)"
+        stroke-width="1"
+        vector-effect="non-scaling-stroke"
+      />
+    ))
+  }
+  {nodes.map(([x, y, r]) => <circle cx={x} cy={y} r={r} fill="var(--line-14)" />)}
+</svg>
+
+<style>
+  .backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    pointer-events: none;
+  }
+
+  @media (max-width: 1199px) {
+    .backdrop {
+      display: none;
+    }
+  }
+</style>

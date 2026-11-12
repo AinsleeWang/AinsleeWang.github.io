@@ -9,7 +9,7 @@
 // rather than the MonoTag component: MonoTag has no border box around the
 // tag and isn't mode-aware (always --moss-300), so it can't reproduce 1e's
 // bordered tag + paper-mode moss-700 meta text. SiteHeader is reused as
-// specified (glow={false}, the 34x17 inner-page variant + the article nav).
+// specified (glow={false}, the 34x17 inner-page variant).
 import type { Post } from '../lib/posts';
 import { readingMinutes } from '../lib/posts';
 import type { AstroComponentFactory } from 'astro/runtime/server/index.js';
@@ -17,6 +17,7 @@ import Base from './Base.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import PostNav from '../components/PostNav.astro';
 import '../styles/vendor/article.css';
+import '../styles/prose-paper.css';
 
 export interface Props {
   post: Post;
@@ -28,44 +29,43 @@ export interface Props {
 }
 
 const { post, mode, Content, older, newer } = Astro.props;
-const { title, date, tag, summary, sample, location } = post.data;
+const { title, date, tag, summary, sample, location, lang } = post.data;
 const minutes = readingMinutes(post);
 
 const formatDate = (d: Date) =>
   `${d.getUTCFullYear()}.${String(d.getUTCMonth() + 1).padStart(2, '0')}.${String(d.getUTCDate()).padStart(2, '0')}`;
 const dateStr = formatDate(date);
-
-const ARTICLE_NAV = [
-  { label: '索引', href: '/' },
-  { label: '關於', href: '/about/' },
-  { label: 'RSS', href: '/rss.xml' },
-];
 ---
 
 <Base title={`${title} — wit.et`} description={summary} mode={mode} noindex={sample}>
   <div class="container page">
-    <SiteHeader mode={mode} glow={false} nav={ARTICLE_NAV} />
+    <SiteHeader mode={mode} glow={false} />
 
-    <article class="wt-article">
-      <div class="wt-meta-row">
-        <span class="wt-tag">{tag}</span>
-        <span class="wt-meta">
-          {dateStr}
-          {location && ` · ${location}`}
-          {` · ${minutes} MIN`}
-        </span>
-      </div>
-      <h1>{title}</h1>
-      {summary && <p class="wt-lede">{summary}</p>}
-      <hr />
-      <Content />
-      <PostNav tag={tag} mode={mode} older={older} newer={newer} />
-    </article>
+    <main id="main">
+      <article class="wt-article" lang={lang === 'en' ? 'en' : undefined}>
+        <div class="wt-meta-row">
+          <span class="wt-tag">{tag}</span>
+          <span class="wt-meta">
+            {dateStr}
+            {location && ` · ${location}`}
+            {` · ${minutes} MIN`}
+          </span>
+        </div>
+        <h1>{title}</h1>
+        {summary && <p class="wt-lede">{summary}</p>}
+        <hr />
+        <Content />
+        <PostNav tag={tag} mode={mode} older={older} newer={newer} />
+      </article>
+    </main>
   </div>
 </Base>
 
 <style>
   .page {
     padding-block: 26px 72px;
+  }
+  .wt-article {
+    margin-top: var(--reading-top);
   }
 </style>

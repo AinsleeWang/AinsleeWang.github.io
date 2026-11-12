@@ -90,3 +90,9 @@ html body[data-mode="paper"] .wt-article {
   --fs-empty-title: 24px; /* 「清單還在寫。」 */
   --fs-postnav: 15px; /* prev/next neighbour titles */
 }
+
+/* Launch 2: site chrome (POLISH-SPEC section 3). */
+:root {
+  --fs-footer-brand: 15px; /* footer "wit, et cetera." */
+  --fs-skip: 14px; /* skip link 「跳到內容」 */
+}

@@ -50,6 +50,7 @@
   line-height: 1.5;
   letter-spacing: 0.06em;
   text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
   color: var(--moss-300);
 }
 
@@ -358,5 +359,8 @@
     align-items: center;
     min-height: 44px;
     color: var(--moss-300);
+    /* The disclosure sits inside the article (under the title), so the
+       prose link underline has to be switched off here. */
+    text-decoration: none;
   }
 }
