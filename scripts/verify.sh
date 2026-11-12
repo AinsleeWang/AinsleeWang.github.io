@@ -51,7 +51,10 @@ echo "BUILD exit=$BUILD_EXIT (log: $LOG_DIR/build.log)"
 # 3. color audit — concat dist html+css into one file first, because
 # color_audit.py FAILs a single file with no var(--*) in it, and Astro
 # splits CSS out to its own files per-page.
-if [ "$BUILD_EXIT" -eq 0 ]; then
+if [ ! -f "$DS_REPO/qa/color_audit.py" ]; then
+  # CI has no sibling design-system checkout; the audit runs on the local machine only.
+  echo "COLOR_AUDIT skipped (no $DS_REPO)"
+elif [ "$BUILD_EXIT" -eq 0 ]; then
   COMBINED="$LOG_DIR/color-audit-combined.txt"
   : > "$COMBINED"
   find dist -type f \( -name '*.html' -o -name '*.css' \) -exec cat {} + >> "$COMBINED" 2>/dev/null
@@ -67,16 +70,11 @@ fi
 # 4. raw hex / rgba() grep in src, excluding vendor (upstream-sourced) and
 # content (markdown body text, not CSS).
 GREP_OUT="$LOG_DIR/raw-color-grep.log"
-grep -rnE '#[0-9a-fA-F]{3,8}\b|rgba?\(' src \
-  --include='*.astro' --include='*.css' --include='*.ts' 2>/dev/null \
-  | grep -v '^src/styles/vendor/' \
-  | grep -v '^src/content/' \
-  > "$GREP_OUT"
-if [ -s "$GREP_OUT" ]; then
+if "$SITE_ROOT/scripts/check-colors.sh" > "$GREP_OUT" 2>&1; then
+  echo "RAW_COLOR_GREP exit=0"
+else
   echo "RAW_COLOR_GREP exit=1 (log: $GREP_OUT)"
   FAILS+=("raw-color-grep")
-else
-  echo "RAW_COLOR_GREP exit=0"
 fi
 
 # 5. internal link check — every href/src in dist/ resolves to a real file
