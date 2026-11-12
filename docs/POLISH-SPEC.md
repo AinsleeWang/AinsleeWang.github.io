@@ -80,8 +80,10 @@ unique to that post instead of a placeholder:
 
 - **Footer** on every page, both modes. Top hairline. Left: the three-node
   ellipsis mark + `wit, et cetera.` Right (mono caps, `--fs-nav`): `RSS`,
-  `GITHUB` (https://github.com/AinsleeWang), `© 2026 wit.et`. Stacks on
-  mobile, 44 px targets. Below, one mono caption line at 62 % opacity:
+  `INSTAGRAM` (https://www.instagram.com/wit.etcetera/), `GITHUB`
+  (https://github.com/AinsleeWang), `© 2026 wit.et`. External links carry
+  `rel="me noopener"`. Stacks on mobile, 44 px targets. Below, one mono
+  caption line at 62 % opacity:
   `SET IN SPACE GROTESK, NOTO SERIF/SANS TC & JETBRAINS MONO · BUILT WITH ASTRO`.
 - **Header**: one nav everywhere — `索引` → `/`, `關於` → `/about/`,
   `PROJECTS` → `/projects/`, `RSS`. `aria-current="page"` on the active item
