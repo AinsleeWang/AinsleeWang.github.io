@@ -1,0 +1,86 @@
+---
+// FilterBar — plain links to /tags/<tag>/ (no client JS, per
+// docs/DECISIONS.md). Active item gets --starglow color + underline, the
+// only other allowed starglow besides the logo and hero chart.
+// design-ref/wit.et Blog.dc.html 1c lines 177-181.
+export type FilterTag = 'all' | 'essay' | 'build' | 'photo' | 'travel';
+
+export interface Props {
+  active: FilterTag;
+  count: number;
+}
+
+const { active, count } = Astro.props;
+const items: { key: FilterTag; label: string; href: string }[] = [
+  { key: 'all', label: 'all', href: '/' },
+  { key: 'essay', label: 'essay', href: '/tags/essay/' },
+  { key: 'build', label: 'build', href: '/tags/build/' },
+  { key: 'photo', label: 'photo', href: '/tags/photo/' },
+  { key: 'travel', label: 'travel', href: '/tags/travel/' },
+];
+---
+
+<nav class="filter-bar" aria-label="依類型篩選">
+  {
+    items.map((item) => (
+      <a
+        href={item.href}
+        class={item.key === active ? 'filter-bar__item filter-bar__item--active' : 'filter-bar__item'}
+        aria-current={item.key === active ? 'page' : undefined}
+      >
+        {item.label}
+      </a>
+    ))
+  }
+  <span class="filter-bar__count">{count} posts</span>
+</nav>
+
+<style>
+  .filter-bar {
+    display: flex;
+    align-items: center;
+    gap: 26px;
+    padding: 14px 0;
+    border-top: 1px solid var(--line-22);
+    border-bottom: 1px solid var(--line-22);
+    font-family: var(--font-mono);
+    font-size: var(--fs-nav);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    flex-wrap: wrap;
+  }
+  .filter-bar__item {
+    color: var(--moss-300);
+  }
+  .filter-bar__item--active {
+    color: var(--starglow);
+    border-bottom: 1px solid var(--starglow);
+    padding-bottom: 3px;
+  }
+  .filter-bar__item--active:hover,
+  .filter-bar__item--active:focus-visible {
+    color: var(--starglow);
+  }
+  .filter-bar__count {
+    margin-left: auto;
+    color: var(--muted-62);
+    text-transform: none;
+  }
+
+  @media (max-width: 767px) {
+    .filter-bar {
+      overflow-x: auto;
+      gap: 18px;
+      padding: 0;
+    }
+    .filter-bar__count {
+      display: none;
+    }
+    /* 44px touch target, per 1h (e.g. lines 490/507). */
+    .filter-bar__item {
+      display: flex;
+      align-items: center;
+      min-height: 44px;
+    }
+  }
+</style>

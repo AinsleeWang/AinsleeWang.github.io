@@ -1,28 +1,65 @@
 ---
-// Temporary placeholder index — proves the `posts` collection works.
-// E-1.2 will replace this with the real homepage layout (1a/1c from the
-// design ref). Do not polish this; it is not meant to be designed.
+// Homepage (E-1.2) — design-ref/wit.et Blog.dc.html artboards 1a
+// (header + hero + filter bar) and 1c (two-column index, "main direction").
+// 1b/1d are rejected alternatives and are not implemented (docs/DECISIONS.md).
 import { getCollection } from 'astro:content';
 import Base from '../layouts/Base.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import Hero from '../components/Hero.astro';
+import FilterBar from '../components/FilterBar.astro';
+import PostCard from '../components/PostCard.astro';
+import BuildLog from '../components/BuildLog.astro';
 
-const posts = (await getCollection('posts')).sort(
-  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
-);
+const allPosts = (await getCollection('posts')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const streamPosts = allPosts.filter((p) => p.data.tag !== 'build');
+const buildPosts = allPosts.filter((p) => p.data.tag === 'build');
+
+// "最新一篇若是 photo" — the feature-photo card variant applies only to the
+// newest post in the left-column stream, and only when it's tagged photo.
+const featuredId = streamPosts[0]?.data.tag === 'photo' ? streamPosts[0].id : null;
 ---
 
-<Base title="wit.et" mode="deep-space">
-  <main style="padding: var(--grid);">
-    <h1>wit.et — posts (placeholder index, E-1.2 replaces this)</h1>
-    <ul>
-      {
-        posts.map((post) => (
-          <li>
-            <span>[{post.data.tag}]</span>{' '}
-            <span>{post.data.date.toISOString().slice(0, 10)}</span>{' '}
-            <span>{post.data.title}</span>
-          </li>
-        ))
-      }
-    </ul>
-  </main>
+<Base title="wit.et — 才智，以及其他。" description="程式、文字、照片、路上——一份永遠沒寫完的清單。" mode="deep-space">
+  <div class="container page">
+    <SiteHeader mode="deep-space" />
+    <Hero />
+    <FilterBar active="all" count={allPosts.length} />
+
+    <main class="layout">
+      <section class="stream" aria-label="文章列表">
+        {streamPosts.map((post) => <PostCard post={post} featured={post.id === featuredId} />)}
+      </section>
+      <BuildLog posts={buildPosts} />
+    </main>
+  </div>
 </Base>
+
+<style>
+  .page {
+    padding-block: 32px 64px;
+  }
+  .layout {
+    display: grid;
+    /* 384px matches design-ref 1c exactly at 1280px wide; minmax lets the
+       right column shrink instead of forcing horizontal overflow down to
+       the 768px breakpoint floor. */
+    grid-template-columns: minmax(0, 1fr) minmax(240px, 384px);
+    gap: 0 56px;
+    align-items: start;
+    padding-top: 8px;
+  }
+  .stream {
+    display: block;
+    min-width: 0;
+  }
+
+  @media (max-width: 767px) {
+    .page {
+      padding-block: 18px 40px;
+    }
+    .layout {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
