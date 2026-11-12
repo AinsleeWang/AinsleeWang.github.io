@@ -17,6 +17,10 @@ export interface Props {
 
 const { title, description, mode, noindex = false } = Astro.props;
 
+// Load only the CJK face this mode sets text in (POLISH-SPEC section 5):
+// paper is Noto Serif TC, deep-space is Noto Sans TC.
+const cjkFamily = mode === 'paper' ? 'Noto+Serif+TC:wght@400;600;700' : 'Noto+Sans+TC:wght@400;500;700';
+const fontsHref = `https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500&family=${cjkFamily}&display=swap`;
 const themeColor = tokenValue(mode === 'paper' ? 'paper' : 'space-950');
 ---
 
@@ -34,10 +38,7 @@ const themeColor = tokenValue(mode === 'paper' ? 'paper' : 'space-950');
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500&family=Noto+Serif+TC:wght@400;600;700&family=Noto+Sans+TC:wght@400;500;700&display=swap"
-    />
+    <link rel="stylesheet" href={fontsHref} />
   </head>
   <body data-mode={mode}>
     <a class="skip-link" href="#main">跳到內容</a>
