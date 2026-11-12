@@ -1,5 +1,32 @@
-node_modules/
+# build output
 dist/
+# generated types
 .astro/
+# verify.sh evidence (logs, screenshots) — regenerated per run, not source
 .evidence/
+
+# overnight run's own log, written live outside this milestone's scope —
+# not committed here (see docs/DECISIONS.md); ignored instead of staged so
+# it doesn't count against this branch's "clean tree" check (judgment call,
+# flagged in E-1.1 handback)
+/docs/NIGHT-REPORT.md
+
+# dependencies
+node_modules/
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+
+# environment variables
+.env
+.env.production
+
+# macOS-specific files
 .DS_Store
+
+# jetbrains setting folder
+.idea/

@@ -1,0 +1,28 @@
+---
+// Temporary placeholder index — proves the `posts` collection works.
+// E-1.2 will replace this with the real homepage layout (1a/1c from the
+// design ref). Do not polish this; it is not meant to be designed.
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+
+const posts = (await getCollection('posts')).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf()
+);
+---
+
+<Base title="wit.et" mode="deep-space">
+  <main style="padding: var(--grid);">
+    <h1>wit.et — posts (placeholder index, E-1.2 replaces this)</h1>
+    <ul>
+      {
+        posts.map((post) => (
+          <li>
+            <span>[{post.data.tag}]</span>{' '}
+            <span>{post.data.date.toISOString().slice(0, 10)}</span>{' '}
+            <span>{post.data.title}</span>
+          </li>
+        ))
+      }
+    </ul>
+  </main>
+</Base>
