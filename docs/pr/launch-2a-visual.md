@@ -40,7 +40,7 @@ The site has to look finished with no photographs. Before this, a post without a
 - **Lines stay 1px** at every size (non-scaling strokes).
 - **Feature card**: the label moves to the top-right as before, and the chart reserves that corner instead. Under the overlaid title there is a scrim in the slot's own ground colour, so the stars fade out behind the text and the panel is not darkened. On phones the scrim covers the whole text block.
 - **Label area** is sized for the narrowest slot (about 280px), so on wide slots the chart keeps more clearance from the label than it strictly needs.
-- **Backdrop**: 14 nodes, 5 links, 10 % lines and 14 % nodes. The linked groups sit only in the page margins, so no line runs behind text. It is not shown below 1200px: there is no margin there, and the lone nodes looked like specks on the screen. The spec does not say this.
+- **Backdrop**: 9 nodes, 5 links, 10 % lines and 14 % nodes, in two groups anchored to the left and right viewport edges. Everything stays inside the outer 72px (the container's own side padding), so no node or line is ever behind the content column, at any window size. It is not shown below 1200px, where that padding shrinks. The spec does not say either of these.
 - **`aria-current`** is set only on the homepage (索引). Tag pages and reading pages set none: the attribute means "this link is the page you are on", and the filter bar already marks the current tag.
 - **Tag pages**: the filter bar drops its own top rule there, because the header's hairline now sits directly above it and the two made a double line.
 - **Mobile TOC on BUILD pages** moved from above the article to under the title. The spec wants 28px from the header rule to the meta row, and the disclosure sat in between.

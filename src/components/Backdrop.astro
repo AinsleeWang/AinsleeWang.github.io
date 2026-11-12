@@ -1,54 +1,64 @@
 ---
 // Backdrop — the star-chart grid behind deep-space pages (VIS brief section
-// 5.1; docs/POLISH-SPEC.md section 3). Fixed, decorative, non-interactive:
-// 14 nodes and 5 links, hand-placed. Meant to be found, not noticed; no accent colour.
-// Base.astro renders it for deep-space pages only.
-// Coordinates are in a 1440x900 field that covers the viewport ("slice").
-// The linked groups sit at x < 150 or x > 1290: outside the 1280px content
-// column on every desktop width, so no line ever runs behind text. Only
-// lone nodes fall inside the column, and none in the header band.
-// Below 1200px there is no margin left for the groups and the lone nodes
-// alone read as specks on the screen, so the backdrop is not shown.
-const nodes = [
-  [96, 150, 2],
-  [142, 236, 1.5],
-  [88, 322, 2.2],
-  [1338, 420, 2.2],
-  [1296, 512, 1.5],
-  [1352, 590, 1.8],
-  [124, 706, 1.8],
-  [98, 792, 1.5],
-  [388, 640, 1.5],
-  [742, 372, 1.5],
-  [1010, 132, 1.8],
-  [560, 470, 1.5],
-  [884, 818, 1.8],
-  [1180, 762, 1.5],
+// 5.1; docs/POLISH-SPEC.md section 3). Fixed, decorative, non-interactive.
+// Meant to be found, not noticed; no accent colour. Base.astro renders it
+// for deep-space pages only.
+//
+// Nothing is ever drawn behind the content column. Each group is anchored
+// to a viewport edge and stays inside the outer 72px — the container's own
+// side padding, so that strip is clear of content at every width the
+// backdrop is shown (it is hidden below 1200px, where the padding shrinks).
+// x is in pixels from the edge (negative = from the right edge), y in
+// percent of the viewport height.
+type Node = [x: number, y: number, r: number];
+const left: Node[] = [
+  [16, 17, 2],
+  [62, 26, 1.5],
+  [8, 36, 2.2],
+  [44, 78, 1.8],
+  [18, 88, 1.5],
 ];
-const links = [
+const right: Node[] = [
+  [-40, 14, 1.5],
+  [-22, 46, 2.2],
+  [-62, 57, 1.5],
+  [-10, 66, 1.8],
+];
+const leftLinks = [
   [0, 1],
   [1, 2],
   [3, 4],
-  [4, 5],
-  [6, 7],
+];
+const rightLinks = [
+  [1, 2],
+  [2, 3],
+];
+const groups = [
+  { x: '0', nodes: left, links: leftLinks },
+  { x: '100%', nodes: right, links: rightLinks },
 ];
 ---
 
-<svg class="backdrop" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
+<svg class="backdrop" aria-hidden="true" focusable="false">
   {
-    links.map(([a, b]) => (
-      <line
-        x1={nodes[a][0]}
-        y1={nodes[a][1]}
-        x2={nodes[b][0]}
-        y2={nodes[b][1]}
-        stroke="var(--line-10)"
-        stroke-width="1"
-        vector-effect="non-scaling-stroke"
-      />
+    groups.map((group) => (
+      <svg x={group.x} overflow="visible">
+        {group.links.map(([a, b]) => (
+          <line
+            x1={group.nodes[a][0]}
+            y1={`${group.nodes[a][1]}%`}
+            x2={group.nodes[b][0]}
+            y2={`${group.nodes[b][1]}%`}
+            stroke="var(--line-10)"
+            stroke-width="1"
+          />
+        ))}
+        {group.nodes.map(([x, y, r]) => (
+          <circle cx={x} cy={`${y}%`} r={r} fill="var(--line-14)" />
+        ))}
+      </svg>
     ))
   }
-  {nodes.map(([x, y, r]) => <circle cx={x} cy={y} r={r} fill="var(--line-14)" />)}
 </svg>
 
 <style>
