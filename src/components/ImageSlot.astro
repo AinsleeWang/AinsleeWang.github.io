@@ -2,20 +2,34 @@
 // ImageSlot — a cover image box, per design-ref/wit.et Blog.dc.html (e.g.
 // lines 69-71, 186-189, 199-200). With a `cover` it renders the real image
 // through astro:assets (AVIF + WebP, responsive widths, cropped to this
-// slot's ratio); without one it keeps the placeholder box.
+// slot's ratio); without one it draws a star chart generated from the
+// post's slug (docs/POLISH-SPEC.md section 2, src/lib/constellation.ts) —
+// computed at build time, inline SVG, no client JS.
 //
-// labelPosition exists because the design moves the "IMAGE W:H" label from
-// its default bottom-left to top-right whenever the slot carries a text
-// overlay (1c line 188, the feature photo card) — otherwise the overlay
-// title and the label would collide. The default slot is that overlay; it
-// is empty (and unused) for the plain image cases. With a cover the label
-// is dropped and a scrim keeps the overlay text legible.
+// labelPosition exists because the design moves the mono label from its
+// default bottom-left to top-right whenever the slot carries a text overlay
+// (1c line 188, the feature photo card) — otherwise the overlay title and
+// the label would collide. The default slot is that overlay; it is empty
+// (and unused) for the plain image cases. With a cover the label is dropped.
+// Either way a scrim keeps the overlay text legible.
+//
+// Chart markup: lines live in a nested viewBox'd <svg> (non-scaling 1px
+// strokes); stars are positioned in percentages on the outer one so their
+// radius is a real pixel size — 1.5 / 2.5 / 3.5 at a 300px slot, growing
+// with the slot (container units) up to a cap, so a 1136px cover does not
+// turn its stars into discs. Browsers without CSS `r` or container units
+// fall back to the `r` attribute (the 300px sizes).
 import { Picture } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
+import { constellation } from '../lib/constellation';
 
 export interface Props {
   ratio: string; // CSS aspect-ratio value, e.g. "4/3", "2.4/1", "3/2"
-  label?: string;
+  // Used only when there is no cover: `seed` (the post slug) fixes the
+  // chart, `tag` and `title` feed its label and accessible name.
+  seed: string;
+  tag: string;
+  title: string;
   labelPosition?: 'bottom-left' | 'top-right';
   cover?: ImageMetadata;
   alt?: string;
@@ -26,7 +40,9 @@ export interface Props {
 
 const {
   ratio,
-  label,
+  seed,
+  tag,
+  title,
   labelPosition = 'bottom-left',
   cover,
   alt = '',
@@ -34,7 +50,8 @@ const {
   widths = [640, 960, 1280, 1600],
   sizes = '(max-width: 767px) calc(100vw - 40px), 1136px',
 } = Astro.props;
-const autoLabel = `IMAGE ${ratio.replace('/', ':')}`;
+const chart = cover ? null : constellation(seed, ratio, labelPosition);
+const pct = (value: number, of: number) => Math.round((value / of) * 10000) / 100;
 const hasOverlay = Astro.slots.has('default');
 
 const [rw, rh] = ratio.split('/').map(Number);
@@ -47,34 +64,68 @@ const baseHeight = Math.round((baseWidth * (rh ?? 1)) / rw);
   style={`aspect-ratio:${ratio}`}
 >
   {
-    cover ? (
-      <>
-        <div class="image-slot__media">
-          <Picture
-            src={cover}
-            alt={alt}
-            formats={['avif', 'webp']}
-            widths={widths}
-            sizes={sizes}
-            width={baseWidth}
-            height={baseHeight}
-            fit="cover"
-            fallbackFormat="jpg"
-            loading={eager ? 'eager' : 'lazy'}
-            decoding={eager ? 'auto' : 'async'}
+    cover && (
+      <div class="image-slot__media">
+        <Picture
+          src={cover}
+          alt={alt}
+          formats={['avif', 'webp']}
+          widths={widths}
+          sizes={sizes}
+          width={baseWidth}
+          height={baseHeight}
+          fit="cover"
+          fallbackFormat="jpg"
+          loading={eager ? 'eager' : 'lazy'}
+          decoding={eager ? 'auto' : 'async'}
+        />
+      </div>
+    )
+  }
+  {
+    chart && (
+      <svg class="image-slot__chart" role="img" aria-label={`Generated star chart for ${title}`}>
+        <svg viewBox={`0 0 ${chart.width} ${chart.height}`} preserveAspectRatio="none" width="100%" height="100%" fill="none">
+          <path
+            d={chart.orbit.d}
+            stroke="var(--moss-300)"
+            stroke-opacity=".22"
+            stroke-width="1"
+            vector-effect="non-scaling-stroke"
           />
-        </div>
-        {hasOverlay && (
-          <div class="image-slot__content">
-            <slot />
-          </div>
-        )}
-      </>
-    ) : (
-      <>
+          <polyline
+            points={chart.chain.map((i) => `${chart.stars[i].x},${chart.stars[i].y}`).join(' ')}
+            stroke="var(--moss-300)"
+            stroke-opacity=".35"
+            stroke-width="1"
+            stroke-linejoin="round"
+            vector-effect="non-scaling-stroke"
+          />
+        </svg>
+        {chart.stars.map((s) => (
+          <circle
+            class={`image-slot__star image-slot__star--${s.r * 10}`}
+            cx={`${pct(s.x, chart.width)}%`}
+            cy={`${pct(s.y, chart.height)}%`}
+            r={s.r}
+            fill={s.alpha ? 'var(--starglow)' : 'var(--moss-300)'}
+          />
+        ))}
+      </svg>
+    )
+  }
+  {
+    hasOverlay && (
+      <div class="image-slot__content">
         <slot />
-        <span class="image-slot__label">{label ?? autoLabel}</span>
-      </>
+      </div>
+    )
+  }
+  {
+    chart && (
+      <span class="image-slot__label" aria-hidden="true">
+        {tag.toUpperCase()} · {chart.catalogue}
+      </span>
     )
   }
 </div>
@@ -86,17 +137,30 @@ const baseHeight = Math.round((baseWidth * (rh ?? 1)) / rw);
     background: var(--space-800);
     border: 1px solid var(--line-18);
     border-radius: var(--radius-sm);
+    overflow: hidden;
+    container-type: inline-size;
   }
-  .image-slot:not(.image-slot--cover):has(> :not(.image-slot__label)) {
-    display: flex;
-    align-items: flex-end;
-    padding: 22px;
+  .image-slot__chart {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .image-slot__star--15 {
+    r: clamp(1.5px, 0.5cqw, 2.6px);
+  }
+  .image-slot__star--25 {
+    r: clamp(2.5px, 0.8333cqw, 4.3px);
+  }
+  .image-slot__star--35 {
+    r: clamp(3.5px, 1.1667cqw, 6px);
   }
   .image-slot__label {
     position: absolute;
     font-family: var(--font-mono);
     font-size: var(--fs-meta);
     letter-spacing: 0.06em;
+    font-variant-numeric: tabular-nums;
     color: var(--label-70);
   }
   .image-slot--label-bottom-left .image-slot__label {
@@ -106,9 +170,6 @@ const baseHeight = Math.round((baseWidth * (rh ?? 1)) / rw);
   .image-slot--label-top-right .image-slot__label {
     right: 12px;
     top: 10px;
-  }
-  .image-slot--cover {
-    overflow: hidden;
   }
   .image-slot__media,
   .image-slot__media :global(picture),
@@ -126,6 +187,19 @@ const baseHeight = Math.round((baseWidth * (rh ?? 1)) / rw);
     display: flex;
     align-items: flex-end;
     padding: 22px;
-    background: linear-gradient(to top, color-mix(in srgb, var(--space-950) 80%, transparent), transparent 65%);
+    background: linear-gradient(to top, var(--scrim-950-80), transparent 65%);
+  }
+  /* Over a chart the scrim is the slot's own ground colour: it fades the
+     stars behind the title out instead of darkening the panel. */
+  .image-slot:not(.image-slot--cover) .image-slot__content {
+    background: linear-gradient(to top, var(--scrim-800-92), transparent 50%);
+  }
+
+  @media (max-width: 767px) {
+    /* The overlay text fills most of a phone-width slot; clear the chart
+       from behind all of it and let it show above. */
+    .image-slot:not(.image-slot--cover) .image-slot__content {
+      background: linear-gradient(to top, var(--scrim-800-92) 55%, transparent 85%);
+    }
   }
 </style>

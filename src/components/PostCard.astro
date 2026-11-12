@@ -38,7 +38,16 @@ const variant = tag === 'essay' ? 'essay' : featured ? 'feature' : 'media';
   <a href={href} class="post-card__link">
     {
       variant === 'feature' && (
-        <ImageSlot ratio="2.4/1" labelPosition="top-right" cover={cover} alt={coverAltText} eager={eager}>
+        <ImageSlot
+          ratio="2.4/1"
+          labelPosition="top-right"
+          seed={post.id}
+          tag={tag}
+          title={title}
+          cover={cover}
+          alt={coverAltText}
+          eager={eager}
+        >
           <div>
             <MonoTag tag={tag} date={dateStr} />
             <h2 class="post-card__title post-card__title--feature">{title}</h2>
@@ -63,6 +72,9 @@ const variant = tag === 'essay' ? 'essay' : featured ? 'feature' : 'media';
         <div class="post-card__media">
           <ImageSlot
             ratio="4/3"
+            seed={post.id}
+            tag={tag}
+            title={title}
             cover={cover}
             alt={coverAltText}
             eager={eager}
