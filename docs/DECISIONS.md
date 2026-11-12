@@ -51,3 +51,9 @@ flagged in `docs/NIGHT-REPORT.md`, never silently re-decided.
   `feat/e1-3-articles`. Nothing is merged or pushed tonight.
 - Conventional Commits; PR description per milestone in `docs/pr/<id>.md`
   using What / Why / How to test.
+
+## Launch polish
+
+Decisions for the public launch (2026-11-12) live in `docs/POLISH-SPEC.md`,
+which takes precedence over this file where they differ (starglow uses,
+client JS, syntax highlighting, sample posts).
