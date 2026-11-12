@@ -1,7 +1,7 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import { unified } from '@astrojs/markdown-remark';
-import { rehypeCodeBar, rehypeFigureImages } from './src/lib/markdown-plugins.mjs';
+import { rehypeEditorial, shikiMetaTransformer } from './src/lib/markdown-plugins.mjs';
 
 // https://astro.build/config
 export default defineConfig({
@@ -15,18 +15,15 @@ export default defineConfig({
     // Shiki's stock themes inline literal hex colors into the HTML, which
     // the color audit (docs/DECISIONS.md C3) forbids. The built-in
     // `css-variables` theme emits `color:var(--astro-code-token-*)`
-    // instead; src/styles/prose-legacy.css maps those variables onto palette
-    // tokens (POLISH-SPEC section 0).
-    // Both options are read by the unified() processor below as well.
-    syntaxHighlight: 'shiki',
-    shikiConfig: { theme: 'css-variables' },
+    // instead; src/styles/article.css maps those variables onto palette
+    // tokens (EDITORIAL-SPEC section 5). `output` fences are not
+    // highlighted: rehypeEditorial turns them into the quiet output block.
+    syntaxHighlight: { type: 'shiki', excludeLangs: ['math', 'output'] },
+    shikiConfig: { theme: 'css-variables', transformers: [shikiMetaTransformer()] },
     // Astro 7 defaults to a new native "Sätteri" processor with its own
-    // (non-rehype) plugin shape; `markdown.rehypePlugins` is deprecated
-    // under it ("astro check" fails until @astrojs/markdown-remark is
-    // installed — done, added to package.json). rehypeCodeBar/
-    // rehypeFigureImages are standard hast/unified transformers, so the
-    // processor is switched back to `unified()` to keep them working
-    // as-is rather than porting them to Sätteri's visitor API.
-    processor: unified({ rehypePlugins: [rehypeFigureImages, rehypeCodeBar] }),
+    // (non-rehype) plugin shape. rehypeEditorial is a standard unified
+    // transformer, so the processor is switched back to `unified()` to keep
+    // it working as-is rather than porting it to Sätteri's visitor API.
+    processor: unified({ rehypePlugins: [rehypeEditorial] }),
   },
 });
