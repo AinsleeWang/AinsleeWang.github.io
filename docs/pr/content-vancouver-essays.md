@@ -20,6 +20,5 @@ production builds.
 3. Read one essay at 375 px and 1280 px.
 
 ## Open items
-- `[TBD]` Dates are assumed (weekly, 2026-07-12 → 2026-08-02); the source only
-  gives year and month. Awaiting the author's confirmation.
-- `[TBD]` Possible typo left untouched in week 1: 「來不急」.
+None. Dates (2026-07-12 → 2026-08-02) confirmed by the author on 2026-11-12;
+the week 1 typo 「來不急」→「來不及」 was fixed at the author's request.
