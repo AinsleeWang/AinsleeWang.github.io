@@ -33,7 +33,25 @@ const showToc = toc.length >= 3;
 const hasCode = post.rendered?.html?.includes('class="code-bar"') ?? false;
 ---
 
-<Base title={`${title} — wit.et`} description={summary} rule noindex={sample} bleed>
+<Base
+  title={`${title} — wit.et`}
+  description={summary}
+  rule
+  noindex={sample}
+  bleed
+  type="article"
+  publishedTime={post.data.date}
+  ogSlug={post.id}
+  jsonLd={{
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: title,
+    datePublished: post.data.date.toISOString().slice(0, 10),
+    inLanguage: lang,
+    url: new URL(`/posts/${post.id}/`, Astro.site).href,
+    author: { '@type': 'Person', name: 'wit.et', url: 'https://ainsleewang.github.io/about/' },
+  }}
+>
   <main id="main">
     <div class="wrap">
       <ReadingHead post={post} />

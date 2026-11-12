@@ -17,7 +17,19 @@ const numbers = postNumbers(all);
 const [feat, ...rest] = all;
 ---
 
-<Base title="wit.et — 才智，以及其他。" description="程式、文字、照片、路上——一份永遠沒寫完的清單。" current="index">
+<Base
+  title="wit.et — 才智，以及其他。"
+  description="程式、文字、照片、路上——一份永遠沒寫完的清單。"
+  current="index"
+  jsonLd={{
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'wit.et',
+    url: new URL('/', Astro.site).href,
+    inLanguage: 'zh-Hant',
+    description: '才智，以及其他。一張永遠沒寫完的清單——程式、文字、照片、路上。',
+  }}
+>
   <main id="main">
     <Masthead />
     <FilterBar active="all" count={all.length} />

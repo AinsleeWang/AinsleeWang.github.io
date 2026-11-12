@@ -1,0 +1,22 @@
+{
+  "name": "wit.et",
+  "short_name": "wit.et",
+  "description": "才智，以及其他。",
+  "start_url": "/",
+  "display": "browser",
+  "lang": "zh-Hant",
+  "theme_color": "#F5F2EA",
+  "background_color": "#F5F2EA",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}
