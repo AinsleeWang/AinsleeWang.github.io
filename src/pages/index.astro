@@ -2,15 +2,16 @@
 // Homepage (E-1.2) — design-ref/wit.et Blog.dc.html artboards 1a
 // (header + hero + filter bar) and 1c (two-column index, "main direction").
 // 1b/1d are rejected alternatives and are not implemented (docs/DECISIONS.md).
-import { getCollection } from 'astro:content';
+import { getPublishedPosts } from '../lib/posts';
 import Base from '../layouts/Base.astro';
 import SiteHeader from '../components/SiteHeader.astro';
 import Hero from '../components/Hero.astro';
 import FilterBar from '../components/FilterBar.astro';
 import PostCard from '../components/PostCard.astro';
 import BuildLog from '../components/BuildLog.astro';
+import EmptyState from '../components/EmptyState.astro';
 
-const allPosts = (await getCollection('posts')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const allPosts = await getPublishedPosts();
 
 const streamPosts = allPosts.filter((p) => p.data.tag !== 'build');
 const buildPosts = allPosts.filter((p) => p.data.tag === 'build');
@@ -26,12 +27,22 @@ const featuredId = streamPosts[0]?.data.tag === 'photo' ? streamPosts[0].id : nu
     <Hero />
     <FilterBar active="all" count={allPosts.length} />
 
-    <main class="layout">
-      <section class="stream" aria-label="文章列表">
-        {streamPosts.map((post) => <PostCard post={post} featured={post.id === featuredId} />)}
-      </section>
-      <BuildLog posts={buildPosts} />
-    </main>
+    {
+      allPosts.length === 0 ? (
+        <main class="layout layout--empty">
+          <EmptyState />
+        </main>
+      ) : (
+        <main class="layout">
+          <section class="stream" aria-label="文章列表">
+            {streamPosts.map((post, i) => (
+              <PostCard post={post} featured={post.id === featuredId} eager={i === 0} />
+            ))}
+          </section>
+          {buildPosts.length > 0 && <BuildLog posts={buildPosts} />}
+        </main>
+      )
+    }
   </div>
 </Base>
 
@@ -48,6 +59,9 @@ const featuredId = streamPosts[0]?.data.tag === 'photo' ? streamPosts[0].id : nu
     gap: 0 56px;
     align-items: start;
     padding-top: 8px;
+  }
+  .layout--empty {
+    display: block;
   }
   .stream {
     display: block;

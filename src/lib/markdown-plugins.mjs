@@ -65,23 +65,38 @@ export function rehypeCodeBar() {
 // article.css (paper mode) and this site's prose-deep.css (deep-space
 // mode). Applies to every post — not just photo/travel — since both prose
 // stylesheets define the same figure/figcaption hooks.
+//
+// A paragraph holding two or more images (and nothing else) becomes
+// <div class="wt-gallery"> of such figures, captions taken from alt.
 export function rehypeFigureImages() {
+  const makeFigure = (img) => {
+    const alt = img.properties?.alt ?? '';
+    const children = alt
+      ? [img, { type: 'element', tagName: 'figcaption', properties: {}, children: [{ type: 'text', value: alt }] }]
+      : [img];
+    return { type: 'element', tagName: 'figure', properties: {}, children };
+  };
+
   return (tree) => {
     const targets = [];
     walk(tree, (node, parent, index) => {
       if (node.tagName !== 'p' || !parent) return;
       const meaningful = node.children.filter((c) => !(c.type === 'text' && /^\s*$/.test(c.value ?? '')));
-      if (meaningful.length === 1 && meaningful[0].type === 'element' && meaningful[0].tagName === 'img') {
-        targets.push({ parent, index, img: meaningful[0] });
+      if (meaningful.length > 0 && meaningful.every((c) => c.type === 'element' && c.tagName === 'img')) {
+        targets.push({ parent, index, imgs: meaningful });
       }
     });
 
-    for (const { parent, index, img } of targets) {
-      const alt = img.properties?.alt ?? '';
-      const children = alt
-        ? [img, { type: 'element', tagName: 'figcaption', properties: {}, children: [{ type: 'text', value: alt }] }]
-        : [img];
-      parent.children[index] = { type: 'element', tagName: 'figure', properties: {}, children };
+    for (const { parent, index, imgs } of targets) {
+      parent.children[index] =
+        imgs.length === 1
+          ? makeFigure(imgs[0])
+          : {
+              type: 'element',
+              tagName: 'div',
+              properties: { className: ['wt-gallery'] },
+              children: imgs.map(makeFigure),
+            };
     }
   };
 }

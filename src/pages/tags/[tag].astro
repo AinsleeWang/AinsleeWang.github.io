@@ -7,11 +7,12 @@
 // (src/pages/index.astro); build uses its own list-row style, lifted from
 // design-ref/wit.et Blog.dc.html lines 126-129 (artboard 1b's BUILD rows —
 // only the row style, not 1b's rejected single-column layout).
-import { getCollection } from 'astro:content';
+import { getPublishedPosts, readingMinutes } from '../../lib/posts';
 import Base from '../../layouts/Base.astro';
 import SiteHeader from '../../components/SiteHeader.astro';
 import FilterBar from '../../components/FilterBar.astro';
 import PostCard from '../../components/PostCard.astro';
+import EmptyState from '../../components/EmptyState.astro';
 
 export async function getStaticPaths() {
   return (['essay', 'build', 'photo', 'travel'] as const).map((tag) => ({ params: { tag } }));
@@ -19,7 +20,7 @@ export async function getStaticPaths() {
 
 const { tag } = Astro.params as { tag: 'essay' | 'build' | 'photo' | 'travel' };
 
-const allPosts = (await getCollection('posts')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const allPosts = await getPublishedPosts();
 const posts = allPosts.filter((p) => p.data.tag === tag);
 
 // Same condition as src/pages/index.astro's featuredId: the newest post in
@@ -42,7 +43,9 @@ const titleTag = tag.toUpperCase();
 
     <main class="layout">
       {
-        tag === 'build' ? (
+        posts.length === 0 ? (
+          <EmptyState />
+        ) : tag === 'build' ? (
           <div class="build-list">
             {posts.map((post) => (
               <a href={`/posts/${post.id}/`} class="build-list__row">
@@ -50,14 +53,16 @@ const titleTag = tag.toUpperCase();
                 <span class="build-list__title">{post.data.title}</span>
                 <span class="build-list__meta">
                   {formatShortDate(post.data.date)}
-                  {post.data.minutes != null && <> &middot; {post.data.minutes} MIN</>}
+                  {` · ${readingMinutes(post)} MIN`}
                 </span>
               </a>
             ))}
           </div>
         ) : (
           <section class="stream" aria-label={`${titleTag} 文章列表`}>
-            {posts.map((post) => <PostCard post={post} featured={post.id === featuredId} />)}
+            {posts.map((post, i) => (
+              <PostCard post={post} featured={post.id === featuredId} eager={i === 0} />
+            ))}
           </section>
         )
       }

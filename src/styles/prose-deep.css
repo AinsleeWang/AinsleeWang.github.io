@@ -236,6 +236,25 @@
   color: var(--muted-62);
 }
 
+/* Gallery — two or more images in one paragraph (rehypeFigureImages).    */
+/* 2-up from 768px, stacked below; each figure keeps its own caption.     */
+
+[data-mode="deep-space"] .wt-deep-article .wt-gallery {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0 20px;
+}
+
+[data-mode="deep-space"] .wt-deep-article .wt-gallery figure {
+  min-width: 0;
+}
+
+@media (min-width: 768px) {
+  [data-mode="deep-space"] .wt-deep-article .wt-gallery {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 /* ---------------------------------------------------------------------- */
 /* Footer — prev/more link, mono uppercase, hairline top rule              */
 /* ---------------------------------------------------------------------- */

@@ -10,24 +10,26 @@
 // tag and isn't mode-aware (always --moss-300), so it can't reproduce 1e's
 // bordered tag + paper-mode moss-700 meta text. SiteHeader is reused as
 // specified (glow={false}, the 34x17 inner-page variant + the article nav).
-import type { CollectionEntry } from 'astro:content';
+import type { Post } from '../lib/posts';
+import { readingMinutes } from '../lib/posts';
 import type { AstroComponentFactory } from 'astro/runtime/server/index.js';
 import Base from './Base.astro';
 import SiteHeader from '../components/SiteHeader.astro';
+import PostNav from '../components/PostNav.astro';
 import '../styles/vendor/article.css';
 
 export interface Props {
-  post: CollectionEntry<'posts'>;
+  post: Post;
   mode: 'paper' | 'deep-space';
   Content: AstroComponentFactory;
-  // Previous post *tagged essay*, by date — null when this is the oldest
-  // essay (design-ref's footer has no "no previous post" state; per the
-  // brief's "沒有就不顯示", the whole footer is omitted instead).
-  prevEssay: CollectionEntry<'posts'> | null;
+  // Adjacent essays by date (null when there is none on that side).
+  older: Post | null;
+  newer: Post | null;
 }
 
-const { post, mode, Content, prevEssay } = Astro.props;
-const { title, date, tag, summary, minutes, sample } = post.data;
+const { post, mode, Content, older, newer } = Astro.props;
+const { title, date, tag, summary, sample } = post.data;
+const minutes = readingMinutes(post);
 
 const formatDate = (d: Date) =>
   `${d.getUTCFullYear()}.${String(d.getUTCMonth() + 1).padStart(2, '0')}.${String(d.getUTCDate()).padStart(2, '0')}`;
@@ -49,20 +51,14 @@ const ARTICLE_NAV = [
         <span class="wt-tag">{tag}</span>
         <span class="wt-meta">
           {dateStr}
-          {minutes != null && ` · ${minutes} MIN`}
+          {` · ${minutes} MIN`}
         </span>
       </div>
       <h1>{title}</h1>
       {summary && <p class="wt-lede">{summary}</p>}
       <hr />
       <Content />
-      {
-        prevEssay && (
-          <div class="wt-article-footer">
-            <a href={`/posts/${prevEssay.id}/`}>← 上一篇 · {prevEssay.data.title}</a>
-          </div>
-        )
-      }
+      <PostNav tag={tag} mode={mode} older={older} newer={newer} />
     </article>
   </div>
 </Base>
