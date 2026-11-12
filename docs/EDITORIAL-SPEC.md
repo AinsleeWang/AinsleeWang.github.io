@@ -49,14 +49,14 @@ Hard rules (each is machine-checked, see §8):
    Provide a tiny component for this (`<Lat>`), do not hand-write spans.
 2. Chinese secondary text (meta, labels, captions, prev/next labels) is
    upright Noto Serif TC, set apart by size, letter-spacing and `--ink-70` /
-   `--ink-50`, never by slant.
+   `--ink-60`, never by slant.
 3. No monospace outside code. No uppercase-mono micro-labels anywhere.
 4. Heaviest weight is 700.
 5. Body: 17px / 2.05, `letter-spacing: .045em`, `text-align: justify`,
    `text-wrap: pretty`, column 680px. Headings `text-wrap: balance`.
 
 All sizes go in `src/styles/site-scale.css`; all alpha colours are named in
-`global.css` (`--ink-70`, `--ink-50`, `--rule`, `--rule-strong`, `--band`,
+`global.css` (`--ink-70`, `--ink-60`, `--rule`, `--rule-strong`, `--band`,
 from the mocks). `--starglow` appears only in the logo's last node.
 
 ## 3. Words
@@ -109,7 +109,7 @@ within the tag → footer.
 
 - `h2` carries the moss bar from the author's own `▌` marker.
 - Blockquote: thin moss rule; an English line inside is Garamond italic.
-- Closing credit lines after the last `---`: small, upright, `--ink-50`.
+- Closing credit lines after the last `---`: small, upright, `--ink-60`.
 - `cover`: full-width image between head and band (photo/travel and any
   post that has one), with `coverAlt`.
 
