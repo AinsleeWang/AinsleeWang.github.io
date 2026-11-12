@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # scripts/verify.sh — single entry point for CI / verifier agents.
-# Runs typecheck, build, color audit, raw-color grep, and route screenshots;
+# Runs typecheck, build, color audit, raw-color grep, route screenshots and
+# type rules (scripts/check-type.mjs);
 # prints a one-line summary at the end. Only summaries are echoed to stdout —
 # full logs land in .evidence/<milestone>/.
 #
@@ -127,12 +128,14 @@ else
     FAILS+=("screenshot-server-not-ready")
   else
     OVERFLOW_FAIL=0
+    TYPE_URLS=()
     IFS=',' read -ra ROUTE_ARR <<< "$ROUTES"
     for ROUTE in "${ROUTE_ARR[@]}"; do
       SLUG="$(echo "$ROUTE" | sed 's:^/::; s:/$::; s:/:-:g')"
       [ -z "$SLUG" ] && SLUG="home"
       OUT_PREFIX="$LOG_DIR/$SLUG"
       SHOOT_LOG="$LOG_DIR/shoot-$SLUG.log"
+      TYPE_URLS+=("http://localhost:4321${ROUTE}")
       node "$SHOOT_SCRIPT" "http://localhost:4321${ROUTE}" "$OUT_PREFIX" "375,768,1280" > "$SHOOT_LOG" 2>&1
       SHOOT_EXIT=$?
       cat "$SHOOT_LOG"
@@ -148,6 +151,13 @@ else
     else
       echo "SCREENSHOT exit=0"
     fi
+
+    # Type rules (docs/EDITORIAL-SPEC.md section 8) on the same server.
+    node "$SITE_ROOT/scripts/check-type.mjs" "${TYPE_URLS[@]}" > "$LOG_DIR/check-type.log" 2>&1
+    TYPE_EXIT=$?
+    cat "$LOG_DIR/check-type.log"
+    echo "TYPE exit=$TYPE_EXIT (log: $LOG_DIR/check-type.log)"
+    [ "$TYPE_EXIT" -ne 0 ] && FAILS+=("type")
   fi
 
   cleanup
@@ -182,7 +192,7 @@ if SHOW_SAMPLES=0 npx astro build --outDir "$PROD_DIR" >> "$PROD_LOG" 2>&1; then
   # (b) empty state, only meaningful when every source post is a sample
   REAL_POSTS="$(grep -LE '^sample: true' src/content/posts/*.md src/content/posts/*/index.md 2>/dev/null | wc -l | tr -d ' ')"
   if [ "$REAL_POSTS" -eq 0 ]; then
-    if ! grep -q '清單還在寫。' "$PROD_DIR/index.html"; then
+    if ! grep -q '清單還在寫 ⋯' "$PROD_DIR/index.html"; then
       echo "prod-shape: index.html lacks the empty-state text" >> "$PROD_LOG"
       PROD_FAIL=1
     fi
