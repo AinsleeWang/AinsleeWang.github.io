@@ -176,6 +176,25 @@
 /* ---------------------------------------------------------------------- */
 
 [data-mode="deep-space"] .wt-deep-article .wt-code {
+/* Syntax colours. Shiki's css-variables theme writes
+ * `color:var(--astro-code-token-*)` on each token; this is the deep-space
+ * half of the map (POLISH-SPEC section 0), prose-paper.css holds the paper
+ * half. Token kinds the spec does not name: a parameter stays the text
+ * colour, a string expression follows string, a link follows --functional. */
+[data-mode="deep-space"] .astro-code {
+  --astro-code-foreground: var(--fg);
+  --astro-code-background: var(--space-800);
+  --astro-code-token-keyword: var(--moss-300);
+  --astro-code-token-string: var(--stellar-300);
+  --astro-code-token-string-expression: var(--stellar-300);
+  --astro-code-token-function: var(--starlight);
+  --astro-code-token-constant: var(--moss-100);
+  --astro-code-token-comment: var(--muted-62);
+  --astro-code-token-punctuation: var(--muted-82);
+  --astro-code-token-parameter: var(--fg);
+  --astro-code-token-link: var(--functional);
+}
+
   margin: 1.75em 0 0;
   background: var(--space-800);
   border: var(--line-hairline) solid var(--line-18);

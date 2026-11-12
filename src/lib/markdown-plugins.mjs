@@ -18,10 +18,16 @@ function walk(node, visit, parent, index) {
 }
 
 // BUILD pages (design-ref 1f) show a bar above each code block with the
-// fence's language. The design's "copy" label is omitted until a
-// copy-to-clipboard script exists — an inert label would mislead. Scoped to `tag: build` via the frontmatter Astro exposes
-// on the vfile, so ESSAY/PHOTO pages — which never show this bar in the
-// design — are untouched even if a future post puts a code fence there.
+// fence's language. The design's "copy" control is not rendered here: it
+// is a <button> added by src/components/Enhance.astro's inline script, so
+// it only exists when it can work. Scoped to `tag: build` via the
+// frontmatter Astro exposes on the vfile, so ESSAY/PHOTO pages — which
+// never show this bar in the design — are untouched even if a future post
+// puts a code fence there.
+//
+// Runs after Shiki, which replaces <pre><code class="language-x"> with
+// <pre class="astro-code" data-language="x"><code>; the language is read
+// from either shape (fences Shiki skips keep the original one).
 export function rehypeCodeBar() {
   return (tree, file) => {
     const tag = file?.data?.astro?.frontmatter?.tag;
@@ -38,7 +44,9 @@ export function rehypeCodeBar() {
       const langClass = Array.isArray(classes)
         ? classes.find((c) => typeof c === 'string' && c.startsWith('language-'))
         : null;
-      const lang = langClass ? langClass.slice('language-'.length) : 'text';
+      const shikiLang = node.properties?.dataLanguage;
+      const fenceLang = langClass ? langClass.slice('language-'.length) : shikiLang;
+      const lang = !fenceLang || fenceLang === 'plaintext' ? 'text' : fenceLang;
 
       const bar = {
         type: 'element',

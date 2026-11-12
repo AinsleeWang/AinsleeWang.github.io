@@ -12,14 +12,14 @@ export default defineConfig({
   // scripts/verify.sh work tonight.
   site: process.env.SITE_URL ?? 'http://localhost:4321',
   markdown: {
-    // Shiki (Astro's default) inlines literal hex colors into the HTML
-    // output; qa/color_audit.py and scripts/verify.sh's raw-color grep
-    // (docs/DECISIONS.md C3) can't see through that. design-ref's BUILD
-    // code blocks have no syntax color either, so highlighting is simply
-    // off rather than worked around. (Still a top-level option under
-    // Astro 7's new default "Sätteri" processor — not deprecated, unlike
-    // remarkPlugins/rehypePlugins below.)
-    syntaxHighlight: false,
+    // Shiki's stock themes inline literal hex colors into the HTML, which
+    // the color audit (docs/DECISIONS.md C3) forbids. The built-in
+    // `css-variables` theme emits `color:var(--astro-code-token-*)`
+    // instead; each mode maps those variables onto palette tokens in
+    // src/styles/prose-deep.css and prose-paper.css (POLISH-SPEC section 0).
+    // Both options are read by the unified() processor below as well.
+    syntaxHighlight: 'shiki',
+    shikiConfig: { theme: 'css-variables' },
     // Astro 7 defaults to a new native "Sätteri" processor with its own
     // (non-rehype) plugin shape; `markdown.rehypePlugins` is deprecated
     // under it ("astro check" fails until @astrojs/markdown-remark is

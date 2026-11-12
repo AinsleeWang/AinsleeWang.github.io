@@ -31,3 +31,34 @@
 [data-mode="paper"] .wt-article .wt-meta-row {
   font-variant-numeric: tabular-nums;
 }
+
+/* Text links: article.css draws a 1px underline; the site sets its offset
+ * to 3px and thickens it on hover (POLISH-SPEC section 4). The html/body
+ * prefix outranks article.css whatever order the two files are bundled in
+ * (same reasoning as site-scale.css). */
+html body[data-mode="paper"] .wt-article a {
+  text-underline-offset: 3px;
+}
+
+html body[data-mode="paper"] .wt-article a:hover {
+  text-decoration-thickness: 2px;
+}
+
+/* Syntax colours — the paper half of the map in prose-deep.css. The block
+ * keeps article.css's --moss-100 ground. A comment is --space-950 at 62%
+ * (the existing --muted-paper-62) rather than the spec's 55%, which falls
+ * short of 4.5:1 on that ground. Punctuation and parameters stay the text
+ * colour; a link follows --functional. */
+[data-mode="paper"] .astro-code {
+  --astro-code-foreground: var(--fg);
+  --astro-code-background: var(--moss-100);
+  --astro-code-token-keyword: var(--moss-700);
+  --astro-code-token-string: var(--stellar-600);
+  --astro-code-token-string-expression: var(--stellar-600);
+  --astro-code-token-function: var(--space-950);
+  --astro-code-token-constant: var(--moss-600);
+  --astro-code-token-comment: var(--muted-paper-62);
+  --astro-code-token-punctuation: var(--fg);
+  --astro-code-token-parameter: var(--fg);
+  --astro-code-token-link: var(--functional);
+}
