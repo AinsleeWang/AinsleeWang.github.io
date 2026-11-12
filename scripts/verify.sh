@@ -8,6 +8,11 @@
 #   MILESTONE=<name>   default "adhoc" — evidence subfolder name
 #   ROUTES=/,/foo      default "/"     — comma-separated routes to screenshot
 #   SHOOT_SCRIPT=path  default: scripts/shoot.mjs (Playwright, system Chrome)
+#   SHOW_SAMPLES=0|1   default 1 — passed to the main build so `sample: true`
+#                      posts are included and layouts can be screenshotted.
+#                      The final "prod-shape" step always rebuilds with
+#                      SHOW_SAMPLES=0 into a temp dir and checks what a
+#                      public build would contain.
 
 set -uo pipefail
 
@@ -15,6 +20,7 @@ SITE_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$SITE_ROOT"
 
 MILESTONE="${MILESTONE:-adhoc}"
+export SHOW_SAMPLES="${SHOW_SAMPLES:-1}"
 ROUTES="${ROUTES:-/}"
 DS_REPO="$SITE_ROOT/../wit-et-design-system"
 SHOOT_SCRIPT="${SHOOT_SCRIPT:-$SITE_ROOT/scripts/shoot.mjs}"
@@ -24,7 +30,7 @@ mkdir -p "$LOG_DIR"
 
 FAILS=()
 
-echo "== verify.sh: milestone=$MILESTONE routes=$ROUTES =="
+echo "== verify.sh: milestone=$MILESTONE routes=$ROUTES show_samples=$SHOW_SAMPLES =="
 
 # 1. astro check
 npm run check > "$LOG_DIR/check.log" 2>&1
@@ -148,6 +154,52 @@ else
   PREVIEW_PID=""
 fi
 trap - EXIT
+
+# 7. production shape — rebuild with SHOW_SAMPLES=0 into a temp dir and
+# assert what a public build contains: (a) no sample post pages, (b) the
+# empty-state text on the homepage when no non-sample post exists, (c) the
+# internal-link check passes on that output.
+PROD_DIR="$(mktemp -d "${TMPDIR:-/tmp}/wt-prod.XXXXXX")"
+PROD_LOG="$LOG_DIR/prod-shape.log"
+PROD_FAIL=0
+: > "$PROD_LOG"
+rm -rf "$SITE_ROOT/.astro" "$SITE_ROOT/node_modules/.astro"
+if SHOW_SAMPLES=0 npx astro build --outDir "$PROD_DIR" >> "$PROD_LOG" 2>&1; then
+  # (a) every `sample: true` source file must have no page in the output
+  while IFS= read -r f; do
+    [ -z "$f" ] && continue
+    if [ "$(basename "$f")" = "index.md" ]; then
+      slug="$(basename "$(dirname "$f")")"
+    else
+      slug="$(basename "$f" .md)"
+    fi
+    if [ -e "$PROD_DIR/posts/$slug" ]; then
+      echo "prod-shape: sample page leaked: /posts/$slug/" >> "$PROD_LOG"
+      PROD_FAIL=1
+    fi
+  done < <(grep -lE '^sample: true' src/content/posts/*.md src/content/posts/*/index.md 2>/dev/null)
+
+  # (b) empty state, only meaningful when every source post is a sample
+  REAL_POSTS="$(grep -LE '^sample: true' src/content/posts/*.md src/content/posts/*/index.md 2>/dev/null | wc -l | tr -d ' ')"
+  if [ "$REAL_POSTS" -eq 0 ]; then
+    if ! grep -q '清單還在寫。' "$PROD_DIR/index.html"; then
+      echo "prod-shape: index.html lacks the empty-state text" >> "$PROD_LOG"
+      PROD_FAIL=1
+    fi
+  fi
+
+  # (c) links resolve inside the production output
+  if ! node "$SITE_ROOT/scripts/check-links.mjs" "$PROD_DIR" >> "$PROD_LOG" 2>&1; then
+    PROD_FAIL=1
+  fi
+else
+  echo "prod-shape: SHOW_SAMPLES=0 build failed" >> "$PROD_LOG"
+  PROD_FAIL=1
+fi
+rm -rf "$PROD_DIR"
+tail -3 "$PROD_LOG"
+echo "PROD_SHAPE exit=$PROD_FAIL (log: $PROD_LOG)"
+[ "$PROD_FAIL" -ne 0 ] && FAILS+=("prod-shape")
 
 if [ "${#FAILS[@]}" -eq 0 ]; then
   echo "VERIFY: PASS"
