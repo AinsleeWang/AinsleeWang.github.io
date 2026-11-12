@@ -87,6 +87,19 @@ unique to that post instead of a placeholder:
   `PROJECTS` → `/projects/`, `RSS`. `aria-current="page"` on the active item
   with a 1 px underline in the nav colour (not starglow). Bottom hairline on
   every page except the homepage (the hero supplies its own top rule).
+- **Homepage right rail** (desktop): never empty. BUILD LOG when build posts
+  exist; otherwise a card of the same shell titled `THE LIST SO FAR` — four
+  mono rows, one per tag, each linking to its tag page with a two-digit
+  count (`ESSAY 04`), a tag with no posts showing `—` at 62 % opacity, and a
+  last row that is just the three-node ellipsis. On mobile it follows the
+  stream, as BUILD LOG does. (Found with real content: four essays and no
+  build posts left the right column blank.)
+- **Reading-page top spacing**: 72 px between the header rule and the meta
+  row on desktop, 28 px on mobile, on all three reading layouts (the essay
+  page currently has none).
+- **Paper-mode gallery**: `.wt-gallery` gets the same 2-up layout in paper
+  mode, in the site's own stylesheet (the vendored `article.css` is not
+  edited).
 - **Skip link** ("跳到內容") visible on focus. `<main id="main">` everywhere.
 - **Backdrop** (deep-space pages only): a fixed, `aria-hidden`,
   pointer-events-none SVG star-chart grid behind content — sparse (≤ 14
