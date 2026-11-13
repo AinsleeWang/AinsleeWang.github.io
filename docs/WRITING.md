@@ -10,7 +10,7 @@ The file name is the URL. Posts with `sample: true` are never published.
 |---|---|---|
 | `title` | yes | The page `h1`. |
 | `date` | yes | `2026-08-05`. Sorts the lists; shown as `2026.08.05`. |
-| `tag` | yes | `essay` 隨筆, `build` 實作, `photo` 攝影, `travel` 旅行. |
+| `tag` | yes | `essay` 隨筆, `build` 實作, `photo` 攝影, `travel` 旅行 (the last two are accepted but currently have no tag page or filter entry). |
 | `summary` | no | One short line. Set large on the home list and in the band under the title. Break it at `，` to control where it wraps. |
 | `location` | no | Shown after the date. |
 | `minutes` | no | Reading time; computed from the text when absent. |

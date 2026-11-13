@@ -18,43 +18,36 @@ set in Garamond italic (use the `Lat` component, not `<em>` around Chinese).
 
 wit.et 讀作 wit, et cetera——才智，以及其他。
 
-拉丁文的 *et* 只是一個連接詞。把它放進名字裡，是因為想寫的東西從來收不進單一個分類：程式、文字、照片、路上看到的事。與其假裝它們有共同的主題，不如承認，清單本身就是主題。
+拉丁文的 *et* 只是一個連接詞。把它放進名字裡，是因為想寫的東西從來收不進單一個分類：程式、文字，和還沒分類的事。與其假裝它們有共同的主題，不如承認，清單本身就是主題。
 
 *et* 也讓人想到另一個 E.T.。對外面的世界，也對心裡那塊還沒去過的地方，保持一點外星訪客式的好奇——不預設看得懂，所以看得比較仔細。
 
 ### h2: 這裡會出現什麼
 
-四個標籤，一條時間流。
+目前有兩種文章。
 
-(four rows: tag name in bold on the left, sentence on the right; each tag
+(two rows: tag name in bold on the left, sentence on the right; each tag
 name links to `/tags/<tag>/`)
 
 - 隨筆 — 把一件事想清楚之後，留下來的紀錄。
 - 實作 — 做東西的過程，和中途學到的小事。
-- 攝影 — 照片，以及按下快門的那個當下。
-- 旅行 — 在路上。
 
 清單還在寫。分類以後可能變多，也可能不會。
 
-### h2: 這個網站是怎麼做的
-
-整個網站只用一種紙：米白底、明體字，想做成一本攤開來讀的雜誌。中文是 Noto Serif TC，英文和數字是 EB Garamond，程式碼是 JetBrains Mono。顏色、字級和間距都來自同一份 design tokens。
-
-用 Astro 建置，[原始碼公開在 GitHub](https://github.com/AinsleeWang/AinsleeWang.github.io)。
-
 ### h2: 找到我
 
-(two rows, label in Garamond italic + link; external links `rel="me noopener"`)
+(three rows, label in Garamond italic + link; external links `rel="me noopener"`)
 
 - *github* — [github.com/AinsleeWang](https://github.com/AinsleeWang)
 - *instagram* — [@wit.etcetera](https://www.instagram.com/wit.etcetera/)
+- *email* — [itingw113@gmail.com](mailto:itingw113@gmail.com) (added at the owner's request, 2026-11-13)
 
 ### Closing paragraph (`lang="en"`, Garamond italic, after the ⋯ divider)
 
-wit.et is a list that never finishes — code, words, photographs, the road. *Et* means "and". The rest is et cetera.
+wit.et is a list that never finishes — code, words, and whatever comes next. *Et* means "and". The rest is et cetera.
 
 - `<title>`: `關於 — wit.et`
-- meta description: 才智，以及其他。wit.et 是一張永遠沒寫完的清單——程式、文字、照片、路上。
+- meta description: 才智，以及其他。wit.et 是一張永遠沒寫完的清單——程式、文字，et cetera。
 
 ---
 

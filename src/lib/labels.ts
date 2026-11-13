@@ -10,4 +10,6 @@ export const TAG_LABEL: Record<FilterTag, string> = {
   all: '全部',
 };
 
-export const TAGS: Tag[] = ['essay', 'build', 'photo', 'travel'];
+// Tags shown in the filter bar and given a tag page. photo and travel stay
+// valid in the schema but are not featured for now.
+export const TAGS: Tag[] = ['essay', 'build'];

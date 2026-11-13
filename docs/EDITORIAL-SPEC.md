@@ -66,7 +66,7 @@ Interface language is Traditional Chinese. URL slugs do not change.
 | Thing | Text |
 |---|---|
 | Nav | 文章 (`/`) · 關於 (`/about/`) |
-| Tags | essay 隨筆 · build 實作 · photo 攝影 · travel 旅行 · all 全部 |
+| Tags | essay 隨筆 · build 實作 · all 全部 (photo 攝影 and travel 旅行 remain valid on posts but have no filter entry or tag page for now) |
 | Count | 共 N 篇 |
 | Reading time | 約 N 分鐘 |
 | Prev / next | 上一篇 · 下一篇 |

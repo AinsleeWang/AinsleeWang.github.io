@@ -10,7 +10,7 @@ export async function GET(context: APIContext) {
 
   return rss({
     title: 'wit.et',
-    description: '程式、文字、照片、路上——一份永遠沒寫完的清單。',
+    description: '程式、文字，et cetera——一份永遠沒寫完的清單。',
     site: context.site ?? 'http://localhost:4321',
     items: posts.map((post) => ({
       title: post.data.title,
