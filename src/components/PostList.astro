@@ -1,0 +1,73 @@
+---
+// PostList — the numbered contents list and its end line, shared by the
+// home page and the tag pages. Each row is one link.
+import type { Post } from '../lib/posts';
+import { formatDate } from '../lib/posts';
+import { TAG_LABEL } from '../lib/labels';
+import Lat from './Lat.astro';
+import Mixed from './Mixed.astro';
+import Phrases from './Phrases.astro';
+import '../styles/list.css';
+
+export interface Props {
+  posts: Post[];
+  numbers: Map<string, string>;
+  // The home page links the archive from its end line once the list is long.
+  archive?: boolean;
+}
+
+const { posts, numbers, archive = false } = Astro.props;
+---
+
+<section class="toc" aria-label="文章列表">
+  {
+    posts.map((post) => {
+      const { title, summary, date, tag, location } = post.data;
+      return (
+        <a class="row" href={`/posts/${post.id}/`}>
+          <div class="no">
+            <Lat>{numbers.get(post.id)}</Lat>
+          </div>
+          <div>
+            <p class="line">
+              <Phrases text={summary ?? title} />
+            </p>
+            {summary && <p class="title">{title}</p>}
+          </div>
+          <p class="meta">
+            <Lat>{formatDate(date)}</Lat>
+            <small>
+              {TAG_LABEL[tag]}
+              {location && (
+                <>
+                  {'　'}
+                  <Mixed text={location} />
+                </>
+              )}
+            </small>
+          </p>
+        </a>
+      );
+    })
+  }
+  <p class="end">
+    清單還在寫 ⋯
+    {archive && <a class="more" href="/archive/">全部文章</a>}
+  </p>
+</section>
+
+<style>
+  .more {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    margin-left: 1.2em;
+    color: var(--ink-70);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 6px;
+  }
+  .more:hover {
+    color: var(--moss-700);
+  }
+</style>

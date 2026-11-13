@@ -1,0 +1,14 @@
+---
+// Text that may mix Chinese and Latin (a place name, for example): Latin
+// runs go through <Lat>, Chinese runs stay upright.
+import Lat from './Lat.astro';
+
+export interface Props {
+  text: string;
+}
+
+const RUN = /([A-Za-z0-9][A-Za-z0-9 .,'’&/-]*[A-Za-z0-9.]|[A-Za-z0-9])/;
+const parts = Astro.props.text.split(RUN).filter((s) => s !== '');
+---
+
+{parts.map((s) => (RUN.test(s) && !/[^\x00-\x7F]/.test(s) ? <Lat>{s}</Lat> : s))}

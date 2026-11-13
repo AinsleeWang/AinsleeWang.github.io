@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # scripts/verify.sh — single entry point for CI / verifier agents.
-# Runs typecheck, build, color audit, raw-color grep, and route screenshots;
+# Runs typecheck, build, color audit, raw-color grep, route screenshots and
+# type rules (scripts/check-type.mjs);
 # prints a one-line summary at the end. Only summaries are echoed to stdout —
 # full logs land in .evidence/<milestone>/.
 #
@@ -50,7 +51,10 @@ echo "BUILD exit=$BUILD_EXIT (log: $LOG_DIR/build.log)"
 # 3. color audit — concat dist html+css into one file first, because
 # color_audit.py FAILs a single file with no var(--*) in it, and Astro
 # splits CSS out to its own files per-page.
-if [ "$BUILD_EXIT" -eq 0 ]; then
+if [ ! -f "$DS_REPO/qa/color_audit.py" ]; then
+  # CI has no sibling design-system checkout; the audit runs on the local machine only.
+  echo "COLOR_AUDIT skipped (no $DS_REPO)"
+elif [ "$BUILD_EXIT" -eq 0 ]; then
   COMBINED="$LOG_DIR/color-audit-combined.txt"
   : > "$COMBINED"
   find dist -type f \( -name '*.html' -o -name '*.css' \) -exec cat {} + >> "$COMBINED" 2>/dev/null
@@ -66,21 +70,15 @@ fi
 # 4. raw hex / rgba() grep in src, excluding vendor (upstream-sourced) and
 # content (markdown body text, not CSS).
 GREP_OUT="$LOG_DIR/raw-color-grep.log"
-grep -rnE '#[0-9a-fA-F]{3,8}\b|rgba?\(' src \
-  --include='*.astro' --include='*.css' --include='*.ts' 2>/dev/null \
-  | grep -v '^src/styles/vendor/' \
-  | grep -v '^src/content/' \
-  > "$GREP_OUT"
-if [ -s "$GREP_OUT" ]; then
+if "$SITE_ROOT/scripts/check-colors.sh" > "$GREP_OUT" 2>&1; then
+  echo "RAW_COLOR_GREP exit=0"
+else
   echo "RAW_COLOR_GREP exit=1 (log: $GREP_OUT)"
   FAILS+=("raw-color-grep")
-else
-  echo "RAW_COLOR_GREP exit=0"
 fi
 
 # 5. internal link check — every href/src in dist/ resolves to a real file
-# (see scripts/check-links.mjs's own ALLOWLIST for the two known-404 E-1.4
-# routes it deliberately skips).
+# (scripts/check-links.mjs).
 if [ "$BUILD_EXIT" -eq 0 ]; then
   node "$SITE_ROOT/scripts/check-links.mjs" "$SITE_ROOT/dist" > "$LOG_DIR/check-links.log" 2>&1
   LINKS_EXIT=$?
@@ -103,6 +101,8 @@ cleanup() {
   # npx forks the real server as a child, so killing the wrapper PID can
   # leave it listening; ask astro to stop it as well.
   npx astro preview stop > /dev/null 2>&1 || true
+  # Last resort: nothing may keep listening on the preview port.
+  lsof -ti :4321 2>/dev/null | xargs kill 2>/dev/null || true
 }
 trap cleanup EXIT
 
@@ -127,12 +127,14 @@ else
     FAILS+=("screenshot-server-not-ready")
   else
     OVERFLOW_FAIL=0
+    TYPE_URLS=()
     IFS=',' read -ra ROUTE_ARR <<< "$ROUTES"
     for ROUTE in "${ROUTE_ARR[@]}"; do
       SLUG="$(echo "$ROUTE" | sed 's:^/::; s:/$::; s:/:-:g')"
       [ -z "$SLUG" ] && SLUG="home"
       OUT_PREFIX="$LOG_DIR/$SLUG"
       SHOOT_LOG="$LOG_DIR/shoot-$SLUG.log"
+      TYPE_URLS+=("http://localhost:4321${ROUTE}")
       node "$SHOOT_SCRIPT" "http://localhost:4321${ROUTE}" "$OUT_PREFIX" "375,768,1280" > "$SHOOT_LOG" 2>&1
       SHOOT_EXIT=$?
       cat "$SHOOT_LOG"
@@ -148,6 +150,13 @@ else
     else
       echo "SCREENSHOT exit=0"
     fi
+
+    # Type rules (docs/EDITORIAL-SPEC.md section 8) on the same server.
+    node "$SITE_ROOT/scripts/check-type.mjs" "${TYPE_URLS[@]}" > "$LOG_DIR/check-type.log" 2>&1
+    TYPE_EXIT=$?
+    cat "$LOG_DIR/check-type.log"
+    echo "TYPE exit=$TYPE_EXIT (log: $LOG_DIR/check-type.log)"
+    [ "$TYPE_EXIT" -ne 0 ] && FAILS+=("type")
   fi
 
   cleanup
@@ -182,7 +191,7 @@ if SHOW_SAMPLES=0 npx astro build --outDir "$PROD_DIR" >> "$PROD_LOG" 2>&1; then
   # (b) empty state, only meaningful when every source post is a sample
   REAL_POSTS="$(grep -LE '^sample: true' src/content/posts/*.md src/content/posts/*/index.md 2>/dev/null | wc -l | tr -d ' ')"
   if [ "$REAL_POSTS" -eq 0 ]; then
-    if ! grep -q '清單還在寫。' "$PROD_DIR/index.html"; then
+    if ! grep -q '清單還在寫 ⋯' "$PROD_DIR/index.html"; then
       echo "prod-shape: index.html lacks the empty-state text" >> "$PROD_LOG"
       PROD_FAIL=1
     fi

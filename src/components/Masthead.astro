@@ -1,0 +1,80 @@
+---
+// Masthead — the home page's title block (design-ref/editorial/home.html).
+---
+
+<section class="mast">
+  <h1><span>wit,</span><span>et cetera.</span></h1>
+  <p class="zh">才智，以及其他。<br />一張永遠沒寫完的清單——<em>程式、文字、照片、路上。</em></p>
+  <div class="vert">興趣雜得像一張永遠寫不完的清單</div>
+</section>
+
+<style>
+  .mast {
+    position: relative;
+    padding: 36px 0 54px;
+    border-top: 1px solid var(--rule-strong);
+  }
+  h1 {
+    font-family: var(--en);
+    font-style: italic;
+    font-weight: 500;
+    font-size: var(--fs-mast);
+    line-height: 0.92;
+    letter-spacing: -0.025em;
+    margin-left: -0.04em;
+  }
+  h1 span {
+    display: block;
+  }
+  h1 span:last-child {
+    padding-left: 1.35em;
+  }
+  .zh {
+    margin-top: 34px;
+    max-width: 21em;
+    font-family: var(--zh);
+    font-weight: 700;
+    font-size: var(--fs-mast-zh);
+    line-height: 1.9;
+    letter-spacing: 0.06em;
+  }
+  .zh em {
+    font-style: normal;
+    color: var(--moss-600);
+  }
+  .vert {
+    position: absolute;
+    right: 0;
+    top: 44px;
+    writing-mode: vertical-rl;
+    font-family: var(--zh);
+    font-size: var(--fs-vert);
+    letter-spacing: 0.32em;
+    color: var(--ink-70);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .vert::before {
+    content: '';
+    width: 1px;
+    height: 44px;
+    background: var(--moss-600);
+  }
+
+  @media (max-width: 820px) {
+    .vert {
+      display: none;
+    }
+    .mast {
+      padding: 26px 0 40px;
+    }
+    h1 span:last-child {
+      padding-left: 0.6em;
+    }
+    .zh {
+      font-size: var(--fs-mast-zh-m);
+      margin-top: 24px;
+    }
+  }
+</style>

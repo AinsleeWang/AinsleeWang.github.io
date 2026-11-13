@@ -1,80 +1,134 @@
 ---
-// Homepage (E-1.2) — design-ref/wit.et Blog.dc.html artboards 1a
-// (header + hero + filter bar) and 1c (two-column index, "main direction").
-// 1b/1d are rejected alternatives and are not implemented (docs/DECISIONS.md).
-import { getPublishedPosts } from '../lib/posts';
+// Home (docs/EDITORIAL-SPEC.md section 4, design-ref/editorial/home.html):
+// masthead, filter bar, feature (newest post), numbered list, end line.
+import { excerpt, formatDate, getPublishedPosts, postNumbers, readingMinutes } from '../lib/posts';
+import { TAG_LABEL } from '../lib/labels';
 import Base from '../layouts/Base.astro';
-import SiteHeader from '../components/SiteHeader.astro';
-import Hero from '../components/Hero.astro';
+import Masthead from '../components/Masthead.astro';
 import FilterBar from '../components/FilterBar.astro';
-import PostCard from '../components/PostCard.astro';
-import BuildLog from '../components/BuildLog.astro';
-import ListSoFar from '../components/ListSoFar.astro';
-import EmptyState from '../components/EmptyState.astro';
+import PostList from '../components/PostList.astro';
+import ImageSlot from '../components/ImageSlot.astro';
+import Lat from '../components/Lat.astro';
+import Mixed from '../components/Mixed.astro';
+import Phrases from '../components/Phrases.astro';
 
-const allPosts = await getPublishedPosts();
-
-const streamPosts = allPosts.filter((p) => p.data.tag !== 'build');
-const buildPosts = allPosts.filter((p) => p.data.tag === 'build');
-
-// "最新一篇若是 photo" — the feature-photo card variant applies only to the
-// newest post in the left-column stream, and only when it's tagged photo.
-const featuredId = streamPosts[0]?.data.tag === 'photo' ? streamPosts[0].id : null;
+const all = await getPublishedPosts();
+const numbers = postNumbers(all);
+const [feat, ...rest] = all;
 ---
 
-<Base title="wit.et — 才智，以及其他。" description="程式、文字、照片、路上——一份永遠沒寫完的清單。" mode="deep-space">
-  <div class="container page">
-    <SiteHeader mode="deep-space" current="index" rule={false} />
-    <Hero />
-    <FilterBar active="all" count={allPosts.length} />
+<Base
+  title="wit.et — 才智，以及其他。"
+  description="程式、文字、照片、路上——一份永遠沒寫完的清單。"
+  current="index"
+  jsonLd={{
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'wit.et',
+    url: new URL('/', Astro.site).href,
+    inLanguage: 'zh-Hant',
+    description: '才智，以及其他。一張永遠沒寫完的清單——程式、文字、照片、路上。',
+  }}
+>
+  <main id="main">
+    <Masthead />
+    <FilterBar active="all" count={all.length} />
 
     {
-      allPosts.length === 0 ? (
-        <main id="main" class="layout layout--empty">
-          <EmptyState />
-        </main>
-      ) : (
-        <main id="main" class="layout">
-          <section class="stream" aria-label="文章列表">
-            {streamPosts.map((post, i) => (
-              <PostCard post={post} featured={post.id === featuredId} eager={i === 0} />
-            ))}
-          </section>
-          {buildPosts.length > 0 ? <BuildLog posts={buildPosts} /> : <ListSoFar posts={allPosts} />}
-        </main>
+      feat && (
+        <article class="feat">
+          <div>
+            <div class="kick">{TAG_LABEL[feat.data.tag]}</div>
+            {feat.data.cover && (
+              <div class="cover">
+                <ImageSlot ratio="3/2" cover={feat.data.cover} alt={feat.data.coverAlt ?? feat.data.title} eager />
+              </div>
+            )}
+            <a class="line-link" href={`/posts/${feat.id}/`}>
+              <p class="line">
+                <Phrases text={feat.data.summary ?? feat.data.title} />
+              </p>
+            </a>
+          </div>
+          <div class="side">
+            {feat.data.summary && <h2 class="title">{feat.data.title}</h2>}
+            <p class="meta">
+              <Lat>{formatDate(feat.data.date)}</Lat>
+              {feat.data.location && (
+                <>
+                  {'　'}
+                  <Mixed text={feat.data.location} />
+                </>
+              )}
+              {'　'}約 <Lat>{readingMinutes(feat)}</Lat> 分鐘
+            </p>
+            <p class="excerpt">{excerpt(feat)}</p>
+          </div>
+        </article>
       )
     }
-  </div>
+
+    <PostList posts={rest} numbers={numbers} archive={all.length > 10} />
+  </main>
 </Base>
 
 <style>
-  .page {
-    padding-block: 32px 64px;
-  }
-  .layout {
+  .feat {
+    position: relative;
     display: grid;
-    /* 384px matches design-ref 1c exactly at 1280px wide; minmax lets the
-       right column shrink instead of forcing horizontal overflow down to
-       the 768px breakpoint floor. */
-    grid-template-columns: minmax(0, 1fr) minmax(240px, 384px);
-    gap: 0 56px;
-    align-items: start;
-    padding-top: 8px;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 72px;
+    padding: 72px 0 76px;
+    border-bottom: 1px solid var(--rule-strong);
   }
-  .layout--empty {
-    display: block;
+  .cover {
+    margin-top: 30px;
   }
-  .stream {
-    display: block;
-    min-width: 0;
+  .line {
+    margin-top: 30px;
+    font-family: var(--zh);
+    font-weight: 700;
+    font-size: var(--fs-feat);
+    line-height: 1.28;
+    letter-spacing: 0.02em;
+    text-wrap: balance;
+  }
+  /* The whole feature is the link: the large line's anchor is stretched
+     over the block. */
+  .line-link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+  .feat:hover .line {
+    color: var(--moss-700);
+  }
+  .side {
+    align-self: end;
+    padding-bottom: 8px;
+  }
+  .title {
+    font-family: var(--zh);
+    font-weight: 700;
+    font-size: var(--fs-title);
+    line-height: 1.6;
+    letter-spacing: 0.04em;
+  }
+  .excerpt {
+    margin-top: 22px;
+    font-family: var(--zh);
+    font-size: var(--fs-excerpt);
+    line-height: 2;
+    letter-spacing: 0.05em;
+    text-align: justify;
+    color: var(--ink-70);
   }
 
-  @media (max-width: 767px) {
-    .page {
-      padding-block: 18px 40px;
-    }
-    .layout {
+  @media (max-width: 820px) {
+    .feat {
       grid-template-columns: 1fr;
+      gap: 28px;
+      padding: 44px 0 48px;
     }
   }
 </style>

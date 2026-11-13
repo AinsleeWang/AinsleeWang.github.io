@@ -1,0 +1,83 @@
+---
+// Archive (docs/EDITORIAL-SPEC.md section 6): every published post, grouped
+// by year (newest first). Rows reuse the numbered list; the number is the
+// same ordinal as on the home page.
+import { formatDate, getPublishedPosts, postNumbers } from '../lib/posts';
+import type { Post } from '../lib/posts';
+import { TAG_LABEL } from '../lib/labels';
+import Base from '../layouts/Base.astro';
+import ListHead from '../components/ListHead.astro';
+import Lat from '../components/Lat.astro';
+import '../styles/list.css';
+
+const all = await getPublishedPosts();
+const numbers = postNumbers(all);
+
+const groups: { year: number; posts: Post[] }[] = [];
+for (const post of all) {
+  const year = post.data.date.getUTCFullYear();
+  const last = groups[groups.length - 1];
+  if (last && last.year === year) last.posts.push(post);
+  else groups.push({ year, posts: [post] });
+}
+---
+
+<Base title="全部文章 — wit.et" description="wit.et 的全部文章，依年份排列。" current="index">
+  <main id="main">
+    <ListHead title="全部文章" />
+    <section class="toc" aria-label="全部文章">
+      {
+        groups.map((g) => (
+          <>
+            <h2 class="year">
+              <Lat>{g.year}</Lat>
+            </h2>
+            {g.posts.map((post) => (
+              <a class="row" href={`/posts/${post.id}/`}>
+                <div class="no">
+                  <Lat>{numbers.get(post.id)}</Lat>
+                </div>
+                <p class="atitle">{post.data.title}</p>
+                <p class="meta">
+                  <Lat>{formatDate(post.data.date).slice(5)}</Lat>
+                  <small>{TAG_LABEL[post.data.tag]}</small>
+                </p>
+              </a>
+            ))}
+          </>
+        ))
+      }
+      <p class="end">清單還在寫 ⋯</p>
+    </section>
+  </main>
+</Base>
+
+<style>
+  .year {
+    padding-top: 40px;
+    font-weight: 400;
+    line-height: 1.2;
+    border-bottom: 1px solid var(--rule-strong);
+    padding-bottom: 14px;
+  }
+  .year :global(i.l) {
+    font-size: var(--fs-year);
+    color: var(--ink-70);
+  }
+  .atitle {
+    font-family: var(--zh);
+    font-weight: 700;
+    font-size: var(--fs-title);
+    line-height: 1.6;
+    letter-spacing: 0.04em;
+    text-wrap: balance;
+  }
+  .row:hover .atitle {
+    color: var(--moss-700);
+  }
+  @media (max-width: 820px) {
+    .year :global(i.l) {
+      font-size: var(--fs-year-m);
+    }
+  }
+</style>

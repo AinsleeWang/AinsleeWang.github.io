@@ -1,0 +1,47 @@
+---
+// 404 (docs/EDITORIAL-SPEC.md section 6, design-ref/editorial/pages-copy.md):
+// the masthead style with one line and a way back.
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="404 — wit.et" noindex>
+  <main id="main">
+    <section class="lost">
+      <h1>404</h1>
+      <p class="line">這一頁不在清單上。</p>
+      <a class="kick back" href="/">回到文章</a>
+    </section>
+  </main>
+</Base>
+
+<style>
+  .lost {
+    padding: 36px 0 90px;
+    border-top: 1px solid var(--rule-strong);
+  }
+  h1 {
+    font-family: var(--en);
+    font-style: italic;
+    font-weight: 500;
+    font-size: var(--fs-mast);
+    line-height: 0.92;
+    letter-spacing: -0.025em;
+    margin-left: -0.04em;
+  }
+  .line {
+    margin-top: 34px;
+    font-family: var(--zh);
+    font-weight: 700;
+    font-size: var(--fs-title);
+    line-height: 1.6;
+    letter-spacing: 0.06em;
+  }
+  .back {
+    margin-top: 18px;
+    min-height: 44px;
+    width: fit-content;
+  }
+  .back:hover {
+    color: var(--moss-700);
+  }
+</style>

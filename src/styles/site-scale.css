@@ -1,98 +1,76 @@
-/* site-scale.css — font-size scale for the wit.et site (E-1.2 landing).
- *
- * These values come straight off design-ref/wit.et Blog.dc.html artboards
- * 1a/1c/1h, NOT off the brand brief's §3.2 type scale (Body 16/1.75,
- * Caption 13 mono). docs/DECISIONS.md C2 is the record of that conflict and
- * names this file as the single, intentional override point: components
- * under src/components/ read ONLY these variables for font-size, never a
- * literal px value and never the brief's §3.2 numbers directly.
- *
- * If the brief scale is ever restored, this file is the one place to edit.
- */
+/* site-scale.css — every font size on the site, lifted from
+ * design-ref/editorial/home.html, essay.html and build.html. Components read these
+ * variables; no other file writes a literal font-size (inline code's
+ * relative em is the one exception). */
 :root {
-  --fs-hero: 64px; /* 1a hero title, line 57 */
-  --fs-hero-mobile: 40px; /* no mobile hero spec in design-ref (1h follows 1b,
-    which has no hero); judgment call to keep the hero but shrink it rather
-    than drop the section — see docs/pr/E-1.2.md */
-  --fs-hero-sub: 18px; /* 1a hero subtitle, line 58 */
-  --fs-logo: 19px; /* 1a header wordmark, line 48 */
-  --fs-nav: 12px; /* header nav + filter bar items, lines 50/61 */
-  --fs-feature-title: 28px; /* 1c feature photo card overlay title, line 187 */
-  --fs-card-title-lg: 34px; /* 1c essay card title, line 194 */
-  --fs-card-title: 26px; /* 1c photo/travel 300px-image card title, lines 203/217 */
-  --fs-summary: 17px; /* 1c card summary paragraph, line 195 */
-  --fs-meta: 11px; /* mono tag / date / MIN / FRAMES rows throughout 1c */
-  --fs-buildlog-title: 16px; /* BUILD LOG item title, line 234 */
-}
+  --fs-body: 17px;
+  --lat-scale: 1.28em; /* i.l: Latin runs sit a little larger in Chinese text */
 
-/* E-1.3 ESSAY reading page (design-ref 1e) vs. the vendored article.css
- * (wit-et-design-system, feat/e4-article-layout). article.css defaults to
- * the brand brief's §3.2 type scale (Body 16/1.75, Caption 13 mono); the
- * draft (design-ref 1e, lines 345/350-351) uses Body 18/1.9 and 12px mono
- * meta. docs/DECISIONS.md C2 resolves this in favor of the draft and names
- * this file as the single override point — components/layouts read these
- * custom properties (or article.css's own, which these redefine), never a
- * literal font-size.
- *
- * --article-measure: article.css's own default is `36em` (relative,
- * ~36 CJK characters per line); 1e measures 620px flat at the 1280px
- * artboard width, so this pins it to that exact value.
- *
- * Selector: `html body[data-mode="paper"] .wt-article` rather than the
- * bare `[data-mode="paper"] .wt-article` article.css itself uses. Same
- * specificity + later-in-cascade isn't reliable here — Vite's CSS bundling
- * order across astro component imports doesn't guarantee this file's
- * <link> lands after article.css's — so the two extra type selectors
- * (html, body; both legitimately in the element's ancestor chain, since
- * Base.astro sets data-mode on <body>) give this rule strictly higher
- * specificity instead, which wins regardless of source order.
- */
-html body[data-mode="paper"] .wt-article {
-  --article-body: 18px;
-  --article-measure: 620px;
-  --article-caption: 12px;
-}
+  /* header / footer */
+  --fs-brand: 18px;
+  --fs-nav: 15px;
+  --fs-nav-m: 14px;
+  --fs-sig: 26px;
+  --fs-ft-nav: 18px;
+  --fs-skip: 14px;
 
-/* E-1.3 BUILD/PHOTO/TRAVEL reading pages (design-ref 1f/1g, deep-space
- * mode). src/styles/prose-deep.css reads ONLY these variables for
- * font-size — same C2 rule as the ESSAY override above, this file is the
- * one place a literal px value is allowed to appear.
- *
- * --fs-caption (12px: meta-row/tag/code-bar/footer mono text) and
- * --fs-figcaption (13px: image captions) are deliberately two different
- * sizes, not a typo — design-ref 1f/1g itself uses 12px everywhere except
- * the figcaption, which is 13px.
- */
-:root {
-  --fs-prose-body: 18px; /* 1f/1g body paragraphs + lede */
-  --fs-prose-h1: 40px; /* 1f/1g h1 */
-  --fs-prose-h2: 28px; /* 1f h2 */
-  --fs-caption: 12px; /* 1f/1g meta-row/tag/code-bar/footer mono text */
-  --fs-figcaption: 13px; /* 1g image caption */
-  --fs-code: 13.5px; /* 1f code block text */
-}
+  /* masthead */
+  --fs-mast: clamp(64px, 13.2vw, 172px);
+  --fs-mast-zh: 19px;
+  --fs-mast-zh-m: 17px;
+  --fs-vert: 14px;
 
-/* E-1.3 part 2: /tags/<tag>/ index pages (design-ref 1b, lines 126-129 —
- * the BUILD list-row style only; 1b's own single-column layout is a
- * rejected alternative per docs/DECISIONS.md and is NOT implemented).
- * --fs-tag-row-label reuses the existing 56px-wide mono "BUILD" column;
- * --fs-tag-row-title is the row's title text, distinct from
- * --fs-buildlog-title (16px, the sidebar BuildLog card) even though both
- * render a build post's title, because the full-width tag-page row and the
- * narrow sidebar card are sized differently in design-ref.
- */
-:root {
-  --fs-tag-row-title: 17px; /* design-ref 1b line 126-127 */
-}
+  /* filter bar */
+  --fs-bar: 15px;
+  --fs-bar-dot: 7px;
+  --fs-count: 14px;
 
-/* Launch 1: empty state (POLISH-SPEC section 1) and prev/next navigation. */
-:root {
-  --fs-empty-title: 24px; /* 「清單還在寫。」 */
-  --fs-postnav: 15px; /* prev/next neighbour titles */
-}
+  /* feature / shared */
+  --fs-kick: 15px;
+  --fs-feat: clamp(40px, 5.6vw, 72px);
+  --fs-title: 22px;
+  --fs-meta: 14px;
+  --fs-excerpt: 16px;
 
-/* Launch 2: site chrome (POLISH-SPEC section 3). */
-:root {
-  --fs-footer-brand: 15px; /* footer "wit, et cetera." */
-  --fs-skip: 14px; /* skip link 「跳到內容」 */
+  /* list */
+  --fs-no: 44px;
+  --fs-no-m: 30px;
+  --fs-row-line: 34px;
+  --fs-row-line-m: 26px;
+  --fs-row-title: 16px;
+  --fs-row-date: 21px;
+  --fs-row-small: 13px;
+  --fs-end: 15px;
+  --fs-year: 34px;
+  --fs-year-m: 26px;
+
+  /* reading pages (design-ref/editorial/essay.html and build.html) */
+  --fs-h1: clamp(32px, 4.4vw, 54px);
+  --fs-h2: 25px;
+  --fs-h2-m: 22px;
+  --fs-h3: 20px;
+  --fs-band: 24px;
+  --fs-band-m: 20px;
+  --fs-prose: 17px;
+  --fs-prose-m: 16.5px;
+  --fs-quote-en: 26px;
+  --fs-credit: 14px;
+  --fs-sep: 15px;
+  --fs-pn-label: 13px;
+  --fs-pn-title: 17px;
+  --fs-close-en: 22px;
+
+  /* technical parts */
+  --fs-code: 13.5px;
+  --fs-code-bar: 11px;
+  --fs-copy: 13px;
+  --fs-out-label: 12.5px;
+  --fs-out: 13px;
+  --fs-figcaption: 14px;
+  --fs-note-title: 14px;
+  --fs-ol-no: 24px;
+  --fs-refs: 15.5px;
+  --fs-refs-no: 17px;
+  --fs-toc: 14px;
+  --fs-toc-no: 16px;
 }

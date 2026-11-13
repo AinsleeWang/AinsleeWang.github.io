@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>wit.et — editorial mock (essay)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Noto+Serif+TC:wght@400;500;700;900&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500&display=swap">
+<style>
+:root{
+  --space-950:#0B1026; --paper:#F5F2EA; --moss-700:#38452E; --moss-600:#4A593D;
+  --moss-400:#7E9370; --moss-100:#DCE5D3; --stellar-600:#46598C;
+  --ink:var(--space-950);
+  --ink-70:color-mix(in srgb,var(--space-950) 70%,transparent);
+  --ink-50:color-mix(in srgb,var(--space-950) 50%,transparent);
+  --rule:color-mix(in srgb,var(--space-950) 14%,transparent);
+  --rule-strong:color-mix(in srgb,var(--space-950) 80%,transparent);
+  --band:color-mix(in srgb,var(--moss-100) 45%,transparent);
+  --zh:"Noto Serif TC",serif; --en:"EB Garamond","Noto Serif TC",serif; --mono:"JetBrains Mono",monospace;
+}
+*{box-sizing:border-box;margin:0}
+html{background:var(--paper)}
+body{color:var(--ink);font-family:var(--en);-webkit-font-smoothing:antialiased;text-autospace:normal}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1180px;margin-inline:auto;padding-inline:56px}
+.hd{display:flex;align-items:center;justify-content:space-between;padding-block:28px;border-bottom:1px solid var(--rule)}
+.brand{display:flex;align-items:center;gap:12px;font-family:"Space Grotesk",sans-serif;font-weight:500;font-size:18px}
+.nav{display:flex;gap:34px;font-family:var(--zh);font-weight:700;font-size:15px;letter-spacing:.14em}
+.nav .rss{font-family:var(--en);font-style:italic;font-weight:400;font-size:17px;letter-spacing:0}
+
+.head{padding:76px 0 44px}
+.kick{display:flex;align-items:center;gap:14px;font-family:var(--zh);font-weight:700;font-size:15px;letter-spacing:.14em}
+.kick::before{content:"";width:44px;height:1px;background:var(--ink)}
+h1{margin-top:26px;max-width:16em;font-family:var(--zh);font-weight:700;font-size:clamp(32px,4.4vw,54px);line-height:1.36;letter-spacing:.02em;text-wrap:balance}
+.meta{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap;margin-top:28px;
+  font-family:var(--zh);font-size:14px;letter-spacing:.1em;color:var(--ink-70)}
+
+.band{background:var(--band);border-block:1px solid var(--rule)}
+.band p{max-width:680px;margin-inline:auto;padding:40px 0;font-family:var(--zh);font-weight:500;font-size:24px;line-height:1.8;letter-spacing:.06em}
+
+.prose{max-width:680px;margin-inline:auto;padding:56px 0 20px;font-family:var(--zh);font-size:17px;line-height:2.05;letter-spacing:.045em}
+.prose p{margin-top:1.5em;text-align:justify;text-wrap:pretty}
+.prose p:first-child{margin-top:0}
+.prose h2{margin-top:3.2em;padding-left:18px;border-left:5px solid var(--moss-600);
+  font-weight:700;font-size:25px;line-height:1.5;letter-spacing:.04em}
+.prose h2 + p{margin-top:1.2em}
+.prose blockquote{margin:2.2em 0;padding-left:1.6em;border-left:1px solid var(--moss-400);color:var(--moss-700)}
+.prose blockquote .en{font-family:var(--en);font-style:italic;font-size:26px;line-height:1.5;letter-spacing:0;color:var(--ink)}
+.prose blockquote p{margin-top:.5em;text-align:left}
+.prose code{font-family:var(--mono);font-size:.86em;letter-spacing:0;background:var(--band);padding:.1em .4em;border-radius:3px}
+.sep{margin:3.4em auto;width:120px;text-align:center;font-size:15px;letter-spacing:.9em;color:var(--moss-600)}
+.credit{font-size:14px;line-height:1.9;letter-spacing:.08em;color:var(--ink-50)}
+
+.pn{max-width:680px;margin:64px auto 0;display:grid;grid-template-columns:1fr 1fr;gap:32px;padding-top:26px;border-top:1px solid var(--rule-strong)}
+.pn span{display:block;font-family:var(--zh);font-size:13px;letter-spacing:.3em;color:var(--ink-50)}
+.pn b{display:block;margin-top:6px;font-family:var(--zh);font-weight:700;font-size:17px;line-height:1.6;letter-spacing:.04em}
+.pn a:last-child{text-align:right}
+.ft{display:flex;justify-content:space-between;align-items:baseline;gap:24px;flex-wrap:wrap;margin-top:72px;padding:30px 0 56px;border-top:1px solid var(--rule-strong)}
+.ft .sig{font-family:var(--en);font-style:italic;font-size:26px}
+.ft nav{display:flex;gap:28px;align-items:baseline;font-family:var(--en);font-style:italic;font-size:18px;color:var(--ink-70)}
+
+@media (max-width:820px){
+  .wrap{padding-inline:22px}
+  .nav{gap:18px;font-size:14px;letter-spacing:.08em}
+  .head{padding:40px 0 30px}
+  .band p{font-size:20px;padding:28px 22px}
+  .prose{padding-top:36px;font-size:16.5px;line-height:2}
+  .prose h2{font-size:22px}
+  .pn{grid-template-columns:1fr;gap:20px}
+  .pn a:last-child{text-align:left}
+}
+
+.layout{position:relative}
+.tocm{position:absolute;left:0;top:64px;width:170px;font-family:var(--zh);font-size:14px;line-height:1.7;letter-spacing:.06em}
+.tocm b{display:block;padding-bottom:10px;margin-bottom:12px;border-bottom:1px solid var(--rule-strong);font-weight:700;letter-spacing:.3em}
+.tocm a{display:grid;grid-template-columns:26px 1fr;padding:5px 0;color:var(--ink-50)}
+.tocm a i{font-family:var(--en);font-style:italic;font-size:16px}
+.tocm a.on{color:var(--ink);font-weight:700}
+.prose ol{margin:1.4em 0 0;padding:0;list-style:none;counter-reset:s}
+.prose ol li{counter-increment:s;display:grid;grid-template-columns:38px 1fr;margin-top:.7em;text-align:justify}
+.prose ol li::before{content:counter(s);font-family:var(--en);font-style:italic;font-size:24px;line-height:1.45;color:var(--moss-600);letter-spacing:0}
+.code{margin:1.9em 0 0;border:1px solid var(--rule);border-radius:4px;background:var(--band);letter-spacing:0;overflow:hidden}
+.code .bar{display:flex;justify-content:space-between;align-items:center;padding:9px 16px;border-bottom:1px solid var(--rule);font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--ink-50)}
+.code .bar button{all:unset;cursor:pointer;font-family:var(--zh);font-size:13px;letter-spacing:.2em;color:var(--ink-70)}
+.code pre{margin:0;padding:16px 18px 18px;overflow:auto;font-family:var(--mono);font-size:13.5px;line-height:1.85;color:var(--ink)}
+.code .hl{display:block;margin:0 -18px;padding:0 18px;background:color-mix(in srgb,var(--moss-400) 22%,transparent);box-shadow:inset 3px 0 0 var(--moss-600)}
+.k{color:var(--moss-700);font-weight:500}.s{color:var(--stellar-600)}.c{color:var(--ink-50)}.n{color:var(--moss-600)}
+.out{margin:.9em 0 0;padding:2px 0 2px 18px;border-left:1px solid var(--moss-400);letter-spacing:0}
+.out span{display:block;font-family:var(--zh);font-size:12.5px;letter-spacing:.2em;color:var(--ink-50);margin-bottom:4px}
+.out pre{margin:0;font-family:var(--mono);font-size:13px;line-height:1.8;color:var(--ink-70);overflow:auto}
+figure{margin:2.4em 0 0}
+figure.wide{margin-inline:-90px}
+.shot{border:1px solid var(--rule);border-radius:4px;overflow:hidden;display:block}
+figcaption{margin-top:12px;display:grid;grid-template-columns:auto 1fr;gap:14px;font-family:var(--zh);font-size:14px;line-height:1.8;letter-spacing:.05em;color:var(--ink-70);text-align:left}
+figcaption i{font-style:normal;font-weight:700;letter-spacing:.2em;color:var(--moss-700);white-space:nowrap}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.note{margin:2em 0 0;padding:18px 22px;border:1px solid var(--rule);border-left:5px solid var(--moss-600)}
+.note b{display:block;font-weight:700;letter-spacing:.2em;font-size:14px;margin-bottom:4px}
+.note p{margin:0!important}
+.refs{margin-top:1em;padding-left:0;list-style:none;font-size:15.5px}
+.refs li{display:grid;grid-template-columns:38px 1fr;margin-top:.5em}
+.refs li i{font-family:var(--en);color:var(--moss-600);font-size:17px}
+.refs a{border-bottom:1px solid var(--stellar-600);color:var(--stellar-600)}
+.demo{position:fixed;left:0;bottom:0;padding:6px 12px;background:var(--ink);color:var(--paper);font:12px var(--mono)}
+/* stand-in for a real screenshot image */
+.fake{background:#0B1026;color:#EAEDE8;font:12.5px/1.75 "JetBrains Mono",monospace;padding:0}
+.fake .t{display:flex;gap:6px;padding:10px 12px;background:#1C2438}.fake .t u{width:10px;height:10px;border-radius:50%;background:#7E9370;opacity:.6}
+.fake pre{margin:0;padding:14px 16px 18px;white-space:pre-wrap}.fake em{color:#9DB48D;font-style:normal}.fake s{color:#C9B37E;text-decoration:none}
+@media (max-width:1180px){.tocm{display:none}}
+@media (max-width:820px){figure.wide{margin-inline:-22px}figure.wide .shot{border-radius:0;border-inline:0}figure.wide figcaption{padding-inline:22px}.two{grid-template-columns:1fr}
+i.l{font-family:var(--en);font-style:italic;font-size:1.28em;letter-spacing:0;line-height:1}
+</style>
+</head>
+<body>
+<div class="demo">示意內容：文字與指令是為了展示版型而寫的草稿，不是你的文章</div>
+<div class="wrap">
+  <header class="hd">
+    <a class="brand" href="home.html">
+      <svg width="36" height="18" viewBox="0 0 100 48" fill="none"><polyline points="6,8 28,40 50,12 72,40 94,6" stroke="#4A593D" stroke-width="2"/><circle cx="6" cy="8" r="4.5" fill="#4A593D"/><circle cx="28" cy="40" r="3" fill="#4A593D"/><circle cx="50" cy="12" r="3.5" fill="#4A593D"/><circle cx="72" cy="40" r="3" fill="#4A593D"/><circle cx="94" cy="6" r="4" fill="#C9B37E"/></svg>
+      wit.et
+    </a>
+    <nav class="nav"><a href="home.html">文章</a><a href="#">作品</a><a href="#">關於</a><a class="rss" href="#">rss</a></nav>
+  </header>
+  <div class="head">
+    <div class="kick">實作</div>
+    <h1>只讀主檔，會少三十三筆訊息</h1>
+    <div class="meta"><span><i class="l">2026.08.05</i>　<i class="l">Vancouver</i></span><span>約 <i class="l">6</i> 分鐘</span></div>
+  </div>
+</div>
+<div class="band"><div class="wrap"><p>SQLite 的暫存檔不是垃圾，它是最新的證據。</p></div></div>
+<div class="wrap layout">
+  <nav class="tocm"><b>目錄</b>
+    <a class="on" href="#"><i>1</i>問題</a><a href="#"><i>2</i>重現</a><a href="#"><i>3</i>正確的做法</a><a href="#"><i>4</i>後記</a><a href="#"><i>5</i>參考資料</a>
+  </nav>
+  <article class="prose">
+    <h2 style="margin-top:0">問題</h2>
+    <p>這篇用課堂 lab 提供的手機訊息資料庫，在 macOS 上以 <code>sqlite3</code> 操作。同一個資料庫，兩種開法，查到的訊息筆數不一樣。差的那幾十筆不會有任何錯誤訊息提醒你，查詢就是安靜地跑完。</p>
+
+    <h2>重現</h2>
+    <ol>
+      <li>先替三個檔案算 hash，留下動手之前的狀態。</li>
+      <li>只複製主檔到另一個資料夾，查一次筆數。</li>
+      <li>三個檔案一起複製，再查一次。</li>
+    </ol>
+    <div class="code">
+      <div class="bar"><span>bash</span><button>複製</button></div>
+<pre><span class="c"># 動手之前：三個檔案一起算</span>
+<span class="k">shasum</span> -a 256 sms.db sms.db-wal sms.db-shm &gt; before.sha256
+
+<span class="c"># 只帶主檔</span>
+<span class="k">cp</span> sms.db only-main/
+<span class="hl"><span class="k">sqlite3</span> only-main/sms.db <span class="s">"SELECT COUNT(*) FROM message;"</span></span></pre>
+    </div>
+    <div class="out"><span>輸出</span><pre>996</pre></div>
+
+    <figure class="wide">
+      <div class="shot fake"><div class="t"><u></u><u></u><u></u></div><pre><em>$</em> sqlite3 all-three/sms.db "SELECT COUNT(*) FROM message;"
+<s>1029</s>
+<em>$</em> ls -la all-three/
+-rw-r--r--  1 lab  staff   4096000  sms.db
+-rw-r--r--  1 lab  staff     32768  sms.db-shm
+-rw-r--r--  1 lab  staff    135992  sms.db-wal</pre></div>
+      <figcaption><i>圖一</i><span>三個檔案一起帶，同一句查詢回傳 1,029 筆。這張是執行畫面的截圖，寬度可以比內文寬。</span></figcaption>
+    </figure>
+
+    <p>行內的程式碼長這樣：<code>PRAGMA journal_mode;</code>，字級比內文小一點，底色和引言帶同一個淡綠。</p>
+
+    <div class="note"><b>注意</b><p>用唯讀模式開啟不會動到主檔，但資料夾裡會多出一個你沒有放進去的索引檔。兩種開法都會改變東西。</p></div>
+
+    <h2>正確的做法</h2>
+    <div class="code">
+      <div class="bar"><span>verify.py</span><button>複製</button></div>
+<pre><span class="k">import</span> hashlib, pathlib
+
+<span class="k">def</span> <span class="n">digest</span>(path):
+    <span class="k">return</span> hashlib.sha256(pathlib.Path(path).read_bytes()).hexdigest()
+
+<span class="k">for</span> name <span class="k">in</span> (<span class="s">"sms.db"</span>, <span class="s">"sms.db-wal"</span>, <span class="s">"sms.db-shm"</span>):
+    <span class="k">print</span>(name, digest(name))</pre>
+    </div>
+
+    <figure>
+      <div class="two">
+        <div class="shot fake"><div class="t"><u></u><u></u><u></u></div><pre>before.sha256
+<em>a41f…</em>  sms.db</pre></div>
+        <div class="shot fake"><div class="t"><u></u><u></u><u></u></div><pre>after.sha256
+<em>a41f…</em>  sms.db</pre></div>
+      </div>
+      <figcaption><i>圖二</i><span>兩張圖寫在同一段，就會並排；手機上會上下堆疊。</span></figcaption>
+    </figure>
+
+    <h2>後記</h2>
+    <p>寫每一篇實作文，最後留一段給沒走通的路和當下的想法。這一段回到和隨筆一樣的語氣。</p>
+
+    <h2>參考資料</h2>
+    <ul class="refs">
+      <li><i>1</i><span><a href="#">SQLite: Write-Ahead Logging</a>，sqlite.org</span></li>
+      <li><i>2</i><span><a href="#">課堂 lab 講義</a>（未公開）</span></li>
+    </ul>
+  </article>
+  <nav class="pn"><span></span><a href="#"><span>下一篇</span><b>從三顆磁碟還原 RAID 的四個參數</b></a></nav>
+  <footer class="ft">
+    <span class="sig">wit, et cetera.</span>
+    <nav><a href="#">rss</a><a href="#">instagram</a><a href="#">github</a><span>© 2026</span></nav>
+  </footer>
+</div>
+</body>
+</html>

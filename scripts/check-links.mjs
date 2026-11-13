@@ -18,10 +18,9 @@
 import { readFileSync, existsSync, readdirSync, statSync } from 'node:fs';
 import { join, relative, extname } from 'node:path';
 
-// Routes not built yet (roadmap E-1.4) — known-404 by design, not a bug
-// this script should report. Keep this list to exactly what's deferred;
-// anything else missing from dist/ is a real broken link.
-const ALLOWLIST = new Set(['/about/', '/projects/']);
+// Routes known to be absent from dist/ by design, so the checker skips them.
+// Empty now that every linked page exists; anything missing is a real broken link.
+const ALLOWLIST = new Set([]);
 
 const distDir = process.argv[2] ?? join(process.cwd(), 'dist');
 

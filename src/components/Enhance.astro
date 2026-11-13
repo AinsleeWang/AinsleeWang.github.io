@@ -1,0 +1,65 @@
+---
+// Enhance — the site's only client script (POLISH-SPEC sections 0 and 4).
+// Inline, no framework, no dependency, no network request, under 2 KB as
+// shipped. ArticleLayout renders it only when the page has a code block or
+// a table of contents. The page is complete without it: both features add
+// to markup that already works.
+//
+// 1. Copy button. Each .code-bar gets a <button> that copies the text of the
+//    <pre> after it; the label reads 已複製 for 1.6 s. The button is created
+//    here rather than in the markup so that it never exists where it cannot
+//    work (JS off, or no Clipboard API on an insecure origin). A refused
+//    write is ignored: the label just stays 複製.
+// 2. TOC scroll-spy. The active item is the last h2 whose top has crossed
+//    into the upper 30% of the viewport; before the first one gets there,
+//    nothing is active. It recounts from the headings' positions on every
+//    scroll, so a jump past a heading cannot leave a stale item.
+//
+// Everything it touches precedes it in the document (ArticleLayout renders
+// it after the article), so it runs as it is parsed.
+//
+// The script is written compactly by hand because `is:inline` ships it
+// byte for byte. The 1600 below is the one duration that cannot come from
+// global.css's motion variables.
+---
+
+<script is:inline>
+  (() => {
+    const d = document;
+    const all = (s) => [...d.querySelectorAll(s)];
+    if (navigator.clipboard)
+      all('.code-bar').forEach((bar) => {
+        const b = d.createElement('button');
+        let t;
+        b.type = 'button';
+        b.className = 'copy';
+        b.textContent = '複製';
+        b.setAttribute('aria-live', 'polite');
+        b.onclick = () =>
+          navigator.clipboard.writeText(bar.nextElementSibling.textContent).then(
+            () => {
+              b.textContent = '已複製';
+              clearTimeout(t);
+              t = setTimeout(() => (b.textContent = '複製'), 1600);
+            },
+            () => {},
+          );
+        bar.append(b);
+      });
+    const links = all('.tocm a');
+    const heads = links.map((a) => d.getElementById(decodeURIComponent(a.hash.slice(1))));
+    if (!links.length || heads.includes(null)) return;
+    const spy = () => {
+      let on = -1;
+      heads.forEach((h, i) => {
+        if (h.getBoundingClientRect().top < innerHeight * 0.3) on = i;
+      });
+      links.forEach((a, i) => {
+        a.classList.toggle('on', i == on);
+        i == on ? a.setAttribute('aria-current', 'true') : a.removeAttribute('aria-current');
+      });
+    };
+    addEventListener('scroll', spy, { passive: true });
+    spy();
+  })();
+</script>

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # sync-tokens.sh [ref]
 #
-# Pulls design tokens, article styles (if present), and logo assets from the
+# Pulls design tokens and logo assets from the
 # wit-et-design-system repo at a given git ref (default: master) into this
 # site. Idempotent: running it twice in a row with the same ref produces no
 # further changes.
@@ -44,7 +44,6 @@ write_vendor_css() {
 }
 
 write_vendor_css "tokens/tokens.css" "$VENDOR_DIR/tokens.css"
-write_vendor_css "article.css" "$VENDOR_DIR/article.css"
 
 copy_asset() {
   local src_path="$1"

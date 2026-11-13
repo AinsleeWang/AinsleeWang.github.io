@@ -1,92 +1,77 @@
 ---
-// FilterBar — plain links to /tags/<tag>/ (no client JS, per
-// docs/DECISIONS.md). Active item gets --starglow color + underline, the
-// only other allowed starglow besides the logo and hero chart.
-// design-ref/wit.et Blog.dc.html 1c lines 177-181.
-export type FilterTag = 'all' | 'essay' | 'build' | 'photo' | 'travel';
+// FilterBar — plain links to /tags/<tag>/ (no client JS).
+import { TAG_LABEL, TAGS } from '../lib/labels';
+import type { FilterTag } from '../lib/labels';
+import Lat from './Lat.astro';
 
 export interface Props {
   active: FilterTag;
   count: number;
-  // Off where the header's own bottom hairline sits directly above (tag
-  // pages); on under the homepage hero.
-  topRule?: boolean;
 }
 
-const { active, count, topRule = true } = Astro.props;
-const items: { key: FilterTag; label: string; href: string }[] = [
-  { key: 'all', label: 'all', href: '/' },
-  { key: 'essay', label: 'essay', href: '/tags/essay/' },
-  { key: 'build', label: 'build', href: '/tags/build/' },
-  { key: 'photo', label: 'photo', href: '/tags/photo/' },
-  { key: 'travel', label: 'travel', href: '/tags/travel/' },
+const { active, count } = Astro.props;
+const items: { key: FilterTag; href: string }[] = [
+  { key: 'all', href: '/' },
+  ...TAGS.map((t) => ({ key: t, href: `/tags/${t}/` })),
 ];
 ---
 
-<nav class={topRule ? 'filter-bar' : 'filter-bar filter-bar--no-top-rule'} aria-label="依類型篩選">
+<nav class="bar" aria-label="依類型篩選">
   {
     items.map((item) => (
-      <a
-        href={item.href}
-        class={item.key === active ? 'filter-bar__item filter-bar__item--active' : 'filter-bar__item'}
-        aria-current={item.key === active ? 'page' : undefined}
-      >
-        {item.label}
+      <a href={item.href} aria-current={item.key === active ? 'page' : undefined}>
+        {TAG_LABEL[item.key]}
       </a>
     ))
   }
-  <span class="filter-bar__count">{count} posts</span>
+  <span class="count">共 <Lat>{count}</Lat> 篇</span>
 </nav>
 
 <style>
-  .filter-bar {
+  .bar {
     display: flex;
-    align-items: center;
-    gap: 26px;
-    padding: 14px 0;
-    border-top: 1px solid var(--line-22);
-    border-bottom: 1px solid var(--line-22);
-    font-family: var(--font-mono);
-    font-size: var(--fs-nav);
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 30px;
+    padding: 16px 0;
+    border-block: 1px solid var(--rule);
   }
-  .filter-bar--no-top-rule {
-    border-top: 0;
+  .bar a {
+    font-family: var(--zh);
+    font-weight: 500;
+    font-size: var(--fs-bar);
+    letter-spacing: 0.14em;
+    color: var(--ink-70);
   }
-  .filter-bar__item {
-    color: var(--moss-300);
+  .bar a[aria-current] {
+    color: var(--ink);
+    font-weight: 700;
   }
-  .filter-bar__item--active {
-    color: var(--starglow);
-    border-bottom: 1px solid var(--starglow);
-    padding-bottom: 3px;
+  .bar a[aria-current]::before {
+    content: '● ';
+    font-size: var(--fs-bar-dot);
+    vertical-align: middle;
+    color: var(--moss-600);
   }
-  .filter-bar__item--active:hover,
-  .filter-bar__item--active:focus-visible {
-    color: var(--starglow);
-  }
-  .filter-bar__count {
+  .count {
     margin-left: auto;
-    font-variant-numeric: tabular-nums;
-    color: var(--muted-62);
-    text-transform: none;
+    font-family: var(--zh);
+    font-size: var(--fs-count);
+    letter-spacing: 0.14em;
+    color: var(--ink-70);
   }
 
-  @media (max-width: 767px) {
-    .filter-bar {
-      overflow-x: auto;
+  @media (max-width: 820px) {
+    .bar {
       gap: 18px;
-      padding: 0;
+      overflow-x: auto;
+      white-space: nowrap;
+      padding-block: 0;
     }
-    .filter-bar__count {
-      display: none;
-    }
-    /* 44px touch target, per 1h (e.g. lines 490/507). */
-    .filter-bar__item {
+    .bar a,
+    .count {
       display: flex;
       align-items: center;
+      gap: 0.35em;
       min-height: 44px;
     }
   }

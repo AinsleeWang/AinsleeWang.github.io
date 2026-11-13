@@ -1,5 +1,5 @@
-// RSS feed — E-1.3 part 2. SiteHeader (homepage + article nav) links here;
-// before this file existed the link 404'd. Published posts, newest first
+// RSS feed. Not linked visibly; advertised through the head alternate link
+// only. Published posts, newest first
 // (src/lib/posts.ts).
 import rss from '@astrojs/rss';
 import type { APIContext } from 'astro';
