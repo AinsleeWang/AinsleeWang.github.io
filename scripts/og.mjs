@@ -26,7 +26,7 @@ const labels = Object.fromEntries(
   [...readFileSync(join(ROOT, 'src/lib/labels.ts'), 'utf8').matchAll(/^\s*(essay|build|photo|travel):\s*'([^']+)'/gm)].map((m) => [m[1], m[2]]),
 );
 
-const TAGLINE = '才智，以及其他。一張永遠沒寫完的清單——程式、文字、照片、路上。';
+const TAGLINE = '才智，以及其他。一張永遠沒寫完的清單——程式、文字，et cetera。';
 
 // Flat frontmatter only (the content schema has no nested keys).
 function readPosts() {

@@ -1,10 +1,11 @@
 ---
 // PostNav — prev/next within the tag (design-ref/editorial/essay.html .pn).
 // 上一篇 = the older neighbour on the left, 下一篇 = the newer on the right.
-// With neither side, a single link back to the tag page.
+// With neither side, a single link back to the tag page, or to the home
+// list when the tag has no page of its own.
 import type { Post } from '../lib/posts';
-import { TAG_LABEL } from '../lib/labels';
-import type { Tag } from '../lib/labels';
+import { TAG_LABEL, TAGS } from '../lib/labels';
+import type { FilterTag, Tag } from '../lib/labels';
 
 export interface Props {
   tag: Tag;
@@ -13,6 +14,9 @@ export interface Props {
 }
 
 const { tag, older, newer } = Astro.props;
+const back: { key: FilterTag; href: string } = TAGS.includes(tag)
+  ? { key: tag, href: `/tags/${tag}/` }
+  : { key: 'all', href: '/' };
 ---
 
 <nav class="pn" aria-label="相鄰文章">
@@ -35,9 +39,9 @@ const { tag, older, newer } = Astro.props;
         )}
       </>
     ) : (
-      <a href={`/tags/${tag}/`}>
+      <a href={back.href}>
         <span>更多</span>
-        <b>{TAG_LABEL[tag]}</b>
+        <b>{TAG_LABEL[back.key]}</b>
       </a>
     )
   }

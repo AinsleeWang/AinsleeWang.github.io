@@ -18,7 +18,7 @@ set in Garamond italic (use the `Lat` component, not `<em>` around Chinese).
 
 wit.et 讀作 wit, et cetera——才智，以及其他。
 
-拉丁文的 *et* 只是一個連接詞。把它放進名字裡，是因為想寫的東西從來收不進單一個分類：程式、文字、照片、路上看到的事。與其假裝它們有共同的主題，不如承認，清單本身就是主題。
+拉丁文的 *et* 只是一個連接詞。把它放進名字裡，是因為想寫的東西從來收不進單一個分類：程式、文字，和還沒分類的事。與其假裝它們有共同的主題，不如承認，清單本身就是主題。
 
 *et* 也讓人想到另一個 E.T.。對外面的世界，也對心裡那塊還沒去過的地方，保持一點外星訪客式的好奇——不預設看得懂，所以看得比較仔細。
 
@@ -44,10 +44,10 @@ name links to `/tags/<tag>/`)
 
 ### Closing paragraph (`lang="en"`, Garamond italic, after the ⋯ divider)
 
-wit.et is a list that never finishes — code, words, photographs, the road. *Et* means "and". The rest is et cetera.
+wit.et is a list that never finishes — code, words, and whatever comes next. *Et* means "and". The rest is et cetera.
 
 - `<title>`: `關於 — wit.et`
-- meta description: 才智，以及其他。wit.et 是一張永遠沒寫完的清單——程式、文字、照片、路上。
+- meta description: 才智，以及其他。wit.et 是一張永遠沒寫完的清單——程式、文字，et cetera。
 
 ---
 

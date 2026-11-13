@@ -36,6 +36,7 @@ the site links there.
 - No résumé section on 關於 for now.
 - No structured summary block (environment / materials / conclusion) on
   technical posts.
+- 攝影 and 旅行 are not featured for now (no filter entry, no tag page).
 - No dark or "deep-space" mode on the site.
 
 ## 5. What is built
@@ -45,7 +46,7 @@ the site links there.
 | Area | Feature |
 |---|---|
 | Home | Masthead, tag filter bar with post count, feature block for the newest post, numbered list of the rest |
-| Tags | One page per tag: 隨筆, 實作, 攝影, 旅行 |
+| Tags | One page per featured tag: 隨筆, 實作 |
 | Archive | All posts by year at `/archive/` |
 | Reading page | Kicker, title, date · place · reading time, aphorism band, prose, previous/next within the tag |
 | Quotations | Blockquotes with Latin lines in Garamond italic; a paragraph made of an English quoted line plus a 『』 Chinese line is set as a quotation automatically |
