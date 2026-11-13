@@ -1,4 +1,4 @@
-# Locked copy for /about/, /projects/, 404
+# Locked copy for /about/, 404
 
 Written by the coordinator, revised 2026-11-13 for the editorial direction
 (`docs/EDITORIAL-SPEC.md`): every page is paper, interface text is Chinese,
@@ -55,49 +55,6 @@ wit.et is a list that never finishes — code, words, photographs, the road. *Et
 
 - `<title>`: `關於 — wit.et`
 - meta description: 才智，以及其他。wit.et 是一張永遠沒寫完的清單——程式、文字、照片、路上。
-
----
-
-## /projects/  (list page, like a tag page)
-
-- h1: 作品
-- Deck (one line, `--ink-70`): 做過、而且公開放著的東西。
-- `<title>`: `作品 — wit.et`
-- meta description: wit.et 公開的專案：網站、地圖工具、Android app 與資料流程的紀錄。
-
-Rows, in this order, numbered like the home list (05 at the top down to 01).
-Fields: name (large line, Latin so Garamond roman 500) · year (Garamond
-italic) · description · stack (one line, names separated by ` · `, Garamond
-roman, `--ink-50`) · links (Garamond italic `live` / `source`).
-Descriptions are final. Do not add awards, team member names, employers,
-user numbers, or any claim not written here.
-
-1. **wit.et** · 2026
-   你正在看的這個網站。紙面排版、中英混排的字體規則，幾乎不用 JavaScript。
-   Stack: Astro · CSS · design tokens
-   Links: source → https://github.com/AinsleeWang/AinsleeWang.github.io
-
-2. **taipei-village-seismic-check** · 2026
-   輸入臺北市的地址，查看所在的里的危老風險分數，並在 2D／3D 地圖上疊合圖層；另有一份用手機填的單棟初篩表單。分數是一個里的平均狀況，不是單棟的耐震評估。兩人團隊作品。
-   Stack: MapLibre GL · deck.gl · Python
-   Links: live → https://ainsleewang.github.io/taipei-village-seismic-check/ · source → https://github.com/AinsleeWang/taipei-village-seismic-check
-
-3. **lolesports-rolster** · 2026
-   Mark the players you like! 一個標記喜歡的英雄聯盟職業選手的單頁小工具。
-   Stack: React · Vite · Tailwind · Zustand
-   Links: live → https://ainsleewang.github.io/lolesports-rolster/ · source → https://github.com/AinsleeWang/lolesports-rolster
-
-4. **ETL_Sports_Data_Valorization** · 2026
-   一套 ETL 流程的架構紀錄：把健身社群 app 匯出的 Excel，轉成跨梯次的參與報表和個人趨勢圖。這個 repo 目前只有文件，程式碼尚未公開。
-   Stack: Python · pandas · Chart.js
-   Links: source → https://github.com/AinsleeWang/ETL_Sports_Data_Valorization
-
-5. **Island-Disaster-Survival-App** · 2025
-   為沒有網路的災難情境設計的 Android app：用指南針和步數做離線避難導航，內建避難所資料、物資清單、摩斯電碼求救訊號與醫療卡。研究原型，還不是正式產品。
-   Stack: Kotlin · Jetpack Compose · Room
-   Links: source → https://github.com/AinsleeWang/Island-Disaster-Survival-App
-
-After the last row: the end line 「清單還在寫 ⋯」.
 
 ---
 

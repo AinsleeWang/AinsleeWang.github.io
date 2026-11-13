@@ -44,7 +44,7 @@ Hard rules (each is machine-checked, see §8):
    compute to `font-style: italic` or `oblique`. The browser fakes a slanted
    明體 and it looks broken. Italic is applied only to elements whose text is
    Latin letters, digits and punctuation: the masthead, dates, place names
-   written in Latin, numerals, `rss / instagram / github`, English quotes.
+   written in Latin, numerals, `instagram / github`, English quotes.
    Mixed lines are split: `<i class="l">2026.08.02</i>　約 <i class="l">5</i> 分鐘`.
    Provide a tiny component for this (`<Lat>`), do not hand-write spans.
 2. Chinese secondary text (meta, labels, captions, prev/next labels) is
@@ -65,7 +65,7 @@ Interface language is Traditional Chinese. URL slugs do not change.
 
 | Thing | Text |
 |---|---|
-| Nav | 文章 (`/`) · 作品 (`/projects/`) · 關於 (`/about/`) · `rss` |
+| Nav | 文章 (`/`) · 關於 (`/about/`) |
 | Tags | essay 隨筆 · build 實作 · photo 攝影 · travel 旅行 · all 全部 |
 | Count | 共 N 篇 |
 | Reading time | 約 N 分鐘 |
@@ -76,7 +76,7 @@ Interface language is Traditional Chinese. URL slugs do not change.
 | TOC | 目錄 |
 | Callouts | 注意 · 補充 |
 | Skip link | 跳到內容 |
-| Footer | `wit, et cetera.` · `rss` `instagram` `github` `© 2026` |
+| Footer | `wit, et cetera.` · `instagram` `github` `© 2026` |
 
 Not used: 繼續讀 / "read more" links (the whole block is the link).
 One map (`src/lib/labels.ts`) holds the tag names; nothing else hardcodes them.
@@ -135,11 +135,9 @@ work order, now emitted on any page that has a code block or a TOC.
 
 ## 6. Other pages
 
-`design-ref/editorial/pages-copy.md` holds the locked copy for 關於, 作品 and
-404. They are paper pages built from the same parts: 關於 uses the reading
-layout; 作品 is a numbered list like the home list (name, description, stack
-as plain text separated by ·, links as Garamond italic `source` / `live`);
-404 is the masthead style with 「這一頁不在清單上。」. Wherever that file says
+`design-ref/editorial/pages-copy.md` holds the locked copy for 關於 and 404.
+They are paper pages built from the same parts: 關於 uses the reading
+layout; 404 is the masthead style with 「這一頁不在清單上。」. Wherever that file says
 mono, uppercase or deep-space, this spec wins. Add `/archive/` (全部文章 by
 year) and link it from the end line on the home page.
 
