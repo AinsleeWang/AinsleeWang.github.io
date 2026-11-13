@@ -28,6 +28,5 @@ jobs:
           node scripts/check-type.mjs \
             http://localhost:4321/ \
             http://localhost:4321/about/ \
-            http://localhost:4321/projects/ \
             http://localhost:4321/archive/ \
             "http://localhost:4321/posts/$POST/"

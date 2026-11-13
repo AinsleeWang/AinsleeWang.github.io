@@ -1,17 +1,15 @@
 ---
 // SiteHeader — logo + nav (design-ref/editorial). `current` marks the page
 // with aria-current="page"; the home page and the tag pages are both 文章.
-export type NavKey = 'index' | 'about' | 'projects';
+export type NavKey = 'index' | 'about';
 export interface Props {
   current?: NavKey;
   rule?: boolean;
 }
 
-const NAV: { key: NavKey | 'rss'; label: string; href: string }[] = [
+const NAV: { key: NavKey; label: string; href: string }[] = [
   { key: 'index', label: '文章', href: '/' },
-  { key: 'projects', label: '作品', href: '/projects/' },
   { key: 'about', label: '關於', href: '/about/' },
-  { key: 'rss', label: 'rss', href: '/rss.xml' },
 ];
 const { current, rule = false } = Astro.props;
 ---
@@ -33,7 +31,6 @@ const { current, rule = false } = Astro.props;
       NAV.map((item) => (
         <a
           href={item.href}
-          class={item.key === 'rss' ? 'rss' : undefined}
           aria-current={item.key === current ? 'page' : undefined}
         >
           {item.label}
@@ -76,13 +73,6 @@ const { current, rule = false } = Astro.props;
   .nav a[aria-current] {
     border-bottom: 1px solid var(--ink);
     padding-bottom: 3px;
-  }
-  .nav .rss {
-    font-family: var(--en);
-    font-style: italic;
-    font-weight: 400;
-    font-size: var(--fs-nav-rss);
-    letter-spacing: 0;
   }
 
   @media (max-width: 820px) {

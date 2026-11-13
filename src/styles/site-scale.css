@@ -10,7 +10,6 @@
   --fs-brand: 18px;
   --fs-nav: 15px;
   --fs-nav-m: 14px;
-  --fs-nav-rss: 17px;
   --fs-sig: 26px;
   --fs-ft-nav: 18px;
   --fs-skip: 14px;
@@ -44,7 +43,6 @@
   --fs-end: 15px;
   --fs-year: 34px;
   --fs-year-m: 26px;
-  --fs-stack: 16px;
 
   /* reading pages (design-ref/editorial/essay.html and build.html) */
   --fs-h1: clamp(32px, 4.4vw, 54px);

@@ -1,6 +1,6 @@
 /* list.css — the numbered contents list: number, main column, meta column,
- * and the end line. Shared by PostList (home, tag pages), the archive and
- * the projects page. Sizes are --fs-* from site-scale.css. */
+ * and the end line. Shared by PostList (home, tag pages) and the
+ * archive. Sizes are --fs-* from site-scale.css. */
 .toc {
   padding: 14px 0 40px;
 }
