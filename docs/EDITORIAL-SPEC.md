@@ -76,7 +76,7 @@ Interface language is Traditional Chinese. URL slugs do not change.
 | TOC | 目錄 |
 | Callouts | 注意 · 補充 |
 | Skip link | 跳到內容 |
-| Footer | `wit, et cetera.` · `instagram` `github` `© 2026` |
+| Footer | `wit, et cetera.` · `archive` `instagram` `github` `© 2026` |
 
 Not used: 繼續讀 / "read more" links (the whole block is the link).
 One map (`src/lib/labels.ts`) holds the tag names; nothing else hardcodes them.

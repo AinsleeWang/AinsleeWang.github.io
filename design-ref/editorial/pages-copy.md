@@ -77,4 +77,4 @@ wit.et is a list that never finishes — code, words, photographs, the road. *Et
 - The home page's end line becomes 「清單還在寫 ⋯」 followed by a link
   全部文章 → `/archive/` once there are more than 10 posts; until then the
   archive is linked from the footer only (`archive`, Garamond italic, placed
-  before `rss`).
+  first).
